@@ -1,0 +1,1978 @@
+﻿﻿@model DigiTools.Models.KpiViewModel
+@{
+    ViewBag.Title = "Menú principal";
+}
+
+<!--JQUERY STEPS CSS-->
+@*<link rel="stylesheet" href="~/Scripts/plugins/jquery-steps/jquery.steps.css" />*@
+<!--TOOLTIPSTER CSS-->
+<link rel="stylesheet" href="~/Scripts/plugins/tooltipster-master/css/tooltipster.bundle.min.css" />
+<!-- Bootstrap Select Css -->
+<link href="~/Scripts/plugins/bootstrap-select/css/bootstrap-select.min.css" rel="stylesheet" />
+<!-- EDITABLE TABLE Css -->
+<link href="~/Scripts/plugins/editable-table/index.css" rel="stylesheet">
+<!-- Bootstrap Material Datetime Picker Css -->
+<link href="~/Scripts/plugins/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.css" rel="stylesheet" />
+<!-- TAGSINPUT Css -->
+<link href="~/Scripts/plugins/bootstrap-tagsinput/bootstrap-tagsinput.css" rel="stylesheet">
+<!-- TAGSINPUT typeahead Css -->
+<link href="~/Scripts/plugins/bootstrap-tagsinput/bootstrap-tagsinput-typeahead.css" rel="stylesheet">
+<!-- KATEX Css -->
+<link rel="stylesheet" href="~/Scripts/plugins/katex/katex.css">
+<!-- DROPZONE Css -->
+<link href="~/Scripts/plugins/dropzone-custom/dropzone.css" rel="stylesheet" />
+<!--SLICKGRID CSS-->
+<link href="~/Scripts/plugins/slickgrid/slick.grid.css" rel="stylesheet" />
+<link href="~/Scripts/plugins/slickgrid/css/jquery-ui.css" rel="stylesheet" />
+<link href="~/Scripts/plugins/slickgrid/examples.css" rel="stylesheet" />
+<link href="~/Scripts/plugins/slickgrid/css/select2.css" rel="stylesheet" />
+
+
+
+<script>
+    var firstTime = true;
+    $(function () {
+        //#region Validations
+        //Advanced form with validation
+        var form = $('#wizard_validation').show();
+        form.steps({
+            headerTag: 'h3',
+            bodyTag: 'section',
+            transitionEffect: 'slideLeft',
+            labels: {
+                next: "Siguiente",
+                cancel: "Cancelar",
+                current: "Paso actual:",
+                pagination: "Paginación",
+                finish: "Finalizar",
+                previous: "Anterior",
+                loading: "Cargando ..."
+            },
+            onInit: function (event, currentIndex) {
+                $.AdminBSB.input.activate();
+
+                //Set tab width
+                var $tab = $(event.currentTarget).find('ul[role="tablist"] li');
+                var tabCount = $tab.length;
+                $tab.css('width', (100 / tabCount) + '%');
+
+                //set button waves effect
+                setButtonWavesEffect(event);
+            },
+            onStepChanging: function (event, currentIndex, newIndex) {
+
+                if (currentIndex > newIndex) {
+                    return true;
+                }
+
+                
+                if (currentIndex == 1 && myDropzone1.files.length == 0) {
+                    swal("Descripción gráfica de la falla", "Debe cargar las imágenes realcionadas", "error");
+                    return false;
+                }
+
+                //VALIDAR QUE CUANDO SEA UN CAMBIO DE COMPONENTE, HAYAN REGISTROS EN LA TABLA
+                if (currentIndex == 1 &&  $('#cc').is(':checked')) {
+                   //CAPTURAR RESGISTROS DE LA TABLA;
+                }
+
+                if (currentIndex < newIndex) {
+                    form.find('.body:eq(' + newIndex + ') label.error').remove();
+                    form.find('.body:eq(' + newIndex + ') .error').removeClass('error');
+                }
+
+                form.validate().settings.ignore = ':disabled,:hidden';
+
+                //return form.valid();
+                return true;
+            },
+            onStepChanged: function (event, currentIndex, priorIndex) {
+                setButtonWavesEffect(event);
+
+                if (currentIndex == 3) {
+                    
+                    if (firstTime) {
+                        initGrid();
+                    }
+                }
+            },
+            onFinishing: function (event, currentIndex) {
+                form.validate().settings.ignore = ':disabled,.ignore';
+                return form.valid();
+            },
+            onFinished: function (event, currentIndex) {
+                swal("Good job!", "Submitted!", "success");
+            }
+        });
+
+        //TOOLTIPSTER INIALITATION
+        $('.validateTool').tooltipster({ //find more options on the tooltipster page
+            trigger: 'custom', // default is 'hover' which is no good here
+            position: 'left',
+            animation: 'grow',
+            theme: 'tooltipster-Light',
+            functionPosition: function (instance, helper, position) {
+                position.coord.top += 5;
+                position.coord.left -= 140;
+                return position;
+            }
+        });
+
+        form.validate({
+
+            highlight: function (input) {
+                $(input).parents('.form-line').addClass('error');
+            },
+            unhighlight: function (element, errorClass, validClass) {                
+                if ($(element).hasClass("error")) {
+                    $(element).parents('.form-line').removeClass('error');
+                    $(element).removeClass(errorClass).addClass(validClass).tooltipster('close');
+                }
+            },
+            rules: {
+                'confirm': { equalTo: '#password'},
+                'IdPlanta': { valueNotEquals: "0" },
+                'IdTipoLinea': { valueNotEquals: "0" },
+                'IdLinea': { valueNotEquals: "0" },
+                'IdMaquina': { valueNotEquals: "0" }, 
+                'IdTipoAveria': { valueNotEquals: "0" },
+                'dz_text': { valueNotEquals: "" }
+            },
+            success: function (label, element) {
+                label.parent().removeClass('error');
+                label.remove();
+            },
+            messages: {
+                //'IdPlanta': { valueNotEquals: "Debe seleccionar planta..." }
+            }
+        });
+
+        function setButtonWavesEffect(event) {
+            $(event.currentTarget).find('[role="menu"] li a').removeClass('waves-effect');
+            $(event.currentTarget).find('[role="menu"] li:not(.disabled) a').addClass('waves-effect');
+        }
+        //#endregion
+
+        //#region DropDownList
+
+        //DROPDOWN CASCADE
+        $('.IdPlanta').change(function () {     
+            $('.IdTipoLinea').selectpicker('deselectAll');
+            return false;
+        });
+
+        $('.IdTipoLinea').change(function () {
+            var id1 = $('.IdPlanta').find("option:selected").val();
+            var id2 = $(this).find("option:selected").val();
+
+            var url = '@Url.Content("~/")' + "Home/GetDropDownListAsync";
+
+            $('.IdLinea').selectpicker('destroy');
+            $('.IdLinea').empty();
+
+            $.ajax({
+                url: url,
+                type: 'post',
+                data: { from: 1, id: id1, id2: id2  },
+                success: function (response) {
+
+                    $.each(response, function (i, linea) {
+
+                        $('.IdLinea').append($('<option>', {
+                            value: linea.Value,
+                            text: linea.Text
+                        }));
+                    });
+
+                    $('.IdLinea').selectpicker('refresh');
+                },
+                error: function (error) {
+                    alert(error);
+                }
+            });
+            return false;
+        });
+
+
+        $('.IdLinea').change(function () {
+            var id1 = $(this).find("option:selected").val();
+
+            var url = '@Url.Content("~/")' + "Home/GetDropDownListAsync";
+
+            $('.IdMaquina').selectpicker('destroy');
+            $('.IdMaquina').empty();
+
+            $.ajax({
+                url: url,
+                type: 'post',
+                data: { from: 2, id: id1, id2: 0 },
+                success: function (response) {
+
+                    $.each(response, function (i, maquina) {
+
+                        $('.IdMaquina').append($('<option>', {
+                            value: maquina.Value,
+                            text: maquina.Text
+                        }));
+                    });
+
+                    $('.IdMaquina').selectpicker('refresh');
+                },
+                error: function (error) {
+                    alert(error);
+                }
+            });
+            return false;
+        });
+
+        $('.IdMaquina').change(function () {
+
+            return false;
+        });
+        //#endregion
+
+        if (/Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent)) {
+            $('.selectpicker').selectpicker('mobile');
+        }
+
+        $('#tblRepuestos').editableTableWidget().numericValidation();
+
+        $('#btnAddRep').click(function () {
+
+            $("#tblRepuestos").find('tbody').fadeIn(300, function () {
+                $(this).append($('<tr>')
+                    .append($('<td>').append('0'))
+                    .append($('<td>').append('n/a'))
+                    .append($('<td>').append('0'))
+                    .append($('<td>').append('0')));
+            });
+
+            $('#tblRepuestos').editableTableWidget().numericValidation();
+
+
+            //$('.money-dollar').inputmask("numeric", {
+            //    radixPoint: ".",
+            //    groupSeparator: ",",
+            //    digits: 2,
+            //    autoGroup: true,
+            //    prefix: '$ ', //No Space, this will truncate the first character
+            //    rightAlign: false
+            //    //oncleared: function () { self.Value(''); }
+            //});
+        });
+
+
+        $('#btnDeleteLast').click(function () {
+
+            $("#tblRepuestos").find('tbody').find('tr').last().fadeOut(300, function () { $(this).remove(); });
+
+            return false;
+        });
+
+        $('#btnDeleteAll').click(function () {
+
+            $("#tblRepuestos").find('tbody').find('tr').fadeOut(300, function () { $(this).remove(); });
+
+            return false;
+        });
+
+        $('#cc').change(function () {
+            $("#panReps").show("slow");
+        });
+
+        $('#a').change(function () {
+            $("#panReps").hide(1000);
+        });
+
+        //Datetimepicker plugin
+        $('.datetimepicker').bootstrapMaterialDatePicker({
+            format: 'DD-MM-YYYY HH:mm',
+            clearButton: true,
+            weekStart: 1,
+            lang: 'es',
+            clearText: 'Limipiar',
+            cancelText: 'Cancelar'
+        });
+
+        $('.datepicker').bootstrapMaterialDatePicker({
+            format: 'dddd DD MMMM YYYY',
+            clearButton: true,
+            weekStart: 1,
+            time: false,
+            lang: 'es',
+            clearText: 'Limipiar',
+            cancelText: 'Cancelar'
+        });
+
+
+        //BOTÓN PARA CULCULAR LOS TIEMPOS TTR
+        $('#btnCalTtr').click(function () {
+
+            var horini = $('#txtHrNotAve').val().replace(/(\d{2})-(\d{2})-(\d{4})/, "$2/$1/$3"); 
+            var hornot = $('#txtHrIni').val().replace(/(\d{2})-(\d{2})-(\d{4})/, "$2/$1/$3");
+            var hofin = $('#txtHrFin').val().replace(/(\d{2})-(\d{2})-(\d{4})/, "$2/$1/$3");
+            //VERIFICAR QUE LOS CAMPOS ESTÉN DILIGENCIADOS
+            if (horini && hofin && hornot) {
+
+                //RESTAR FECHAS Y HORAS
+                var diff = Math.abs(new Date(horini) - new Date(hofin));
+
+                //OBTENER MINUTOS DE RESULTADO
+                var minutes = Math.floor((diff / 1000) / 60);
+
+                //SUMAR MINUTOS TTR
+                var sum = 0;
+                $('.ttr').each(function () {
+                    //SI EL CAMPO ESTÁ EN BLANCO SE PONE 0
+                    if (!$(this).val().length) {
+                        $(this).val('0');
+                    }
+
+                    //OBTENER LA SUMA DE LOS TIEMPOS
+                    sum += Number($(this).val());
+                });
+
+                //COMPRAR SI LA SUMA DE LOS TIEMPOS COINCIDEN CON LA HORA DE INICIO Y HORA DE
+                //FINALIZACIÓN DE LA AVERÍA
+                console.log('suma: ' + sum + ' minutes: ' + minutes);
+                if (minutes == sum)
+                {
+                    $('#txtTiempoTotal').val(sum);
+                }
+                else
+                {
+                    showSweetAlert('Error', 'Los tiempos no coinciden, revisar nuevamente!', 'error');
+                }
+
+            }
+            else {
+                showSweetAlert('Atención','Los campos no pueden estar en blanco!','warning');
+            }
+        });
+
+
+        //TAGSINPUT RESPONSABLES DEL FORMATO
+        var tecs = "GetTechnicians", admins = "GetAdmins";
+
+        var tecNames = new Bloodhound({
+            datumTokenizer: Bloodhound.tokenizers.obj.whitespace('Nombre'),
+            queryTokenizer: Bloodhound.tokenizers.whitespace,
+            prefetch: {
+                url: '@Url.Content("~/")' + "Home/" + tecs
+            },
+            remote: {
+                url: '@Url.Content("~/")' + "Home/" + tecs
+            }
+        });
+
+        tecNames.initialize();
+
+
+        $('.tags input:text:not(.datepicker,#IdEjeValPor)').tagsinput({
+            typeaheadjs: {
+                name: 'tecNames',
+                displayKey: 'Nombre',
+                valueKey: 'Nombre',
+                source: tecNames.ttAdapter()
+            }
+        });
+
+        //TAGSINPUT ADMIN RESPONSABLES DEL FORMATO
+        var AdmNames = new Bloodhound({
+            datumTokenizer: Bloodhound.tokenizers.obj.whitespace('Nombre'),
+            queryTokenizer: Bloodhound.tokenizers.whitespace,
+            prefetch: {
+                url: '@Url.Content("~/")' + "Home/" + admins
+            },
+            remote: {
+                url: '@Url.Content("~/")' + "Home/" + admins
+            }
+        });
+
+        AdmNames.initialize();
+
+        $('#IdEjeValPor').tagsinput({
+            typeaheadjs: {
+                name: 'AdmNames',
+                displayKey: 'Nombre',
+                valueKey: 'Nombre',
+                source: AdmNames.ttAdapter()
+            }
+        });
+
+        $('#QueDesc').change(fenomenoChange);
+        $('#DondeDesc').change(fenomenoChange);
+        $('#CuandoDesc').change(fenomenoChange);
+        $('#QuienDesc').change(fenomenoChange);
+        $('#CualDesc').change(fenomenoChange);
+        $('#ComoDesc').change(fenomenoChange);
+
+        function fenomenoChange() {
+            $('#FenomenoDesc').text(
+                $('#ComoDesc').val() + " " +
+                    $('#QueDesc').val() + " " +
+                        $('#DondeDesc').val() + " " +
+                            $('#CuandoDesc').val() + " " +
+                                $('#CualDesc').val() + " " +
+                                    $('#QuienDesc').val());
+        }
+
+        //Tooltip
+        $('[data-toggle="tooltip"]').tooltip({
+            container: 'body'
+        });
+
+        //ITERACCIÓN POR QUE POR QUE
+        $('#btnAddxQue').click(function () {
+
+            $("#tblPorque").find('tbody').fadeIn(300, function () {
+                $(this).append($('<tr>')
+                    .append($('<td>').append('.'))
+                    .append($('<td>').append(''))
+                    .append($('<td>').append(''))
+                    .append($('<td>').append(''))
+                    .append($('<td>').append('')));
+            });
+
+            $('#tblPorque').editableTableWidget();
+        });
+
+        $('#btnDeleteLastxQ').click(function () {
+
+            $("#tblPorque").find('tbody').find('tr').last().fadeOut(300, function () { $(this).remove(); });
+
+            return false;
+        });
+
+        $('#btnDeleteAllxQue').click(function () {
+
+            $("#tblPorque").find('tbody').find('tr').fadeOut(300, function () { $(this).remove(); });
+
+            return false;
+        });
+
+
+    });
+
+    function showSweetAlert(titulo,mensaje,tipo) {
+        swal(titulo, mensaje, tipo);
+    }
+
+    //document.addEventListener("DOMContentLoaded", function () {
+    //    renderMathInElement(document.body, {
+    //        delimiters: [
+    //            { left: "$$", right: "$$", display: true },
+    //            { left: "\\[", right: "\\]", display: true },
+    //            { left: "$", right: "$", display: false },
+    //            { left: "\\(", right: "\\)", display: false }
+    //        ]
+    //    });
+    //});
+
+</script>
+
+<style>
+    #IdPlanta {
+        display: block;
+    }
+
+    .wizard .content {
+        min-height: 400px;
+        overflow: auto;
+    }
+
+    .form-group .form-control {
+        border: 1px solid;
+        border-radius: 5px;
+        padding: 5px;
+    }
+
+    .labelWOBold {
+        font-weight: normal;
+        font-size: 14px !important;
+    }
+
+    td input {
+        width: 100%;
+    }
+
+    .col-md-3 button {
+        margin-top: 8px;
+    }
+
+    h2:not(.tit) {
+        color: white !important;
+    }
+
+    .timepicker {
+        /*text-align:center;*/
+    }
+
+    li .selectpicker {
+        z-index: 10;
+    }
+
+    .dropzone .dz-message {
+        text-align: center;
+        margin: 2em 0;
+    }
+
+    .gray_cube {
+        display: block;
+        padding: 10px;
+        background-color: #f5f5f5;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 12px;
+    }
+
+    #grafico_bañera {
+        position: relative;
+        right: 0;
+        top: 0;
+        /*max-height: 100%;
+        max-width: 100%;
+        height: 100%;
+        width: 100%;
+        background-image: url(../../Content/images/grafico_bañera.JPG);
+        background-repeat: no-repeat;*/
+    }
+
+    #img_bañera, #img_ciclo_raiz {
+        width: 100%;
+        height: auto;
+    }
+
+    #divFechaLastMtto {
+        position: absolute;
+        left: 5px;
+        top: 30%;
+        width: 25%;
+    }
+
+    #divFechaProxMtto {
+        position: absolute;
+        right: 5px;
+        top: 30%;
+        width: 25%;
+    }
+
+    #divOpcionesBañera {
+        position: absolute;
+        left: 10%;
+        top: 55%;
+        padding: 10px;
+        width: 70%;
+        background-color: #f5f5f5;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 12px;
+    }
+
+
+    #FI1Opt {
+        position: absolute;
+        left: 11%;
+        top: 94%;
+        font-size: 12px;
+        width: 70%;
+    }
+
+    #FI2Opt {
+        position: absolute;
+        left: 24%;
+        top: 94%;
+        font-size: 12px;
+        width: 70%;
+    }
+
+    #FI2Opt {
+        position: absolute;
+        left: 24%;
+        top: 94%;
+        font-size: 12px;
+        width: 70%;
+    }
+
+    #FI3Opt {
+        position: absolute;
+        left: 39%;
+        top: 94%;
+        font-size: 12px;
+        width: 70%;
+    }
+
+    #FI4Opt {
+        position: absolute;
+        left: 54%;
+        top: 94%;
+        font-size: 12px;
+        width: 70%;
+    }
+
+    #FI5Opt {
+        position: absolute;
+        left: 69%;
+        top: 94%;
+        font-size: 12px;
+        width: 70%;
+    }
+
+    #FI6Opt {
+        position: absolute;
+        left: 95%;
+        top: 94%;
+        font-size: 12px;
+        width: 70%;
+    }
+
+    .table-bordered tbody tr td {
+        padding: 4px;
+        vertical-align: middle;
+    }
+</style>
+
+<div class="card js-sweetalert">
+    <div class="header">
+        <h2 class="tit">
+            KPI's<small>Control de Averías</small>
+        </h2>
+    </div>
+    <div class="body js-sweetalert clearfix">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            @using (Html.BeginForm("CreateKpi", "Home", FormMethod.Post, new { @id = "wizard_validation" }))
+            {
+
+                @Html.AntiForgeryToken()
+                <h3>Ubicación & Tiempos de avería</h3>
+                <section class="clearfix">                    
+                    <div class="row">
+                        <div class="col-md-3">
+                            <b>@Html.LabelFor(model => model.IdPlanta)</b>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">looks_one</i>
+                                </span>
+                                <div class="form-line">
+                                    <select name="IdPlanta" class="selectpicker show-tick IdPlanta" required>
+                                        @foreach (var item in Model.PlantaList)
+                                        {
+                                            <option value="@item.Value">@item.Text</option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <b>@Html.LabelFor(model => model.IdTipoLinea)</b>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">looks_two</i>
+                                </span>
+                                <div class="form-line">
+                                    <select name="IdTipoLinea" class="selectpicker show-tick IdTipoLinea" required>
+                                        @foreach (var item in Model.TipoLineaList)
+                                        {
+                                            <option value="@item.Value">@item.Text</option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <b>@Html.LabelFor(model => model.IdLinea)</b>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">looks_3</i>
+                                </span>
+                                <div class="form-line">
+                                    <select name="IdLinea"
+                                            class="selectpicker show-tick IdLinea"
+                                            data-width="auto"
+                                            data-size="5"
+                                            data-noneSelectedText='Nada seleccionado...'
+                                            data-live-search="true" required></select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <b>@Html.LabelFor(model => model.IdMaquina)</b>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">looks_4</i>
+                                </span>
+                                <div class="form-line">
+                                    <select name="IdMaquina"
+                                            class="selectpicker show-tick IdMaquina"
+                                            data-width="auto"
+                                            data-size="5"
+                                            data-live-search="true" required></select>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <hr />
+                    <hr />
+                    <div class="row">
+                        <div class="col-md-2"></div>
+                        <div class="col-md-4">
+                            <b>@Html.LabelFor(model => model.HrNotAve)</b>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">access_time</i>
+                                </span>
+                                <div class="form-line">
+                                    @Html.EditorFor(model => model.HrNotAve, new { htmlAttributes = new { @class = "form-control datetimepicker", placeholder = "Seleccione fecha y hora...", id = "txtHrNotAve", required = "required" } })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <b>@Html.LabelFor(model => model.HrIniRep)</b>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">access_time</i>
+                                </span>
+                                <div class="form-line">
+                                    @Html.EditorFor(model => model.HrIniRep, new { htmlAttributes = new { @class = "form-control datetimepicker", placeholder = "Seleccione fecha y hora...", id = "txtHrIni", required = "required" } })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-2"></div>
+                    </div>
+                    <div class="row">
+                        <div class="card clearfix">
+                            <div class="header" style="background-color:#009688">
+                                <h2>
+                                    Tiempo Total de Reparación [TTR] - Estratificación (minutos)
+                                </h2>
+                            </div>
+                            <div class="body">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <b>@Html.LabelFor(model => model.TEspIniTec)</b>
+                                        <div class="input-group">
+                                            <span class="input-group-addon">
+                                                <i class="material-icons">timer</i>
+                                            </span>
+                                            <div class="form-line">
+                                                @Html.EditorFor(model => model.TEspIniTec, new { htmlAttributes = new { @class = "form-control ttr", placeholder = "Ingrese minutos...", @type = "number", @min = "0", required = "required" } })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <b>@Html.LabelFor(model => model.TDiagn)</b>
+                                        <div class="input-group">
+                                            <span class="input-group-addon">
+                                                <i class="material-icons">timer</i>
+                                            </span>
+                                            <div class="form-line">
+                                                @Html.EditorFor(model => model.TDiagn, new { htmlAttributes = new { @class = "form-control ttr", placeholder = "Ingrese minutos...", @type = "number", @min = "0", required = "required" } })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <b>@Html.LabelFor(model => model.TEspRep)</b>
+                                        <div class="input-group">
+                                            <span class="input-group-addon">
+                                                <i class="material-icons">timer</i>
+                                            </span>
+                                            <div class="form-line">
+                                                @Html.EditorFor(model => model.TEspRep, new { htmlAttributes = new { @class = "form-control ttr", placeholder = "Ingrese minutos...", @type = "number", @min = "0", required = "required" } })                                                
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-2"></div>
+                                    <div class="col-md-4">
+                                        <b>@Html.LabelFor(model => model.TRepCamP)</b>
+                                        <div class="input-group">
+                                            <span class="input-group-addon">
+                                                <i class="material-icons">timer</i>
+                                            </span>
+                                            <div class="form-line">
+                                                @Html.EditorFor(model => model.TRepCamP, new { htmlAttributes = new { @class = "form-control ttr", placeholder = "Ingrese minutos...", @type = "number", @min = "0", required = "required" } })                                                
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <b>@Html.LabelFor(model => model.PruTieArr)</b>
+                                        <div class="input-group">
+                                            <span class="input-group-addon">
+                                                <i class="material-icons">timer</i>
+                                            </span>
+                                            <div class="form-line">
+                                                @Html.EditorFor(model => model.PruTieArr, new { htmlAttributes = new { @class = "form-control ttr", placeholder = "Ingrese minutos...", @type = "number", @min = "0", required = "required" } })
+                                                
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2"></div>
+                                </div>
+                            </div>
+                        </div>, 
+                    </div>
+                    <div class="row">
+                        <div class="col-md-2"></div>
+                        <div class="col-md-4">
+                            <b>@Html.LabelFor(model => model.HrFinRepEnt)</b>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">access_time</i>
+                                </span>
+                                <div class="form-line">
+                                    @Html.EditorFor(model => model.HrFinRepEnt, new { htmlAttributes = new { @class = "form-control datetimepicker", placeholder = "Seleccione fecha y hora...", id = "txtHrFin", required = "required" } })                                    
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <b>@Html.LabelFor(model => model.TiempoTotal)</b>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">timer</i>
+                                </span>
+                                <div class="form-line">
+                                    @Html.EditorFor(model => model.TiempoTotal, new { htmlAttributes = new { @class = "form-control", placeholder = "Ingrese minutos...", @type = "number", @min = "0", id = "txtTiempoTotal", @readonly = "readonly", style = "font-weight:bold", required = "required" } })                                
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+
+                        </div>
+                    </div>
+                    <div class="row text-center">
+                        <button id="btnCalTtr" class="btn bg-teal waves-effect" type="button" style="width:30%;">
+                            <i class="material-icons">update</i>
+                            <span>Calcular tiempo</span>
+                        </button>
+                    </div>
+                </section>
+
+                <h3>Información básica</h3>
+                <section>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <b>@Html.LabelFor(model => model.NumAviso)</b>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">confirmation_number</i>
+                                </span>
+                                <div class="form-line">
+                                    @Html.EditorFor(model => model.NumAviso, new { htmlAttributes = new { @class = "form-control", placeholder = "Escriba el número de aviso aquí...", required="required" } })                                   
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <b>@Html.LabelFor(model => model.IdTipoAveria)</b>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">warning</i>
+                                </span>
+                                <div class="form-line">
+                                    <select name="IdTipoAveria" class="selectpicker show-tick IdTipoAveria" required>
+                                        @foreach (var item in Model.TipoAveriaList)
+                                        {
+                                            <option value="@item.Value">@item.Text</option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <b><label>Turno</label></b>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">work</i>
+                                </span>
+                                <div class="form-line">
+                                    <select name="IdTurno" class="selectpicker show-tick IdTurno" required>
+                                        @for (int i = 1; i < 4; i++)
+                                        {
+                                            <option style="align-content:center;" value="@i">@i</option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="card">
+                                <div class="header">
+                                    <h2 class="tit">
+                                        Descripción gráfica de la falla [dibujos y/o planos]
+                                    </h2>
+                                </div>
+                                <div class="body">
+                                    <div class="dropzone" id="dropzoneJsForm">
+                                        <div class="dz-default dz-message gray_cube">
+                                            <div class="drag-icon-cph">
+                                                <i class="material-icons">touch_app</i>
+                                            </div>
+                                            <h3>Arrastre imágenes aquí o presione click para cargar...</h3>
+                                            <em>(Máximo <strong>2</strong> imágenes permitidas.)</em>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.DescripcionAveria)
+                                @Html.TextAreaFor(model => model.DescripcionAveria, 4, 0, new { @class = "form-control rounded-10", placeholder = "Si la reparación no se ha terminado en su totalidad, indique que necesita que se realice para terminarla...", required="required" })
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Accion)
+                                <br />
+                                <br />
+                                @Html.RadioButton("Accion", "Ajuste", new { @class = "with-gap", id = "a" })
+                                <label class="labelWOBold" for="a">Ajuste</label>
+                                <br />
+                                @Html.RadioButton("Accion", "Cambio de componente", true, new { @class = "with-gap", id = "cc" })
+                                <label class="labelWOBold" for="cc">Cambio de componente</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="panReps" class="row">
+                        <div class="col-md-3">
+                            <button id="btnAddRep" class="btn bg-teal waves-effect" type="button" style="width:100%">
+                                <i class="material-icons">playlist_add</i>
+                                <span>Agregar repuesto</span>
+                            </button>
+
+                            <button id="btnDeleteLast" class="btn bg-teal waves-effect" type="button" style="width:100%">
+                                <i class="material-icons">delete_sweep</i>
+                                <span>Quitar último repuesto</span>
+                            </button>
+
+                            <button id="btnDeleteAll" class="btn bg-teal waves-effect" type="button" style="width:100%">
+                                <i class="material-icons">clear_all</i>
+                                <span>Quitar todos los repuestos</span>
+                            </button>
+                        </div>
+                        <div class="col-md-9">
+                            <div class="card clearfix" style="width:100%; margin: 0 auto;">
+                                <div class="header" style="background-color:#009688">
+                                    <h2>
+                                        Repuestos utilizados
+                                    </h2>
+                                </div>
+                                <div class="body">
+                                    <table id="tblRepuestos" class="table table-striped table-bordered ignore" style="width:100%;">
+                                        <thead>
+                                            <tr>
+                                                <th>Codigo Sap</th>
+                                                <th>Descripción</th>
+                                                <th>Cantidad</th>
+                                                <th>Costo [COP]</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <h3>Identificación de causas raices</h3>
+                <section>
+                    <div class="card">
+                        <div class="header" style="background-color:#009688">
+                            <h2>
+                                IDENTIFICACION DE CAUSAS RAICES - 5G
+                                <small class="col-white">Llene esta seccion teniendo en cuenta el principio de los 5G</small>
+                            </h2>
+                        </div>
+                        <div class="body">
+                            <div class="table-responsive-md">
+                                <table class="table table-bordered ">
+                                    <tbody>
+                                        <tr>
+                                            <td style="width:30%">
+                                                <div class="gray_cube">
+                                                    <strong>
+                                                        GEMBA:
+                                                    </strong>
+                                                    (Ir al lugar donde se produce el problema)
+                                                </div>
+                                            </td>
+                                            <td style="width:50%">
+                                                @Html.TextAreaFor(model => model.GembaDesc, 0, 40, new { @class = "form-control rounded-10", placeholder = "...", style = "width:100%; max-width:100%;" })
+                                            </td>
+                                            <td style="width:20%">
+                                                <div class="gray_cube">
+                                                    <div class="switch">
+                                                        <label>NOK<input type="checkbox"><span class="lever"></span>OK</label>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <div class="gray_cube center-align">
+                                                    <strong>
+                                                        GEMBUTSU:
+                                                    </strong>
+                                                    (Ver los objetos, piezas y materiales reales que participan en el problema)
+                                                </div>
+                                            </td>
+                                            <td>
+                                                @Html.TextAreaFor(model => model.GembutsuDesc, 0, 40, new { @class = "form-control rounded-10", placeholder = "..." })
+                                            </td>
+                                            <td style="width:20%">
+                                                <div class="gray_cube">
+                                                    <div class="switch">
+                                                        <label>NOK<input type="checkbox"><span class="lever"></span>OK</label>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <div class="gray_cube center-align">
+                                                    <strong>
+                                                        GENJITSU:
+                                                    </strong>
+                                                    (Confirmar una descripcion precisa y cuantificada del problema)
+                                                </div>
+                                            </td>
+                                            <td>
+                                                @Html.TextAreaFor(model => model.GenjitsuDesc, 0, 40, new { @class = "form-control rounded-10", placeholder = "..." })
+                                            </td>
+                                            <td style="width:20%">
+                                                <div class="gray_cube">
+                                                    <div class="switch">
+                                                        <label>NOK<input type="checkbox"><span class="lever"></span>OK</label>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <div class="gray_cube center-align">
+                                                    <strong>
+                                                        GENRI:
+                                                    </strong>
+                                                    (Se refiere a la teoria. Principios mecanicos y fisicos que rigen la operación)
+                                                </div>
+                                            </td>
+                                            <td>
+                                                @Html.TextAreaFor(model => model.GenriDesc, 0, 40, new { @class = "form-control rounded-10", placeholder = "..." })
+                                            </td>
+                                            <td style="width:20%">
+                                                <div class="gray_cube">
+                                                    <div class="switch">
+                                                        <label>NOK<input type="checkbox"><span class="lever"></span>OK</label>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <div class="gray_cube center-align">
+                                                    <strong>
+                                                        GENSOKU:
+                                                    </strong>
+                                                    (Siguen el estandar de operación.Las condiciones requeridas para operar sin causar problemas)
+                                                </div>
+                                            </td>
+                                            <td>
+                                                @Html.TextAreaFor(model => model.GensokuDesc, 0, 40, new { @class = "form-control rounded-10", placeholder = "..." })
+                                            </td>
+                                            <td style="width:20%">
+                                                <div class="gray_cube">
+                                                    <div class="switch">
+                                                        <label>NOK<input type="checkbox"><span class="lever"></span>OK</label>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="header" style="background-color:#009688">
+                            <h2>
+                                5W + 1H
+                            </h2>
+                        </div>
+                        <div class="body">
+                            <div class="table-responsive-md">
+                                <table class="table table-bordered ">
+                                    <tbody>
+                                        <tr>
+                                            <td style="width:40%">
+                                                <div class="gray_cube">
+                                                    <strong>
+                                                        QUÉ ( WHAT)?
+                                                    </strong>
+                                                    ¿Qué sucedió? ¿Cuál es el problema?
+                                                </div>
+                                            </td>
+                                            <td style="width:60%">
+                                                @Html.TextAreaFor(model => model.QueDesc, 0, 40, new { @class = "form-control rounded-10", placeholder = "...", style = "width:100%; max-width:100%;" })
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="width:40%">
+                                                <div class="gray_cube">
+                                                    <strong>
+                                                        DÓNDE (WHERE)?
+                                                    </strong>
+                                                    ¿Dónde usted esta viendo los problemas? (lugar/maquina/línea/componente)
+                                                </div>
+                                            </td>
+                                            <td style="width:60%">
+                                                @Html.TextAreaFor(model => model.DondeDesc, 0, 40, new { @class = "form-control rounded-10", placeholder = "...", style = "width:100%; max-width:100%;" })
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="width:40%">
+                                                <div class="gray_cube">
+                                                    <strong>
+                                                        CUÁNDO (WHEN)?
+                                                    </strong>
+                                                    ¿Cuándo usted esta viendo los problemas? No es solamente día y hora, sino cualquier relación temporal con el fenómeno.
+                                                </div>
+                                            </td>
+                                            <td style="width:60%">
+                                                @Html.TextAreaFor(model => model.CuandoDesc, 0, 40, new { @class = "form-control rounded-10", placeholder = "...", style = "width:100%; max-width:100%;" })
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="width:40%">
+                                                <div class="gray_cube">
+                                                    <strong>
+                                                        QUIÉN (WHO)?
+                                                    </strong>
+                                                    ¿El problema está relacionado con la habilidad?
+                                                </div>
+                                            </td>
+                                            <td style="width:60%">
+                                                @Html.TextAreaFor(model => model.QuienDesc, 0, 40, new { @class = "form-control rounded-10", placeholder = "...", style = "width:100%; max-width:100%;" })
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="width:40%">
+                                                <div class="gray_cube">
+                                                    <strong>
+                                                        CUÁL (WHICH)?
+                                                    </strong>
+                                                    ¿Existe tendencia aleatoria o hay un patrón? Existe relación con otras variables?
+                                                </div>
+                                            </td>
+                                            <td style="width:60%">
+                                                @Html.TextAreaFor(model => model.CualDesc, 0, 40, new { @class = "form-control rounded-10", placeholder = "...", style = "width:100%; max-width:100%;" })
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="width:40%">
+                                                <div class="gray_cube">
+                                                    <strong>
+                                                        CÓMO (HOW)?
+                                                    </strong>
+                                                    ¿Cómo difiere con respecto al óptimo? ¿Cuál es el costo ($), que cantidad, en que tiempo?
+                                                </div>
+                                            </td>
+                                            <td style="width:60%">
+                                                @Html.TextAreaFor(model => model.ComoDesc, 0, 40, new { @class = "form-control rounded-10", placeholder = "...", style = "width:100%; max-width:100%;" })
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="width:100%" colspan="2">
+                                                <hr />
+                                                <div class="gray_cube">
+                                                    <strong>
+                                                        HOW + WHAT + WHERE + WHEN + WHICH + WHO = FENOMENO
+                                                    </strong>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="width:100%" colspan="2">
+                                                @Html.TextAreaFor(model => model.FenomenoDesc, 0, 40, new { @class = "form-control rounded-10", placeholder = "...", style = "width:100%; max-width:100%;" })
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card clearfix" style="width:100%; margin: 0 auto;">
+                        <div class="header" style="background-color:#009688">
+                            <h2>
+                                ANÁLISIS POR QUÉ - POR QUÉ
+                            </h2>
+                            <button id="btnAddxQue" type="button" class="btn btn-default waves-effect btn-circle m-t-10 m-r-10" data-toggle="tooltip" data-placement="botton" title="Agregar POR QUÉ...">
+                                <i class="material-icons">playlist_add</i>
+                            </button>
+                            <button id="btnDeleteLastxQ" type="button" class="btn btn-default waves-effect btn-circle m-t-10 m-r-10" data-toggle="tooltip" data-placement="botton" title="Quitar último POR QUÉ...">
+                                <i class="material-icons">delete_sweep</i>
+                            </button>
+                            <button id="btnDeleteAllxQue" type="button" class="btn btn-default waves-effect btn-circle m-t-10 m-r-10" data-toggle="tooltip" data-placement="botton" title="Eliminar todos los registros...">
+                                <i class="material-icons">clear_all</i>
+                            </button>
+                        </div>
+                        <div class="body">
+                            <table id="tblPorque" class="table table-striped table-bordered ignore" style="width:100%;">
+                                <thead>
+                                    <tr>
+                                        <th>1 - Por qué?</th>
+                                        <th>2 - Por qué?</th>
+                                        <th>3 - Por qué?</th>
+                                        <th>4 - Por qué?</th>
+                                        <th>5 - Por qué?</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="row" style="margin-top:5px;">
+                        <div class="col-md-12">
+                            <div class="card">
+                                <div class="header">
+                                    <h2 class="tit">
+                                        Dibujo / Diagrama / Foto del 5 Por qué
+                                    </h2>
+                                </div>
+                                <div class="body">
+                                    <div class="dropzone" id="dropzoneJsFormCr">
+                                        <div class="dz-default dz-message">
+                                            <div class="drag-icon-cph">
+                                                <i class="material-icons">touch_app</i>
+                                            </div>
+                                            <h3>Arrastre imágenes aquí o presione click para cargar...</h3>
+                                            <em>(Máximo <strong>2</strong> imágenes permitidas.)</em>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card clearfix" style="width:100%; margin: 0 auto;">
+                        <div class="header" style="background-color:#009688">
+                            <h2>
+                                GRÁFICA DE LA BAÑERA
+                                <small class="col-white">¿Qué tipo de falla es? Diligencie las fechas de los mantenimiento planeados y selecciones la causa raiz basada en el gráfico de la bañera</small>
+                            </h2>
+                        </div>
+                        <div class="body">
+                            <div id="grafico_bañera">
+                                <div class="img-container">
+                                    <img id="img_bañera" src="~/Content/images/grafico_bañera.JPG" alt="Grafico de la bañera." width="420" height="250" />
+                                </div>
+                                <div id="divFechaLastMtto">
+                                    <b>Fecha último mtto</b>
+                                    <div class="input-group">
+                                        <span class="input-group-addon">
+                                            <i class="material-icons">date_range</i>
+                                        </span>
+                                        <div class="form-line">
+                                            @Html.EditorFor(model => model.FchUltimoMtto, new { htmlAttributes = new { @class = "form-control datepicker", placeholder = "Seleccione fecha..." } })
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div id="divFechaProxMtto">
+                                    <b>Fecha próximo mtto</b>
+                                    <div class="input-group">
+                                        <span class="input-group-addon">
+                                            <i class="material-icons">date_range</i>
+                                        </span>
+                                        <div class="form-line">
+                                            @Html.EditorFor(model => model.FchProxMtto, new { htmlAttributes = new { @class = "form-control datepicker", placeholder = "Seleccione fecha..." } })
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div id="divOpcionesBañera">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                @Html.RadioButton("OpBa", "1", new { @class = "with-gap", id = "a1" })
+                                                <label for="a1">Error humano (instalación)</label>
+                                                <br />
+                                                @Html.RadioButton("OpBa", "2", true, new { @class = "with-gap", id = "a2" })
+                                                <label for="a2">Falla de diseño</label>
+                                                <br />
+                                                @Html.RadioButton("OpBa", "3", new { @class = "with-gap", id = "a3" })
+                                                <label for="a3">Calidad de repuestos (factores externos)</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                @Html.RadioButton("OpBa", "4", new { @class = "with-gap", id = "a4" })
+                                                <label for="a4">Condiciones de operación</label>
+                                                <br />
+                                                @Html.RadioButton("OpBa", "5", true, new { @class = "with-gap", id = "a5" })
+                                                <label for="a5">Condiciones básicas</label>
+                                                <br />
+                                                @Html.RadioButton("OpBa", "6", new { @class = "with-gap", id = "a6" })
+                                                <label for="a6">Error humano (en operación)</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                @Html.RadioButton("OpBa", "7", new { @class = "with-gap", id = "a7" })
+                                                <label for="a7">No PM</label>
+                                                <br />
+                                                @Html.RadioButton("OpBa", "8", true, new { @class = "with-gap", id = "a8" })
+                                                <label for="a8">No AM</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card clearfix" style="width:100%; margin-top: 30px;">
+                        <div class="header" style="background-color:#009688">
+                            <h2>
+                                CICLO DE LA CAUSA RAIZ
+                            </h2>
+                        </div>
+                        <div class="body">
+                            <div id="grafico_bañera">
+                                <div class="img-container">
+                                    <img id="img_ciclo_raiz" src="~/Content/images/causa_raiz.JPG" alt="Grafico de la bañera." width="420" height="250" />
+                                </div>
+                                <div id="FI1Opt">
+                                    <div class="form-group">
+                                        @Html.RadioButton("OpCC", "1", new { @class = "with-gap", id = "cc1" })
+                                        <label for="cc1"></label>
+                                    </div>
+                                </div>
+                                <div id="FI2Opt">
+                                    <div class="form-group">
+                                        @Html.RadioButton("OpCC", "2", new { @class = "with-gap", id = "cc2" })
+                                        <label for="cc2"></label>
+                                    </div>
+                                </div>
+                                <div id="FI3Opt">
+                                    <div class="form-group">
+                                        @Html.RadioButton("OpCC", "3", new { @class = "with-gap", id = "cc3" })
+                                        <label for="cc3"></label>
+                                    </div>
+                                </div>
+                                <div id="FI4Opt">
+                                    <div class="form-group">
+                                        @Html.RadioButton("OpCC", "4", new { @class = "with-gap", id = "cc4" })
+                                        <label for="cc4"></label>
+                                    </div>
+                                </div>
+                                <div id="FI5Opt">
+                                    <div class="form-group">
+                                        @Html.RadioButton("OpCC", "5", new { @class = "with-gap", id = "cc5" })
+                                        <label for="cc5"></label>
+                                    </div>
+                                </div>
+                                <div id="FI6Opt">
+                                    <div class="form-group">
+                                        @Html.RadioButton("OpCC", "6", new { @class = "with-gap", id = "cc6" })
+                                        <label for="cc6"></label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <h3>Contramedidas - Responsables</h3>
+                <section>                    
+                    <div class="card clearfix" style="width:100%; margin-top: 30px;">
+                        <div class="header" style="background-color:#009688">
+                            <h2>
+                                LISTA DE ACCIONES
+                            </h2>
+                        </div>
+                        <div class="body">
+                            <div id="gridAcciones" style="width:100%;height:300px;"></div>
+                        </div>
+                    </div>
+
+                    <div class="card clearfix" style="width:100%; margin-top: 30px;">
+                        <div class="header" style="background-color:#009688">
+                            <h2>
+                                INVOLUCRADOS
+                            </h2>
+                        </div>
+                        <div class="body tags">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <b>@Html.LabelFor(model => model.IdDiligenciado)</b>
+                                    <div class="input-group">
+                                        <span class="input-group-addon">
+                                            <i class="material-icons">person</i>
+                                        </span>
+                                        <div class="form-line">
+                                            @Html.EditorFor(model => model.IdDiligenciado)
+                                            @Html.ValidationMessageFor(model => model.IdDiligenciado, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <b>@Html.LabelFor(model => model.IdTecMattInv)</b>
+                                    <div class="input-group">
+                                        <span class="input-group-addon">
+                                            <i class="material-icons">person</i>
+                                        </span>
+                                        <div class="form-line">
+                                            @Html.EditorFor(model => model.IdTecMattInv)
+                                            @Html.ValidationMessageFor(model => model.IdTecMattInv, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <b>@Html.LabelFor(model => model.IdOpersInv)</b>
+                                    <div class="input-group">
+                                        <span class="input-group-addon">
+                                            <i class="material-icons">person</i>
+                                        </span>
+                                        <div class="form-line">
+                                            @Html.EditorFor(model => model.IdOpersInv)
+                                            @Html.ValidationMessageFor(model => model.IdOpersInv, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <b>@Html.LabelFor(model => model.IdAnaElab)</b>
+                                    <div class="input-group">
+                                        <span class="input-group-addon">
+                                            <i class="material-icons">person</i>
+                                        </span>
+                                        <div class="form-line">
+                                            @Html.EditorFor(model => model.IdAnaElab)
+                                            @Html.ValidationMessageFor(model => model.IdAnaElab, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <b>@Html.LabelFor(model => model.FchAnaElab)</b>
+                                    <div class="input-group">
+                                        <span class="input-group-addon">
+                                            <i class="material-icons">date_range</i>
+                                        </span>
+                                        <div class="form-line">
+                                            @Html.EditorFor(model => model.FchAnaElab, new { htmlAttributes = new { @class = "datepicker", placeholder = "Seleccione fecha..." } })
+                                            @Html.ValidationMessageFor(model => model.FchAnaElab, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <b>@Html.LabelFor(model => model.IdContMedDef)</b>
+                                    <div class="input-group">
+                                        <span class="input-group-addon">
+                                            <i class="material-icons">person</i>
+                                        </span>
+                                        <div class="form-line">
+                                            @Html.EditorFor(model => model.IdContMedDef)
+                                            @Html.ValidationMessageFor(model => model.IdContMedDef, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <b>@Html.LabelFor(model => model.FchDefConMed)</b>
+                                    <div class="input-group">
+                                        <span class="input-group-addon">
+                                            <i class="material-icons">date_range</i>
+                                        </span>
+                                        <div class="form-line">
+                                            @Html.EditorFor(model => model.FchDefConMed, new { htmlAttributes = new { @class = "datepicker", placeholder = "Seleccione fecha..." } })
+                                            @Html.ValidationMessageFor(model => model.FchDefConMed, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <b>@Html.LabelFor(model => model.IdEjeValPor)</b>
+                                    <div class="input-group">
+                                        <span class="input-group-addon">
+                                            <i class="material-icons">person</i>
+                                        </span>
+                                        <div class="form-line">
+                                            @Html.EditorFor(model => model.IdEjeValPor)
+                                            @Html.ValidationMessageFor(model => model.IdEjeValPor, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <b>@Html.LabelFor(model => model.FchEjeVal)</b>
+                                    <div class="input-group">
+                                        <span class="input-group-addon">
+                                            <i class="material-icons">date_range</i>
+                                        </span>
+                                        <div class="form-line">
+                                            @Html.EditorFor(model => model.FchEjeVal, new { htmlAttributes = new { @class = "datepicker", placeholder = "Seleccione fecha..." } })
+                                            @Html.ValidationMessageFor(model => model.FchEjeVal, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </section>
+                
+                <h3>Resumen - Cálculo</h3>
+                <section>
+                    <b>Procedimiento para calcular MTTR</b>
+                    <hr />
+                    <span>
+                        $$\dfrac{TAverías}{NumAverías} $$
+                        <br />
+                        <br />
+                        Donde <b>TAverías</b> es la suma de los tiempos de la actual avería y <b>NumAverías</b> el número total de averías de la línea seleccionada.
+                    </span>
+                </section>
+            }
+        </div>
+    </div>
+</div>
+
+
+
+
+<!-- JQuery Steps Plugin Js -->
+<script src="~/Scripts/plugins/jquery-steps/jquery.steps.js"></script>
+<!-- Select Plugin Js -->
+<script src="~/Scripts/plugins/bootstrap-select/js/bootstrap-select.min.js"></script>
+<!--TOOLTIPSTER JS-->
+<script type="text/javascript" src="~/Scripts/plugins/tooltipster-master/js/tooltipster.bundle.min.js"></script>
+<!-- Input Mask Plugin Js -->
+<script src="~/Scripts/plugins/jquery-inputmask/jquery.inputmask.bundle.js"></script>
+<!-- Editable Table Plugin Js -->
+<script src="~/Scripts/plugins/editable-table/mindmup-editabletable.js"></script>
+<script src="~/Scripts/plugins/editable-table/numeric-input-example.js"></script>
+<!-- Moment Plugin Js -->
+<script src="~/Scripts/plugins/momentjs/moment.js"></script>
+<!-- Bootstrap Material Datetime Picker Plugin Js -->
+<script src="~/Scripts/plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js"></script>
+<!-- TAGSINPUT Plugin Js -->
+<script src="~/Scripts/plugins/bootstrap-tagsinput/bootstrap-tagsinput.js"></script>
+<!-- TYPEHEAD Plugin Js -->
+<script src="~/Scripts/plugins/bootstrap-tagsinput/typeahead.bundle.js"></script>
+<!-- Bloodhound Plugin Js -->
+<script src="~/Scripts/plugins/bootstrap-tagsinput/bloodhound.js"></script>
+<!-- KATEX Plugin Js -->
+<script src="~/Scripts/plugins/katex/katex.js"></script>
+<script src="~/Scripts/plugins/katex/auto-render.min.js"></script>
+<!--CUSTOM DROPZONE-->
+<script src="~/Scripts/plugins/dropzone-custom/dropzone.js"></script>
+<!--SLICKGRID JS-->
+<script src="~/Scripts/plugins/slickgrid/lib/jquery.event.drag-2.3.0.js"></script>
+
+<script src="~/Scripts/plugins/slickgrid/slick.core.js"></script>
+<script src="~/Scripts/plugins/slickgrid/slick.grid.js"></script>
+<script src="~/Scripts/plugins/slickgrid/slick.formatters.js"></script>
+<script src="~/Scripts/plugins/slickgrid/slick.editors.js"></script>
+
+<script src="~/Scripts/plugins/slickgrid/lib/firebugx.js"></script>
+<script src="~/Scripts/plugins/slickgrid/lib/jquery-ui-1.11.3.js"></script>
+<script src="~/Scripts/plugins/slickgrid/lib/jquery-ui.min.js"></script>
+<script src="~/Scripts/plugins/slickgrid/lib/select2.js"></script>
+
+<script src="~/Scripts/plugins/slickgrid/plugins/slick.cellrangeselector.js"></script>
+<script src="~/Scripts/plugins/slickgrid/plugins/slick.cellselectionmodel.js"></script>
+<script src="~/Scripts/plugins/slickgrid/plugins/slick.cellrangedecorator.js"></script>
+
+
+<script>
+    var af1 = 0;
+    var af2 = 0;
+    var myDropzone1;
+    var myDropzone2;
+    Dropzone.autoDiscover = false;
+    //DROPZONE
+    $(function () {
+    var fields = 0;
+    myDropzone1 = new Dropzone("div#dropzoneJsForm",
+        {
+            //prevents Dropzone from uploading dropped files immediately
+            autoProcessQueue: false,
+            acceptedFiles: 'image/*',
+            addRemoveLinks: true,
+            dictRemoveFile: 'Remover archivo',
+            maxFiles:2,
+            url: '@Url.Content("~/")' + "Home/CreateKpi",
+            init: function () {
+                var submitButton = document.querySelector("#submit-all");
+                var myDropzone = this; //closure
+
+                //submitButton.addEventListener("click", function () {
+                //    myDropzone.processQueue(); //tell Dropzone to process all queued files
+                //});
+            },
+            sending: function (file, xhr, formData) {
+                // Will send the filesize along with the file as POST data.
+
+                var text = $('#dropzoneJsForm').find('span[name^="dz_text"]').get(fields).textContent;
+                fields++;
+                //$('span[name^="dz_text"]').each(function () {
+                    console.log(text);
+                //});
+
+                formData.append("image_desc",text);
+            }
+        });
+
+        @*Dropzone.options.dropzoneJsForm = {
+
+            //prevents Dropzone from uploading dropped files immediately
+            autoProcessQueue: false,
+            acceptedFiles: 'image/*',
+            addRemoveLinks: true,
+            dictRemoveFile: 'Remover archivo',
+            maxFiles:2,
+            url: '@Url.Content("~/")' + "Home/CreateKpi",
+            init: function () {
+                var submitButton = document.querySelector("#submit-all");
+                var myDropzone = this; //closure
+
+                //submitButton.addEventListener("click", function () {
+                //    myDropzone.processQueue(); //tell Dropzone to process all queued files
+                //});
+            },
+            sending: function (file, xhr, formData) {
+                // Will send the filesize along with the file as POST data.
+
+                var text = $('#dropzoneJsForm').find('span[name^="dz_text"]').get(fields).textContent;
+                fields++;
+                //$('span[name^="dz_text"]').each(function () {
+                    console.log(text);
+                //});
+
+                formData.append("image_desc",text);
+            }
+        };*@
+
+        
+        //DROPZONE CAUSAS RAICES
+        var fieldsCr = 0;
+        
+        myDropzone2 = new Dropzone("#dropzoneJsFormCr",
+            {
+                autoProcessQueue: false,
+                acceptedFiles: 'image/*',
+                addRemoveLinks: true,
+                dictRemoveFile: 'Remover archivo',
+                maxFiles:2,
+                url: '@Url.Content("~/")' + "Home/CreateKpi",
+                init: function () {
+                    var submitButton = document.querySelector("#submit-all");
+                    var myDropzone = this; //closure
+
+                    //submitButton.addEventListener("click", function () {
+                    //    myDropzone.processQueue(); //tell Dropzone to process all queued files
+                    //});
+                },
+                sending: function (file, xhr, formData) {
+                    // Will send the filesize along with the file as POST data.
+
+                    var text = $('#dropzoneJsFormCr').find('span[name^="dz_text"]').get(fields).textContent;
+                    fieldsCr++;
+                    //$('span[name^="dz_text"]').each(function () {
+                        console.log(text);
+                    //});
+
+                    formData.append("image_desc",text);
+                }
+            });
+        //Dropzone.options.dropzoneJsFormCr
+        @*myDropzone.options = {
+
+            //prevents Dropzone from uploading dropped files immediately
+            autoProcessQueue: false,
+            acceptedFiles: 'image/*',
+            addRemoveLinks: true,
+            dictRemoveFile: 'Remover archivo',
+            maxFiles:2,
+            url: '@Url.Content("~/")' + "Home/CreateKpi",
+            init: function () {
+                var submitButton = document.querySelector("#submit-all");
+                var myDropzone = this; //closure
+
+                //submitButton.addEventListener("click", function () {
+                //    myDropzone.processQueue(); //tell Dropzone to process all queued files
+                //});
+            },
+            sending: function (file, xhr, formData) {
+                // Will send the filesize along with the file as POST data.
+
+                var text = $('#dropzoneJsFormCr').find('span[name^="dz_text"]').get(fields).textContent;
+                fieldsCr++;
+                //$('span[name^="dz_text"]').each(function () {
+                    console.log(text);
+                //});
+
+                formData.append("image_desc",text);
+            }
+        };*@
+    });
+
+</script>
+
+<script>
+    //SLICKGRID
+    var grid;
+    var tiposAcciones = {
+        AP: 'Acción preventiva',
+        CM: 'Contramedidas o acciones inmediatas',
+        RH: 'Réplica horizontal'
+    };
+
+    function populateSelect(select, dataSource, addBlank) {
+        var index, len, newOption;
+
+        if (addBlank) { select.appendChild(new Option('', '')); }
+
+        $.each(dataSource, function (value, text) {
+            newOption = new Option(text.Nombre, text.Id);
+            select.appendChild(newOption);
+        });
+    };
+
+    function PopulateSelectTipo(select, dataSource, addBlank) {
+        var index, len, newOption;
+        if (addBlank) { select.appendChild(new Option('', '')); }
+        $.each(dataSource, function (value, text) {
+            newOption = new Option(text, value);
+            select.appendChild(newOption);
+        });
+    };
+
+    function SelectEditorTipo(args) {
+        var $input;
+        var defaultValue;
+        this.keyCaptureList = [Slick.keyCode.UP, Slick.keyCode.DOWN, Slick.keyCode.ENTER];
+
+        this.init = function () {
+            $input = $('<select></select>');
+            $input.width(args.container.clientWidth + 3);
+            PopulateSelectTipo($input[0], args.column.dataSource, true);
+            $input.appendTo(args.container);
+            $input.focus().select();
+
+            $input.select2({
+                placeholder: '-',
+                allowClear: true
+            });
+        };
+
+        this.destroy = function () {
+            $input.select2('destroy');
+        };
+
+        this.show = function () {
+
+        };
+        this.hide = function () {
+            $input.select('results_hide');
+        };
+        this.focus = function () {
+            $input.select2('input_focus');
+        };
+        this.loadValue = function (item) {
+            defaultValue = item[args.column.field];
+            $input.val(defaultValue);
+            $input[0].defaultValue = defaultValue;
+            $input.trigger('change.select2');
+        };
+        this.serializeValue = function () {
+            return $input.val();
+        };
+        this.applyValue = function (item, state) {
+            item[args.column.field] = state;
+        }
+        this.isValueChanged = function () {
+            return (!($input.val() == "" && defaultValue == null)) && ($input.val() != defaultValue);
+        };
+        this.validate = function () {
+            return {
+                valid: true,
+                msg: null
+            };
+        };
+        this.init();
+    }
+
+    function SelectEditor(args) {
+        var $input;
+        var defaultValue;
+        this.keyCaptureList = [Slick.keyCode.UP, Slick.keyCode.DOWN, Slick.keyCode.ENTER];
+
+        this.init = function () {
+            $input = $('<select></select>');
+            $input.width(args.container.clientWidth + 3);
+            populateSelect($input[0], args.column.dataSource, true);
+            $input.appendTo(args.container);
+            $input.focus().select();
+
+            $input.select2({
+                placeholder: '-',
+                allowClear: true
+            });
+        };
+
+        this.destroy = function () {
+            $input.select2('destroy');
+        };
+
+        this.show = function () {
+
+        };
+        this.hide = function () {
+            $input.select('results_hide');
+        };
+        this.focus = function () {
+            $input.select2('input_focus');
+        };
+        this.loadValue = function (item) {
+            defaultValue = item[args.column.field];
+            $input.val(defaultValue);
+            $input[0].defaultValue = defaultValue;
+            $input.trigger('change.select2');
+        };
+        this.serializeValue = function () {
+            return $input.val();
+        };
+        this.applyValue = function (item, state) {
+            item[args.column.field] = state;
+        }
+        this.isValueChanged = function () {
+            return (!($input.val() == "" && defaultValue == null)) && ($input.val() != defaultValue);
+        };
+        this.validate = function () {
+            return {
+                valid: true,
+                msg: null
+            };
+        };
+        this.init();
+    }
+
+    function select2Formatter(row, cell, value, columnDef, dataContext) {
+        if (value) {
+            return columnDef.dataSource.find((x) => x.Id == value).Nombre || '-';
+        }
+        else {
+            return '-';
+        }
+    }
+
+    function select2FormatterTipo(row, cell, value, columnDef, dataContext) {
+        return columnDef.dataSource[value] || '-';
+    }
+
+    function RemoveClick(index) {
+        var data = grid.getData();
+        data.splice(index, 1);
+        grid.setData(data);
+        grid.render();
+    }
+
+    function initGrid() {
+        var columns =
+            [
+                { id: "accion", name: "Acción", field: "accion", minWidth: 300, editable: true, editor: Slick.Editors.Text },
+                { id: "tipo_accion", name: "Tipo de acción", field: "TipoAccion", minWidth: 200, formatter: select2FormatterTipo, editor: SelectEditorTipo, dataSource: tiposAcciones },
+                { id: "id_responsable", name: "Responsable", field: "Nombre", minWidth: 200, formatter: select2Formatter, editor: SelectEditor, dataSource: user_data },
+                { id: "fecha", name: "Fecha", field: "fecha", minWidth: 130, editor: Slick.Editors.Date },
+                {
+                    id: 'id', name: '#', field: 'id', formatter: function (index, c, id, def, datactx) {
+                        return '<a id="deleteSG" class="btn btn-primary" style="padding:2px;" onclick="RemoveClick(' + index + ')">Eliminar</a>';
+                    }
+                }
+            ];
+
+        var options =
+        {
+            editable: true,
+            enableAddRow: true,
+            enableCellNavigation: true,
+            asyncEditorLoading: false,
+            autoEdit: false
+        };
+
+        var data = [];
+        //for (var i = 0; i < 5; i++) {
+        //    var d = (data[i] = {});
+        //    d["accion"] = "Elemento " + i + 9;
+        //    d["TipoAccion"] = 'RH';
+        //    d["Nombre"] = 2;
+        //    d["fecha"] = getCurrentDate();
+        //}
+
+        grid = new Slick.Grid("#gridAcciones", data, columns, options);
+        grid.setSelectionModel(new Slick.CellSelectionModel());
+        grid.onAddNewRow.subscribe(function (e, args) {
+            var item = args.item;
+            grid.invalidateRow(data.length);
+            data.push(item);
+            grid.updateRowCount();
+            grid.render();
+        });
+
+        firstTime = false;
+    }
+
+    function getCurrentDate() {
+        var today = new Date();
+        var dd = today.getDate();
+        var mm = today.getMonth() + 1; //January is 0!
+        var yyyy = today.getFullYear();
+
+        if (dd < 10) {
+            dd = '0' + dd;
+        }
+
+        if (mm < 10) {
+            mm = '0' + mm;
+        }
+
+        today = mm + '/' + dd + '/' + yyyy;
+        return today;
+    }
+
+    var user_data = {};
+         //INICIALIZAR OBJETO AJAX PARA TRAER DATOS DEL SERVIDOR
+        $.ajax({
+            //PARAMETRIZAR SERVICIO AJAX
+            url: '@Url.Action("GetAllUsersJsonAsync", "Home")',
+            type: 'post',
+            //MOSTRAR LOADER ANTES DE INICIAR LA SOLICITUD
+            beforeSend: function () {
+                $('.page-loader-wrapper').fadeIn();
+            },
+            success: function (response) {
+                user_data = response;
+                //initGrid();
+                //OCULTAR LOADER UNA VEZ CARAGADA LA INFORMACIÓN
+                $('.page-loader-wrapper').fadeOut();
+            },
+            //EN CASO DE ERROR, IMPRIMIRLO
+            error: function (request, status, error) {
+                alert('Error al cargar usuarios Json: ' + request.responseText);
+            }
+    });
+</script>

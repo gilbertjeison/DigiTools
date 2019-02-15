@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="b0b36218106740b3bc8b990dd160618e" Name="Diagram1">
+        <EntityTypeShape EntityType="MttoAppModel.C_TMPCLP476291" Width="1.5" PointX="0.75" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="MttoAppModel.calendario_tipomtto" Width="1.5" PointX="2.75" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="MttoAppModel.calendarioPM" Width="1.5" PointX="4.75" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="MttoAppModel.componentes" Width="1.5" PointX="6.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="MttoAppModel.conjuntos" Width="1.5" PointX="0.75" PointY="6.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="MttoAppModel.epps" Width="1.5" PointX="2.75" PointY="7.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="MttoAppModel.equipos" Width="1.5" PointX="4.75" PointY="7.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="MttoAppModel.ewos" Width="1.5" PointX="6.75" PointY="7.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="MttoAppModel.herramientas" Width="1.5" PointX="8.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="MttoAppModel.lineas" Width="1.5" PointX="8.75" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="MttoAppModel.lista_acciones" Width="1.5" PointX="8.75" PointY="6.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="MttoAppModel.maquinas" Width="1.5" PointX="10.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="MttoAppModel.permisos_trabajo" Width="1.5" PointX="0.75" PointY="10.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="MttoAppModel.plantas" Width="1.5" PointX="2.75" PointY="10.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="MttoAppModel.porques" Width="1.5" PointX="10.75" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="MttoAppModel.programadores" Width="1.5" PointX="10.75" PointY="7.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="MttoAppModel.repuestos_utilizados" Width="1.5" PointX="8.75" PointY="10.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="MttoAppModel.sistemas" Width="1.5" PointX="10.75" PointY="10.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="MttoAppModel.smp" Width="1.5" PointX="12.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="MttoAppModel.smp_pasos" Width="1.5" PointX="12.75" PointY="6.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="MttoAppModel.smp_util" Width="1.5" PointX="12.75" PointY="10.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="MttoAppModel.sop" Width="1.5" PointX="0.75" PointY="13.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="MttoAppModel.sop_pasos" Width="1.5" PointX="2.75" PointY="13.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="MttoAppModel.sop_utils" Width="1.5" PointX="10.75" PointY="13.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="MttoAppModel.tecnicos" Width="1.5" PointX="12.75" PointY="13.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="MttoAppModel.tipo_averia" Width="1.5" PointX="14.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="MttoAppModel.tipos" Width="1.5" PointX="0.75" PointY="1" IsExpanded="true" />
+        <EntityTypeShape EntityType="MttoAppModel.tipos_data" Width="1.5" PointX="3" PointY="0.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="MttoAppModel.turnos" Width="1.5" PointX="14.75" PointY="3.75" IsExpanded="true" />
+        <AssociationConnector Association="MttoAppModel.FK_tipos_data_tipos" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="MttoAppModel.C__MigrationHistory" Width="1.5" PointX="15.375" PointY="12.75" />
+        <EntityTypeShape EntityType="MttoAppModel.AspNetRoles" Width="1.5" PointX="15.375" PointY="8.75" />
+        <EntityTypeShape EntityType="MttoAppModel.AspNetUserClaims" Width="1.5" PointX="19.875" PointY="9.75" />
+        <EntityTypeShape EntityType="MttoAppModel.AspNetUserLogins" Width="1.5" PointX="19.875" PointY="7.25" />
+        <EntityTypeShape EntityType="MttoAppModel.AspNetUsers" Width="1.5" PointX="17.625" PointY="7.125" />
+        <AssociationConnector Association="MttoAppModel.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" />
+        <AssociationConnector Association="MttoAppModel.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" />
+        <AssociationConnector Association="MttoAppModel.AspNetUserRoles" />
+        <EntityTypeShape EntityType="MttoAppModel.tiempos_carga" Width="1.5" PointX="11" PointY="17.875" />
+        <AssociationConnector Association="MttoAppModel.FK_tiempos_carga_lineas" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

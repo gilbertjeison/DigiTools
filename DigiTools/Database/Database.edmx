@@ -1,0 +1,1731 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="MttoAppModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="__MigrationHistory">
+          <Key>
+            <PropertyRef Name="MigrationId" />
+            <PropertyRef Name="ContextKey" />
+          </Key>
+          <Property Name="MigrationId" Type="nvarchar" MaxLength="150" Nullable="false" />
+          <Property Name="ContextKey" Type="nvarchar" MaxLength="300" Nullable="false" />
+          <Property Name="Model" Type="varbinary(max)" Nullable="false" />
+          <Property Name="ProductVersion" Type="nvarchar" MaxLength="32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="~TMPCLP476291">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="id_smp" Type="int" />
+          <Property Name="id_epp" Type="int" />
+        </EntityType>
+        <EntityType Name="AspNetRoles">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="256" Nullable="false" />
+        </EntityType>
+        <EntityType Name="AspNetUserClaims">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserId" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="ClaimType" Type="nvarchar(max)" />
+          <Property Name="ClaimValue" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="AspNetUserLogins">
+          <Key>
+            <PropertyRef Name="LoginProvider" />
+            <PropertyRef Name="ProviderKey" />
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Name="LoginProvider" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="ProviderKey" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="UserId" Type="nvarchar" MaxLength="128" Nullable="false" />
+        </EntityType>
+        <EntityType Name="AspNetUserRoles">
+          <Key>
+            <PropertyRef Name="UserId" />
+            <PropertyRef Name="RoleId" />
+          </Key>
+          <Property Name="UserId" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="RoleId" Type="nvarchar" MaxLength="128" Nullable="false" />
+        </EntityType>
+        <EntityType Name="AspNetUsers">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="Nombres" Type="nvarchar" MaxLength="150" Nullable="false" />
+          <Property Name="Apellidos" Type="nvarchar" MaxLength="150" Nullable="false" />
+          <Property Name="IdRol" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="TipoUsuario" Type="int" Nullable="false" />
+          <Property Name="Registrado" Type="datetime" Nullable="false" />
+          <Property Name="Email" Type="nvarchar" MaxLength="256" />
+          <Property Name="EmailConfirmed" Type="bit" Nullable="false" />
+          <Property Name="PasswordHash" Type="nvarchar(max)" />
+          <Property Name="SecurityStamp" Type="nvarchar(max)" />
+          <Property Name="PhoneNumber" Type="nvarchar(max)" />
+          <Property Name="PhoneNumberConfirmed" Type="bit" Nullable="false" />
+          <Property Name="TwoFactorEnabled" Type="bit" Nullable="false" />
+          <Property Name="LockoutEndDateUtc" Type="datetime" />
+          <Property Name="LockoutEnabled" Type="bit" Nullable="false" />
+          <Property Name="AccessFailedCount" Type="int" Nullable="false" />
+          <Property Name="UserName" Type="nvarchar" MaxLength="256" Nullable="false" />
+        </EntityType>
+        <EntityType Name="calendario_tipomtto">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="id_calendario" Type="nvarchar" MaxLength="255" />
+          <Property Name="id_tipo_mtto" Type="nvarchar" MaxLength="255" />
+        </EntityType>
+        <EntityType Name="calendarioPM">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="id_componente" Type="int" />
+          <Property Name="id_ewo" Type="int" />
+          <Property Name="tipo_mantenimiento" Type="int" />
+          <Property Name="semana" Type="int" />
+          <Property Name="observaciones" Type="text" />
+          <Property Name="year" Type="int" />
+          <Property Name="user_id" Type="int" />
+          <Property Name="creado" Type="datetime" />
+        </EntityType>
+        <EntityType Name="componentes">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="codigo_fabricante" Type="nvarchar(max)" />
+          <Property Name="codigo_sap" Type="nvarchar(max)" />
+          <Property Name="descripcion" Type="nvarchar(max)" />
+          <Property Name="ubicacion_almacen" Type="nvarchar(max)" />
+          <Property Name="clase" Type="nvarchar" MaxLength="1" />
+          <Property Name="proveedor" Type="nvarchar" MaxLength="255" />
+          <Property Name="estrategia_mtto" Type="int" />
+          <Property Name="id_smp" Type="int" />
+          <Property Name="frecuencia_pm" Type="int" />
+          <Property Name="tipo_frecuencia_pm" Type="int" />
+          <Property Name="duracion_estandar" Type="int" />
+          <Property Name="estado_equipo" Type="int" />
+          <Property Name="estandar_am" Type="int" />
+          <Property Name="frecuencia_am" Type="int" />
+          <Property Name="tipo_frecuencia_am" Type="int" />
+          <Property Name="n_matriz_qp" Type="nvarchar" MaxLength="255" />
+          <Property Name="n_matriz_qm" Type="nvarchar" MaxLength="255" />
+          <Property Name="tipo_kaizen" Type="int" />
+          <Property Name="n_kaizen" Type="int" />
+          <Property Name="image_path" Type="nvarchar(max)" />
+          <Property Name="id_conjunto" Type="int" />
+          <Property Name="smp_file" Type="varbinary(max)" />
+        </EntityType>
+        <EntityType Name="conjuntos">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="nombre" Type="nvarchar(max)" />
+          <Property Name="image_path" Type="nvarchar(max)" />
+          <Property Name="id_sistema" Type="int" />
+          <Property Name="id_smp" Type="int" />
+        </EntityType>
+        <EntityType Name="epps">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="nombre" Type="nvarchar(max)" />
+          <Property Name="foto" Type="nvarchar(max)" />
+          <Property Name="seleccionado" Type="bit" />
+          <Property Name="codigo" Type="nvarchar" MaxLength="255" />
+          <Property Name="SSMA_TimeStamp" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
+        </EntityType>
+        <EntityType Name="equipos">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Nombre" Type="nvarchar" MaxLength="255" />
+        </EntityType>
+        <EntityType Name="ewos">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="consecutivo" Type="int" />
+          <Property Name="id_area_linea" Type="int" />
+          <Property Name="id_equipo" Type="int" />
+          <Property Name="fecha_ewo" Type="datetime2" Precision="0" />
+          <Property Name="aviso_numero" Type="int" />
+          <Property Name="id_tecnico" Type="int" />
+          <Property Name="id_tipo_averia" Type="int" />
+          <Property Name="id_turno" Type="int" />
+          <Property Name="notificacion_averia" Type="datetime2" Precision="0" />
+          <Property Name="inicio_reparacion" Type="datetime2" Precision="0" />
+          <Property Name="tiempo_espera_tecnico" Type="int" />
+          <Property Name="tiempo_diagnostico" Type="int" />
+          <Property Name="tiempo_espera_repuestos" Type="int" />
+          <Property Name="tiempo_reparacion" Type="int" />
+          <Property Name="tiempo_pruebas" Type="int" />
+          <Property Name="fin_reparacion" Type="datetime2" Precision="0" />
+          <Property Name="tiempo_total" Type="int" />
+          <Property Name="imagen_1" Type="nvarchar(max)" />
+          <Property Name="imagen_2" Type="nvarchar(max)" />
+          <Property Name="desc_imagen_1" Type="nvarchar" MaxLength="255" />
+          <Property Name="desc_imagen_2" Type="nvarchar" MaxLength="255" />
+          <Property Name="desc_averia" Type="nvarchar(max)" />
+          <Property Name="cambio_componente" Type="bit" />
+          <Property Name="ajuste" Type="bit" />
+          <Property Name="what" Type="nvarchar(max)" />
+          <Property Name="where" Type="nvarchar(max)" />
+          <Property Name="when" Type="nvarchar(max)" />
+          <Property Name="who" Type="nvarchar(max)" />
+          <Property Name="wich" Type="nvarchar(max)" />
+          <Property Name="how" Type="nvarchar(max)" />
+          <Property Name="fenomeno" Type="nvarchar(max)" />
+          <Property Name="gemba" Type="nvarchar(max)" />
+          <Property Name="gemba_ok" Type="bit" />
+          <Property Name="gembutsu" Type="nvarchar(max)" />
+          <Property Name="gembutsu_ok" Type="bit" />
+          <Property Name="genjitsu" Type="nvarchar(max)" />
+          <Property Name="genjitsu_ok" Type="bit" />
+          <Property Name="genri" Type="nvarchar(max)" />
+          <Property Name="genri_ok" Type="bit" />
+          <Property Name="gensoku" Type="nvarchar(max)" />
+          <Property Name="gensoku_ok" Type="bit" />
+          <Property Name="imagen_3" Type="nvarchar(max)" />
+          <Property Name="imagen_4" Type="nvarchar(max)" />
+          <Property Name="desc_imagen_3" Type="nvarchar" MaxLength="255" />
+          <Property Name="desc_imagen_4" Type="nvarchar" MaxLength="255" />
+          <Property Name="fecha_ultimo_mtto" Type="datetime2" Precision="0" />
+          <Property Name="fecha_proximo_mtto" Type="datetime2" Precision="0" />
+          <Property Name="falla_index" Type="int" />
+          <Property Name="causa_raiz_index" Type="int" />
+          <Property Name="tecnicos_man_involucrados" Type="nvarchar(max)" />
+          <Property Name="operarios_involucrados" Type="nvarchar(max)" />
+          <Property Name="elaborador_analisis" Type="nvarchar(max)" />
+          <Property Name="fecha_analisis" Type="datetime2" Precision="0" />
+          <Property Name="definidor_contramedidas" Type="nvarchar(max)" />
+          <Property Name="fecha_contramedida" Type="datetime2" Precision="0" />
+          <Property Name="validador_ejecucion" Type="nvarchar(max)" />
+          <Property Name="fecha_validacion" Type="datetime2" Precision="0" />
+          <Property Name="user_id" Type="int" />
+          <Property Name="kpi" Type="bit" />
+        </EntityType>
+        <EntityType Name="herramientas">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="herramienta" Type="nvarchar" MaxLength="255" />
+          <Property Name="tipo" Type="nvarchar" MaxLength="255" />
+          <Property Name="image_path" Type="nvarchar(max)" />
+          <Property Name="SSMA_TimeStamp" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
+        </EntityType>
+        <EntityType Name="lineas">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="nombre" Type="varchar" MaxLength="100" />
+          <Property Name="id_planta" Type="int" />
+          <Property Name="image_path" Type="text" />
+          <Property Name="id_tipo_linea" Type="int" />
+          <Property Name="tiempo_carga" Type="int" />
+        </EntityType>
+        <EntityType Name="lista_acciones">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="accion" Type="nvarchar(max)" />
+          <Property Name="tipo_accion" Type="nvarchar" MaxLength="255" />
+          <Property Name="responsable" Type="nvarchar" MaxLength="255" />
+          <Property Name="fecha" Type="datetime2" Precision="0" />
+          <Property Name="id_ewo" Type="int" />
+          <Property Name="SSMA_TimeStamp" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
+        </EntityType>
+        <EntityType Name="maquinas">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="nombre" Type="nvarchar" MaxLength="255" />
+          <Property Name="foto_path" Type="nvarchar(max)" />
+          <Property Name="id_planta" Type="int" />
+          <Property Name="SSMA_TimeStamp" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
+          <Property Name="id_linea" Type="int" />
+        </EntityType>
+        <EntityType Name="permisos_trabajo">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="descripcion" Type="nvarchar" MaxLength="255" />
+        </EntityType>
+        <EntityType Name="plantas">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="nombre" Type="nvarchar(max)" />
+          <Property Name="image_path" Type="text" />
+        </EntityType>
+        <EntityType Name="porques">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="id_ewo" Type="int" />
+          <Property Name="porque_1" Type="nvarchar(max)" />
+          <Property Name="porque_2" Type="nvarchar(max)" />
+          <Property Name="porque_3" Type="nvarchar(max)" />
+          <Property Name="porque_4" Type="nvarchar(max)" />
+          <Property Name="porque_5" Type="nvarchar(max)" />
+          <Property Name="SSMA_TimeStamp" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
+        </EntityType>
+        <EntityType Name="programadores">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Nombre" Type="nvarchar" MaxLength="255" />
+          <Property Name="Cedula" Type="int" />
+          <Property Name="foto" Type="varchar" MaxLength="8000" />
+        </EntityType>
+        <EntityType Name="repuestos_utilizados">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="codigo_sap" Type="int" />
+          <Property Name="descripcion" Type="nvarchar" MaxLength="255" />
+          <Property Name="cantidad" Type="int" />
+          <Property Name="costo" Type="money" />
+          <Property Name="id_ewo" Type="int" />
+          <Property Name="image_path" Type="nvarchar(max)" />
+          <Property Name="SSMA_TimeStamp" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
+        </EntityType>
+        <EntityType Name="sistemas">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Nombre" Type="nvarchar(max)" />
+          <Property Name="id_maquina" Type="int" />
+          <Property Name="image_path" Type="nvarchar(max)" />
+          <Property Name="SSMA_TimeStamp" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
+        </EntityType>
+        <EntityType Name="smp">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="consecutivo" Type="int" />
+          <Property Name="nombre" Type="nvarchar" MaxLength="255" />
+          <Property Name="numero" Type="bigint" />
+          <Property Name="id_linea" Type="int" />
+          <Property Name="id_equipo" Type="int" />
+          <Property Name="feha_smp" Type="datetime2" Precision="0" />
+          <Property Name="clasificacion" Type="int" />
+          <Property Name="tipo_mtto" Type="int" />
+          <Property Name="tecnicos_req" Type="int" />
+          <Property Name="duracion_actividad" Type="int" />
+          <Property Name="equipo_parado" Type="int" />
+          <Property Name="frecuencia" Type="int" />
+          <Property Name="tipo_frecuencia" Type="int" />
+          <Property Name="id_elaborador" Type="int" />
+          <Property Name="id_aprobador" Type="int" />
+          <Property Name="loto" Type="bit" />
+          <Property Name="permisos" Type="nvarchar(max)" />
+          <Property Name="imagen_1" Type="nvarchar" MaxLength="255" />
+          <Property Name="imagen_2" Type="nvarchar" MaxLength="255" />
+          <Property Name="user_id" Type="int" />
+        </EntityType>
+        <EntityType Name="smp_pasos">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="paso" Type="nvarchar" MaxLength="255" />
+          <Property Name="descripcion" Type="nvarchar(max)" />
+          <Property Name="duracion" Type="int" />
+          <Property Name="image_path" Type="nvarchar" MaxLength="255" />
+          <Property Name="categoria_id" Type="int" />
+          <Property Name="id_smp" Type="int" />
+          <Property Name="SSMA_TimeStamp" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
+        </EntityType>
+        <EntityType Name="smp_util">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="id_smp" Type="int" />
+          <Property Name="id_util" Type="int" />
+          <Property Name="id_tipo" Type="int" />
+          <Property Name="cantidad" Type="int" />
+        </EntityType>
+        <EntityType Name="sop">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="codigo_formato" Type="varchar" MaxLength="50" />
+          <Property Name="codigo_categoria" Type="int" />
+          <Property Name="fecha" Type="datetime" />
+          <Property Name="consecutivo" Type="int" />
+          <Property Name="numero_revision" Type="int" />
+          <Property Name="codigo_maquina" Type="int" />
+          <Property Name="codigo_tipo" Type="int" />
+          <Property Name="codigo_usuario_preparador" Type="int" />
+          <Property Name="codigo_area_aprobadora" Type="int" />
+          <Property Name="codigo_lider_area" Type="int" />
+          <Property Name="personas_requeridas" Type="int" />
+          <Property Name="tiempo_persona" Type="varchar" MaxLength="10" />
+          <Property Name="duracion_tarea" Type="varchar" MaxLength="10" />
+          <Property Name="maquina_parada" Type="varchar" MaxLength="10" />
+          <Property Name="codigo_frecuencia" Type="int" />
+          <Property Name="titulo" Type="varchar" MaxLength="200" />
+          <Property Name="numero_sop" Type="int" />
+          <Property Name="user_id" Type="int" />
+        </EntityType>
+        <EntityType Name="sop_pasos">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="num_paso" Type="int" />
+          <Property Name="descripcion" Type="varchar" MaxLength="500" />
+          <Property Name="image_path" Type="text" />
+          <Property Name="duracion" Type="varchar" MaxLength="10" />
+          <Property Name="codigo_herramienta" Type="int" />
+          <Property Name="id_smp" Type="int" />
+        </EntityType>
+        <EntityType Name="sop_utils">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="id_sop" Type="int" />
+          <Property Name="id_util" Type="int" />
+          <Property Name="id_tipo" Type="int" />
+          <Property Name="cantidad" Type="int" />
+        </EntityType>
+        <EntityType Name="tecnicos">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Nombre" Type="nvarchar" MaxLength="255" />
+          <Property Name="usuario" Type="nchar" MaxLength="50" />
+          <Property Name="password" Type="nchar" MaxLength="50" />
+          <Property Name="id_rol" Type="int" />
+          <Property Name="activo" Type="int" />
+          <Property Name="tipo_usuario" Type="int" />
+        </EntityType>
+        <EntityType Name="tiempos_carga">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="id_linea" Type="int" />
+          <Property Name="year" Type="int" />
+          <Property Name="mes" Type="int" />
+          <Property Name="tiempo_carga" Type="decimal" Precision="18" Scale="2" />
+        </EntityType>
+        <EntityType Name="tipo_averia">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="descripcion" Type="nvarchar" MaxLength="255" />
+        </EntityType>
+        <EntityType Name="tipos">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="descripcion" Type="nvarchar" MaxLength="255" />
+        </EntityType>
+        <EntityType Name="tipos_data">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="id_tipo" Type="int" />
+          <Property Name="descripcion" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="turnos">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="turno" Type="nvarchar" MaxLength="255" />
+        </EntityType>
+        <Association Name="FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId">
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="AspNetUserClaims" Type="Self.AspNetUserClaims" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AspNetUserClaims">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId">
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="AspNetUserLogins" Type="Self.AspNetUserLogins" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AspNetUserLogins">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_AspNetUserRoles_dbo_AspNetRoles_RoleId">
+          <End Role="AspNetRoles" Type="Self.AspNetRoles" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="AspNetUserRoles" Type="Self.AspNetUserRoles" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetRoles">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AspNetUserRoles">
+              <PropertyRef Name="RoleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_AspNetUserRoles_dbo_AspNetUsers_UserId">
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="AspNetUserRoles" Type="Self.AspNetUserRoles" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AspNetUserRoles">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tiempos_carga_lineas">
+          <End Role="lineas" Type="Self.lineas" Multiplicity="0..1" />
+          <End Role="tiempos_carga" Type="Self.tiempos_carga" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="lineas">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="tiempos_carga">
+              <PropertyRef Name="id_linea" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tipos_data_tipos">
+          <End Role="tipos" Type="Self.tipos" Multiplicity="0..1" />
+          <End Role="tipos_data" Type="Self.tipos_data" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tipos">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="tipos_data">
+              <PropertyRef Name="id_tipo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="MttoAppModelStoreContainer">
+          <EntitySet Name="__MigrationHistory" EntityType="Self.__MigrationHistory" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="~TMPCLP476291" EntityType="Self.~TMPCLP476291" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="AspNetRoles" EntityType="Self.AspNetRoles" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="AspNetUserClaims" EntityType="Self.AspNetUserClaims" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="AspNetUserLogins" EntityType="Self.AspNetUserLogins" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="AspNetUserRoles" EntityType="Self.AspNetUserRoles" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="AspNetUsers" EntityType="Self.AspNetUsers" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="calendario_tipomtto" EntityType="Self.calendario_tipomtto" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="calendarioPM" EntityType="Self.calendarioPM" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="componentes" EntityType="Self.componentes" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="conjuntos" EntityType="Self.conjuntos" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="epps" EntityType="Self.epps" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="equipos" EntityType="Self.equipos" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ewos" EntityType="Self.ewos" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="herramientas" EntityType="Self.herramientas" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="lineas" EntityType="Self.lineas" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="lista_acciones" EntityType="Self.lista_acciones" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="maquinas" EntityType="Self.maquinas" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="permisos_trabajo" EntityType="Self.permisos_trabajo" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="plantas" EntityType="Self.plantas" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="porques" EntityType="Self.porques" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="programadores" EntityType="Self.programadores" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="repuestos_utilizados" EntityType="Self.repuestos_utilizados" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="sistemas" EntityType="Self.sistemas" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="smp" EntityType="Self.smp" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="smp_pasos" EntityType="Self.smp_pasos" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="smp_util" EntityType="Self.smp_util" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="sop" EntityType="Self.sop" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="sop_pasos" EntityType="Self.sop_pasos" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="sop_utils" EntityType="Self.sop_utils" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tecnicos" EntityType="Self.tecnicos" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tiempos_carga" EntityType="Self.tiempos_carga" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tipo_averia" EntityType="Self.tipo_averia" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tipos" EntityType="Self.tipos" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tipos_data" EntityType="Self.tipos_data" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="turnos" EntityType="Self.turnos" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" Association="Self.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="AspNetUserClaims" EntitySet="AspNetUserClaims" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" Association="Self.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="AspNetUserLogins" EntitySet="AspNetUserLogins" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_AspNetUserRoles_dbo_AspNetRoles_RoleId" Association="Self.FK_dbo_AspNetUserRoles_dbo_AspNetRoles_RoleId">
+            <End Role="AspNetRoles" EntitySet="AspNetRoles" />
+            <End Role="AspNetUserRoles" EntitySet="AspNetUserRoles" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_AspNetUserRoles_dbo_AspNetUsers_UserId" Association="Self.FK_dbo_AspNetUserRoles_dbo_AspNetUsers_UserId">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="AspNetUserRoles" EntitySet="AspNetUserRoles" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tiempos_carga_lineas" Association="Self.FK_tiempos_carga_lineas">
+            <End Role="lineas" EntitySet="lineas" />
+            <End Role="tiempos_carga" EntitySet="tiempos_carga" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tipos_data_tipos" Association="Self.FK_tipos_data_tipos">
+            <End Role="tipos" EntitySet="tipos" />
+            <End Role="tipos_data" EntitySet="tipos_data" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="MttoAppModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="C_TMPCLP476291">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="id_smp" Type="Int32" />
+          <Property Name="id_epp" Type="Int32" />
+        </EntityType>
+        <EntityType Name="calendario_tipomtto">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="id_calendario" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="id_tipo_mtto" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="calendarioPM">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="id_componente" Type="Int32" />
+          <Property Name="id_ewo" Type="Int32" />
+          <Property Name="tipo_mantenimiento" Type="Int32" />
+          <Property Name="semana" Type="Int32" />
+          <Property Name="observaciones" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="year" Type="Int32" />
+          <Property Name="user_id" Type="Int32" />
+          <Property Name="creado" Type="DateTime" Precision="3" />
+        </EntityType>
+        <EntityType Name="componentes">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="codigo_fabricante" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="codigo_sap" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="descripcion" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ubicacion_almacen" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="clase" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
+          <Property Name="proveedor" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="estrategia_mtto" Type="Int32" />
+          <Property Name="id_smp" Type="Int32" />
+          <Property Name="frecuencia_pm" Type="Int32" />
+          <Property Name="tipo_frecuencia_pm" Type="Int32" />
+          <Property Name="duracion_estandar" Type="Int32" />
+          <Property Name="estado_equipo" Type="Int32" />
+          <Property Name="estandar_am" Type="Int32" />
+          <Property Name="frecuencia_am" Type="Int32" />
+          <Property Name="tipo_frecuencia_am" Type="Int32" />
+          <Property Name="n_matriz_qp" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="n_matriz_qm" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="tipo_kaizen" Type="Int32" />
+          <Property Name="n_kaizen" Type="Int32" />
+          <Property Name="image_path" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="id_conjunto" Type="Int32" />
+          <Property Name="smp_file" Type="Binary" MaxLength="Max" FixedLength="false" />
+        </EntityType>
+        <EntityType Name="conjuntos">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="nombre" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="image_path" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="id_sistema" Type="Int32" />
+          <Property Name="id_smp" Type="Int32" />
+        </EntityType>
+        <EntityType Name="epps">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="nombre" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="foto" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="seleccionado" Type="Boolean" />
+          <Property Name="codigo" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="SSMA_TimeStamp" Type="Binary" MaxLength="8" FixedLength="true" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+        </EntityType>
+        <EntityType Name="equipos">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Nombre" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="ewos">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="consecutivo" Type="Int32" />
+          <Property Name="id_area_linea" Type="Int32" />
+          <Property Name="id_equipo" Type="Int32" />
+          <Property Name="fecha_ewo" Type="DateTime" Precision="0" />
+          <Property Name="aviso_numero" Type="Int32" />
+          <Property Name="id_tecnico" Type="Int32" />
+          <Property Name="id_tipo_averia" Type="Int32" />
+          <Property Name="id_turno" Type="Int32" />
+          <Property Name="notificacion_averia" Type="DateTime" Precision="0" />
+          <Property Name="inicio_reparacion" Type="DateTime" Precision="0" />
+          <Property Name="tiempo_espera_tecnico" Type="Int32" />
+          <Property Name="tiempo_diagnostico" Type="Int32" />
+          <Property Name="tiempo_espera_repuestos" Type="Int32" />
+          <Property Name="tiempo_reparacion" Type="Int32" />
+          <Property Name="tiempo_pruebas" Type="Int32" />
+          <Property Name="fin_reparacion" Type="DateTime" Precision="0" />
+          <Property Name="tiempo_total" Type="Int32" />
+          <Property Name="imagen_1" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="imagen_2" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="desc_imagen_1" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="desc_imagen_2" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="desc_averia" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="cambio_componente" Type="Boolean" />
+          <Property Name="ajuste" Type="Boolean" />
+          <Property Name="what" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="where" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="when" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="who" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="wich" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="how" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="fenomeno" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="gemba" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="gemba_ok" Type="Boolean" />
+          <Property Name="gembutsu" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="gembutsu_ok" Type="Boolean" />
+          <Property Name="genjitsu" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="genjitsu_ok" Type="Boolean" />
+          <Property Name="genri" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="genri_ok" Type="Boolean" />
+          <Property Name="gensoku" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="gensoku_ok" Type="Boolean" />
+          <Property Name="imagen_3" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="imagen_4" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="desc_imagen_3" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="desc_imagen_4" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="fecha_ultimo_mtto" Type="DateTime" Precision="0" />
+          <Property Name="fecha_proximo_mtto" Type="DateTime" Precision="0" />
+          <Property Name="falla_index" Type="Int32" />
+          <Property Name="causa_raiz_index" Type="Int32" />
+          <Property Name="tecnicos_man_involucrados" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="operarios_involucrados" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="elaborador_analisis" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="fecha_analisis" Type="DateTime" Precision="0" />
+          <Property Name="definidor_contramedidas" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="fecha_contramedida" Type="DateTime" Precision="0" />
+          <Property Name="validador_ejecucion" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="fecha_validacion" Type="DateTime" Precision="0" />
+          <Property Name="user_id" Type="Int32" />
+          <Property Name="kpi" Type="Boolean" />
+        </EntityType>
+        <EntityType Name="herramientas">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="herramienta" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="tipo" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="image_path" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="SSMA_TimeStamp" Type="Binary" MaxLength="8" FixedLength="true" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+        </EntityType>
+        <EntityType Name="lineas">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="nombre" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="id_planta" Type="Int32" />
+          <Property Name="image_path" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="id_tipo_linea" Type="Int32" />
+          <Property Name="tiempo_carga" Type="Int32" />
+          <NavigationProperty Name="tiempos_carga" Relationship="MttoAppModel.FK_tiempos_carga_lineas" FromRole="lineas" ToRole="tiempos_carga" />
+        </EntityType>
+        <EntityType Name="lista_acciones">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="accion" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="tipo_accion" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="responsable" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="fecha" Type="DateTime" Precision="0" />
+          <Property Name="id_ewo" Type="Int32" />
+          <Property Name="SSMA_TimeStamp" Type="Binary" MaxLength="8" FixedLength="true" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+        </EntityType>
+        <EntityType Name="maquinas">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="nombre" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="foto_path" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="id_planta" Type="Int32" />
+          <Property Name="SSMA_TimeStamp" Type="Binary" MaxLength="8" FixedLength="true" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+          <Property Name="id_linea" Type="Int32" />
+        </EntityType>
+        <EntityType Name="permisos_trabajo">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="descripcion" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="plantas">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="nombre" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="image_path" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="porques">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="id_ewo" Type="Int32" />
+          <Property Name="porque_1" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="porque_2" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="porque_3" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="porque_4" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="porque_5" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="SSMA_TimeStamp" Type="Binary" MaxLength="8" FixedLength="true" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+        </EntityType>
+        <EntityType Name="programadores">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Nombre" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="Cedula" Type="Int32" />
+          <Property Name="foto" Type="String" MaxLength="8000" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="repuestos_utilizados">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="codigo_sap" Type="Int32" />
+          <Property Name="descripcion" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="cantidad" Type="Int32" />
+          <Property Name="costo" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="id_ewo" Type="Int32" />
+          <Property Name="image_path" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="SSMA_TimeStamp" Type="Binary" MaxLength="8" FixedLength="true" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+        </EntityType>
+        <EntityType Name="sistemas">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Nombre" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="id_maquina" Type="Int32" />
+          <Property Name="image_path" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="SSMA_TimeStamp" Type="Binary" MaxLength="8" FixedLength="true" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+        </EntityType>
+        <EntityType Name="smp">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="consecutivo" Type="Int32" />
+          <Property Name="nombre" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="numero" Type="Int64" />
+          <Property Name="id_linea" Type="Int32" />
+          <Property Name="id_equipo" Type="Int32" />
+          <Property Name="feha_smp" Type="DateTime" Precision="0" />
+          <Property Name="clasificacion" Type="Int32" />
+          <Property Name="tipo_mtto" Type="Int32" />
+          <Property Name="tecnicos_req" Type="Int32" />
+          <Property Name="duracion_actividad" Type="Int32" />
+          <Property Name="equipo_parado" Type="Int32" />
+          <Property Name="frecuencia" Type="Int32" />
+          <Property Name="tipo_frecuencia" Type="Int32" />
+          <Property Name="id_elaborador" Type="Int32" />
+          <Property Name="id_aprobador" Type="Int32" />
+          <Property Name="loto" Type="Boolean" />
+          <Property Name="permisos" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="imagen_1" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="imagen_2" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="user_id" Type="Int32" />
+        </EntityType>
+        <EntityType Name="smp_pasos">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="paso" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="descripcion" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="duracion" Type="Int32" />
+          <Property Name="image_path" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="categoria_id" Type="Int32" />
+          <Property Name="id_smp" Type="Int32" />
+          <Property Name="SSMA_TimeStamp" Type="Binary" MaxLength="8" FixedLength="true" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+        </EntityType>
+        <EntityType Name="smp_util">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="id_smp" Type="Int32" />
+          <Property Name="id_util" Type="Int32" />
+          <Property Name="id_tipo" Type="Int32" />
+          <Property Name="cantidad" Type="Int32" />
+        </EntityType>
+        <EntityType Name="sop">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="codigo_formato" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="codigo_categoria" Type="Int32" />
+          <Property Name="fecha" Type="DateTime" Precision="3" />
+          <Property Name="consecutivo" Type="Int32" />
+          <Property Name="numero_revision" Type="Int32" />
+          <Property Name="codigo_maquina" Type="Int32" />
+          <Property Name="codigo_tipo" Type="Int32" />
+          <Property Name="codigo_usuario_preparador" Type="Int32" />
+          <Property Name="codigo_area_aprobadora" Type="Int32" />
+          <Property Name="codigo_lider_area" Type="Int32" />
+          <Property Name="personas_requeridas" Type="Int32" />
+          <Property Name="tiempo_persona" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="duracion_tarea" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="maquina_parada" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="codigo_frecuencia" Type="Int32" />
+          <Property Name="titulo" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="numero_sop" Type="Int32" />
+          <Property Name="user_id" Type="Int32" />
+        </EntityType>
+        <EntityType Name="sop_pasos">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="num_paso" Type="Int32" />
+          <Property Name="descripcion" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="image_path" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="duracion" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="codigo_herramienta" Type="Int32" />
+          <Property Name="id_smp" Type="Int32" />
+        </EntityType>
+        <EntityType Name="sop_utils">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="id_sop" Type="Int32" />
+          <Property Name="id_util" Type="Int32" />
+          <Property Name="id_tipo" Type="Int32" />
+          <Property Name="cantidad" Type="Int32" />
+        </EntityType>
+        <EntityType Name="tecnicos">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Nombre" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="usuario" Type="String" MaxLength="50" FixedLength="true" Unicode="true" />
+          <Property Name="password" Type="String" MaxLength="50" FixedLength="true" Unicode="true" />
+          <Property Name="id_rol" Type="Int32" />
+          <Property Name="activo" Type="Int32" />
+          <Property Name="tipo_usuario" Type="Int32" />
+        </EntityType>
+        <EntityType Name="tipo_averia">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="descripcion" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="tipos">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="descripcion" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="tipos_data" Relationship="Self.FK_tipos_data_tipos" FromRole="tipos" ToRole="tipos_data" />
+        </EntityType>
+        <EntityType Name="tipos_data">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="id_tipo" Type="Int32" />
+          <Property Name="descripcion" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="tipos" Relationship="Self.FK_tipos_data_tipos" FromRole="tipos_data" ToRole="tipos" />
+        </EntityType>
+        <EntityType Name="turnos">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="turno" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <Association Name="FK_tipos_data_tipos">
+          <End Role="tipos" Type="Self.tipos" Multiplicity="0..1" />
+          <End Role="tipos_data" Type="Self.tipos_data" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tipos">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="tipos_data">
+              <PropertyRef Name="id_tipo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="MttoAppEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="C_TMPCLP476291" EntityType="Self.C_TMPCLP476291" />
+          <EntitySet Name="calendario_tipomtto" EntityType="Self.calendario_tipomtto" />
+          <EntitySet Name="calendarioPM" EntityType="Self.calendarioPM" />
+          <EntitySet Name="componentes" EntityType="Self.componentes" />
+          <EntitySet Name="conjuntos" EntityType="Self.conjuntos" />
+          <EntitySet Name="epps" EntityType="Self.epps" />
+          <EntitySet Name="equipos" EntityType="Self.equipos" />
+          <EntitySet Name="ewos" EntityType="Self.ewos" />
+          <EntitySet Name="herramientas" EntityType="Self.herramientas" />
+          <EntitySet Name="lineas" EntityType="Self.lineas" />
+          <EntitySet Name="lista_acciones" EntityType="Self.lista_acciones" />
+          <EntitySet Name="maquinas" EntityType="Self.maquinas" />
+          <EntitySet Name="permisos_trabajo" EntityType="Self.permisos_trabajo" />
+          <EntitySet Name="plantas" EntityType="Self.plantas" />
+          <EntitySet Name="porques" EntityType="Self.porques" />
+          <EntitySet Name="programadores" EntityType="Self.programadores" />
+          <EntitySet Name="repuestos_utilizados" EntityType="Self.repuestos_utilizados" />
+          <EntitySet Name="sistemas" EntityType="Self.sistemas" />
+          <EntitySet Name="smp" EntityType="Self.smp" />
+          <EntitySet Name="smp_pasos" EntityType="Self.smp_pasos" />
+          <EntitySet Name="smp_util" EntityType="Self.smp_util" />
+          <EntitySet Name="sop" EntityType="Self.sop" />
+          <EntitySet Name="sop_pasos" EntityType="Self.sop_pasos" />
+          <EntitySet Name="sop_utils" EntityType="Self.sop_utils" />
+          <EntitySet Name="tecnicos" EntityType="Self.tecnicos" />
+          <EntitySet Name="tipo_averia" EntityType="Self.tipo_averia" />
+          <EntitySet Name="tipos" EntityType="Self.tipos" />
+          <EntitySet Name="tipos_data" EntityType="Self.tipos_data" />
+          <EntitySet Name="turnos" EntityType="Self.turnos" />
+          <AssociationSet Name="FK_tipos_data_tipos" Association="Self.FK_tipos_data_tipos">
+            <End Role="tipos" EntitySet="tipos" />
+            <End Role="tipos_data" EntitySet="tipos_data" />
+          </AssociationSet>
+          <EntitySet Name="C__MigrationHistory" EntityType="MttoAppModel.C__MigrationHistory" />
+          <EntitySet Name="AspNetRoles" EntityType="MttoAppModel.AspNetRoles" />
+          <EntitySet Name="AspNetUserClaims" EntityType="MttoAppModel.AspNetUserClaims" />
+          <EntitySet Name="AspNetUserLogins" EntityType="MttoAppModel.AspNetUserLogins" />
+          <EntitySet Name="AspNetUsers" EntityType="MttoAppModel.AspNetUsers" />
+          <AssociationSet Name="FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" Association="MttoAppModel.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="AspNetUserClaims" EntitySet="AspNetUserClaims" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" Association="MttoAppModel.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="AspNetUserLogins" EntitySet="AspNetUserLogins" />
+          </AssociationSet>
+          <AssociationSet Name="AspNetUserRoles" Association="MttoAppModel.AspNetUserRoles">
+            <End Role="AspNetRoles" EntitySet="AspNetRoles" />
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+          </AssociationSet>
+          <EntitySet Name="tiempos_carga" EntityType="MttoAppModel.tiempos_carga" />
+          <AssociationSet Name="FK_tiempos_carga_lineas" Association="MttoAppModel.FK_tiempos_carga_lineas">
+            <End Role="lineas" EntitySet="lineas" />
+            <End Role="tiempos_carga" EntitySet="tiempos_carga" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="C__MigrationHistory">
+          <Key>
+            <PropertyRef Name="MigrationId" />
+            <PropertyRef Name="ContextKey" />
+          </Key>
+          <Property Name="MigrationId" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="ContextKey" Type="String" Nullable="false" MaxLength="300" FixedLength="false" Unicode="true" />
+          <Property Name="Model" Type="Binary" Nullable="false" MaxLength="Max" FixedLength="false" />
+          <Property Name="ProductVersion" Type="String" Nullable="false" MaxLength="32" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="AspNetRoles">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="AspNetUsers" Relationship="MttoAppModel.AspNetUserRoles" FromRole="AspNetRoles" ToRole="AspNetUsers" />
+        </EntityType>
+        <EntityType Name="AspNetUserClaims">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserId" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="ClaimType" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ClaimValue" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="AspNetUsers" Relationship="MttoAppModel.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" FromRole="AspNetUserClaims" ToRole="AspNetUsers" />
+        </EntityType>
+        <EntityType Name="AspNetUserLogins">
+          <Key>
+            <PropertyRef Name="LoginProvider" />
+            <PropertyRef Name="ProviderKey" />
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Name="LoginProvider" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="ProviderKey" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="UserId" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="AspNetUsers" Relationship="MttoAppModel.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" FromRole="AspNetUserLogins" ToRole="AspNetUsers" />
+        </EntityType>
+        <EntityType Name="AspNetUsers">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="Nombres" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="Apellidos" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="IdRol" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="TipoUsuario" Type="Int32" Nullable="false" />
+          <Property Name="Registrado" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Email" Type="String" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Name="EmailConfirmed" Type="Boolean" Nullable="false" />
+          <Property Name="PasswordHash" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="SecurityStamp" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PhoneNumber" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PhoneNumberConfirmed" Type="Boolean" Nullable="false" />
+          <Property Name="TwoFactorEnabled" Type="Boolean" Nullable="false" />
+          <Property Name="LockoutEndDateUtc" Type="DateTime" Precision="3" />
+          <Property Name="LockoutEnabled" Type="Boolean" Nullable="false" />
+          <Property Name="AccessFailedCount" Type="Int32" Nullable="false" />
+          <Property Name="UserName" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="AspNetUserClaims" Relationship="MttoAppModel.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" FromRole="AspNetUsers" ToRole="AspNetUserClaims" />
+          <NavigationProperty Name="AspNetUserLogins" Relationship="MttoAppModel.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" FromRole="AspNetUsers" ToRole="AspNetUserLogins" />
+          <NavigationProperty Name="AspNetRoles" Relationship="MttoAppModel.AspNetUserRoles" FromRole="AspNetUsers" ToRole="AspNetRoles" />
+        </EntityType>
+        <Association Name="FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId">
+          <End Type="MttoAppModel.AspNetUsers" Role="AspNetUsers" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="MttoAppModel.AspNetUserClaims" Role="AspNetUserClaims" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AspNetUserClaims">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId">
+          <End Type="MttoAppModel.AspNetUsers" Role="AspNetUsers" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="MttoAppModel.AspNetUserLogins" Role="AspNetUserLogins" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AspNetUserLogins">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="AspNetUserRoles">
+          <End Type="MttoAppModel.AspNetRoles" Role="AspNetRoles" Multiplicity="*" />
+          <End Type="MttoAppModel.AspNetUsers" Role="AspNetUsers" Multiplicity="*" />
+        </Association>
+        <EntityType Name="tiempos_carga">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" />
+          <Property Name="id_linea" Type="Int32" />
+          <Property Name="year" Type="Int32" />
+          <Property Name="mes" Type="Int32" />
+          <Property Name="tiempo_carga" Type="Decimal" Precision="18" Scale="2" />
+          <NavigationProperty Name="lineas" Relationship="MttoAppModel.FK_tiempos_carga_lineas" FromRole="tiempos_carga" ToRole="lineas" />
+        </EntityType>
+        <Association Name="FK_tiempos_carga_lineas">
+          <End Type="MttoAppModel.lineas" Role="lineas" Multiplicity="0..1" />
+          <End Type="MttoAppModel.tiempos_carga" Role="tiempos_carga" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="lineas">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="tiempos_carga">
+              <PropertyRef Name="id_linea" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="MttoAppModelStoreContainer" CdmEntityContainer="MttoAppEntities">
+          <EntitySetMapping Name="C_TMPCLP476291">
+            <EntityTypeMapping TypeName="MttoAppModel.C_TMPCLP476291">
+              <MappingFragment StoreEntitySet="~TMPCLP476291">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="id_smp" ColumnName="id_smp" />
+                <ScalarProperty Name="id_epp" ColumnName="id_epp" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="calendario_tipomtto">
+            <EntityTypeMapping TypeName="MttoAppModel.calendario_tipomtto">
+              <MappingFragment StoreEntitySet="calendario_tipomtto">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="id_calendario" ColumnName="id_calendario" />
+                <ScalarProperty Name="id_tipo_mtto" ColumnName="id_tipo_mtto" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="calendarioPM">
+            <EntityTypeMapping TypeName="MttoAppModel.calendarioPM">
+              <MappingFragment StoreEntitySet="calendarioPM">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="id_componente" ColumnName="id_componente" />
+                <ScalarProperty Name="id_ewo" ColumnName="id_ewo" />
+                <ScalarProperty Name="tipo_mantenimiento" ColumnName="tipo_mantenimiento" />
+                <ScalarProperty Name="semana" ColumnName="semana" />
+                <ScalarProperty Name="observaciones" ColumnName="observaciones" />
+                <ScalarProperty Name="year" ColumnName="year" />
+                <ScalarProperty Name="user_id" ColumnName="user_id" />
+                <ScalarProperty Name="creado" ColumnName="creado" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="componentes">
+            <EntityTypeMapping TypeName="MttoAppModel.componentes">
+              <MappingFragment StoreEntitySet="componentes">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="codigo_fabricante" ColumnName="codigo_fabricante" />
+                <ScalarProperty Name="codigo_sap" ColumnName="codigo_sap" />
+                <ScalarProperty Name="descripcion" ColumnName="descripcion" />
+                <ScalarProperty Name="ubicacion_almacen" ColumnName="ubicacion_almacen" />
+                <ScalarProperty Name="clase" ColumnName="clase" />
+                <ScalarProperty Name="proveedor" ColumnName="proveedor" />
+                <ScalarProperty Name="estrategia_mtto" ColumnName="estrategia_mtto" />
+                <ScalarProperty Name="id_smp" ColumnName="id_smp" />
+                <ScalarProperty Name="frecuencia_pm" ColumnName="frecuencia_pm" />
+                <ScalarProperty Name="tipo_frecuencia_pm" ColumnName="tipo_frecuencia_pm" />
+                <ScalarProperty Name="duracion_estandar" ColumnName="duracion_estandar" />
+                <ScalarProperty Name="estado_equipo" ColumnName="estado_equipo" />
+                <ScalarProperty Name="estandar_am" ColumnName="estandar_am" />
+                <ScalarProperty Name="frecuencia_am" ColumnName="frecuencia_am" />
+                <ScalarProperty Name="tipo_frecuencia_am" ColumnName="tipo_frecuencia_am" />
+                <ScalarProperty Name="n_matriz_qp" ColumnName="n_matriz_qp" />
+                <ScalarProperty Name="n_matriz_qm" ColumnName="n_matriz_qm" />
+                <ScalarProperty Name="tipo_kaizen" ColumnName="tipo_kaizen" />
+                <ScalarProperty Name="n_kaizen" ColumnName="n_kaizen" />
+                <ScalarProperty Name="image_path" ColumnName="image_path" />
+                <ScalarProperty Name="id_conjunto" ColumnName="id_conjunto" />
+                <ScalarProperty Name="smp_file" ColumnName="smp_file" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="conjuntos">
+            <EntityTypeMapping TypeName="MttoAppModel.conjuntos">
+              <MappingFragment StoreEntitySet="conjuntos">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="nombre" ColumnName="nombre" />
+                <ScalarProperty Name="image_path" ColumnName="image_path" />
+                <ScalarProperty Name="id_sistema" ColumnName="id_sistema" />
+                <ScalarProperty Name="id_smp" ColumnName="id_smp" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="epps">
+            <EntityTypeMapping TypeName="MttoAppModel.epps">
+              <MappingFragment StoreEntitySet="epps">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="nombre" ColumnName="nombre" />
+                <ScalarProperty Name="foto" ColumnName="foto" />
+                <ScalarProperty Name="seleccionado" ColumnName="seleccionado" />
+                <ScalarProperty Name="codigo" ColumnName="codigo" />
+                <ScalarProperty Name="SSMA_TimeStamp" ColumnName="SSMA_TimeStamp" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="equipos">
+            <EntityTypeMapping TypeName="MttoAppModel.equipos">
+              <MappingFragment StoreEntitySet="equipos">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ewos">
+            <EntityTypeMapping TypeName="MttoAppModel.ewos">
+              <MappingFragment StoreEntitySet="ewos">
+                <ScalarProperty Name="kpi" ColumnName="kpi" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="consecutivo" ColumnName="consecutivo" />
+                <ScalarProperty Name="id_area_linea" ColumnName="id_area_linea" />
+                <ScalarProperty Name="id_equipo" ColumnName="id_equipo" />
+                <ScalarProperty Name="fecha_ewo" ColumnName="fecha_ewo" />
+                <ScalarProperty Name="aviso_numero" ColumnName="aviso_numero" />
+                <ScalarProperty Name="id_tecnico" ColumnName="id_tecnico" />
+                <ScalarProperty Name="id_tipo_averia" ColumnName="id_tipo_averia" />
+                <ScalarProperty Name="id_turno" ColumnName="id_turno" />
+                <ScalarProperty Name="notificacion_averia" ColumnName="notificacion_averia" />
+                <ScalarProperty Name="inicio_reparacion" ColumnName="inicio_reparacion" />
+                <ScalarProperty Name="tiempo_espera_tecnico" ColumnName="tiempo_espera_tecnico" />
+                <ScalarProperty Name="tiempo_diagnostico" ColumnName="tiempo_diagnostico" />
+                <ScalarProperty Name="tiempo_espera_repuestos" ColumnName="tiempo_espera_repuestos" />
+                <ScalarProperty Name="tiempo_reparacion" ColumnName="tiempo_reparacion" />
+                <ScalarProperty Name="tiempo_pruebas" ColumnName="tiempo_pruebas" />
+                <ScalarProperty Name="fin_reparacion" ColumnName="fin_reparacion" />
+                <ScalarProperty Name="tiempo_total" ColumnName="tiempo_total" />
+                <ScalarProperty Name="imagen_1" ColumnName="imagen_1" />
+                <ScalarProperty Name="imagen_2" ColumnName="imagen_2" />
+                <ScalarProperty Name="desc_imagen_1" ColumnName="desc_imagen_1" />
+                <ScalarProperty Name="desc_imagen_2" ColumnName="desc_imagen_2" />
+                <ScalarProperty Name="desc_averia" ColumnName="desc_averia" />
+                <ScalarProperty Name="cambio_componente" ColumnName="cambio_componente" />
+                <ScalarProperty Name="ajuste" ColumnName="ajuste" />
+                <ScalarProperty Name="what" ColumnName="what" />
+                <ScalarProperty Name="where" ColumnName="where" />
+                <ScalarProperty Name="when" ColumnName="when" />
+                <ScalarProperty Name="who" ColumnName="who" />
+                <ScalarProperty Name="wich" ColumnName="wich" />
+                <ScalarProperty Name="how" ColumnName="how" />
+                <ScalarProperty Name="fenomeno" ColumnName="fenomeno" />
+                <ScalarProperty Name="gemba" ColumnName="gemba" />
+                <ScalarProperty Name="gemba_ok" ColumnName="gemba_ok" />
+                <ScalarProperty Name="gembutsu" ColumnName="gembutsu" />
+                <ScalarProperty Name="gembutsu_ok" ColumnName="gembutsu_ok" />
+                <ScalarProperty Name="genjitsu" ColumnName="genjitsu" />
+                <ScalarProperty Name="genjitsu_ok" ColumnName="genjitsu_ok" />
+                <ScalarProperty Name="genri" ColumnName="genri" />
+                <ScalarProperty Name="genri_ok" ColumnName="genri_ok" />
+                <ScalarProperty Name="gensoku" ColumnName="gensoku" />
+                <ScalarProperty Name="gensoku_ok" ColumnName="gensoku_ok" />
+                <ScalarProperty Name="imagen_3" ColumnName="imagen_3" />
+                <ScalarProperty Name="imagen_4" ColumnName="imagen_4" />
+                <ScalarProperty Name="desc_imagen_3" ColumnName="desc_imagen_3" />
+                <ScalarProperty Name="desc_imagen_4" ColumnName="desc_imagen_4" />
+                <ScalarProperty Name="fecha_ultimo_mtto" ColumnName="fecha_ultimo_mtto" />
+                <ScalarProperty Name="fecha_proximo_mtto" ColumnName="fecha_proximo_mtto" />
+                <ScalarProperty Name="falla_index" ColumnName="falla_index" />
+                <ScalarProperty Name="causa_raiz_index" ColumnName="causa_raiz_index" />
+                <ScalarProperty Name="tecnicos_man_involucrados" ColumnName="tecnicos_man_involucrados" />
+                <ScalarProperty Name="operarios_involucrados" ColumnName="operarios_involucrados" />
+                <ScalarProperty Name="elaborador_analisis" ColumnName="elaborador_analisis" />
+                <ScalarProperty Name="fecha_analisis" ColumnName="fecha_analisis" />
+                <ScalarProperty Name="definidor_contramedidas" ColumnName="definidor_contramedidas" />
+                <ScalarProperty Name="fecha_contramedida" ColumnName="fecha_contramedida" />
+                <ScalarProperty Name="validador_ejecucion" ColumnName="validador_ejecucion" />
+                <ScalarProperty Name="fecha_validacion" ColumnName="fecha_validacion" />
+                <ScalarProperty Name="user_id" ColumnName="user_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="herramientas">
+            <EntityTypeMapping TypeName="MttoAppModel.herramientas">
+              <MappingFragment StoreEntitySet="herramientas">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="herramienta" ColumnName="herramienta" />
+                <ScalarProperty Name="tipo" ColumnName="tipo" />
+                <ScalarProperty Name="image_path" ColumnName="image_path" />
+                <ScalarProperty Name="SSMA_TimeStamp" ColumnName="SSMA_TimeStamp" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="lineas">
+            <EntityTypeMapping TypeName="MttoAppModel.lineas">
+              <MappingFragment StoreEntitySet="lineas">
+                <ScalarProperty Name="tiempo_carga" ColumnName="tiempo_carga" />
+                <ScalarProperty Name="id_tipo_linea" ColumnName="id_tipo_linea" />
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="nombre" ColumnName="nombre" />
+                <ScalarProperty Name="id_planta" ColumnName="id_planta" />
+                <ScalarProperty Name="image_path" ColumnName="image_path" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="lista_acciones">
+            <EntityTypeMapping TypeName="MttoAppModel.lista_acciones">
+              <MappingFragment StoreEntitySet="lista_acciones">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="accion" ColumnName="accion" />
+                <ScalarProperty Name="tipo_accion" ColumnName="tipo_accion" />
+                <ScalarProperty Name="responsable" ColumnName="responsable" />
+                <ScalarProperty Name="fecha" ColumnName="fecha" />
+                <ScalarProperty Name="id_ewo" ColumnName="id_ewo" />
+                <ScalarProperty Name="SSMA_TimeStamp" ColumnName="SSMA_TimeStamp" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="maquinas">
+            <EntityTypeMapping TypeName="MttoAppModel.maquinas">
+              <MappingFragment StoreEntitySet="maquinas">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="nombre" ColumnName="nombre" />
+                <ScalarProperty Name="foto_path" ColumnName="foto_path" />
+                <ScalarProperty Name="id_planta" ColumnName="id_planta" />
+                <ScalarProperty Name="SSMA_TimeStamp" ColumnName="SSMA_TimeStamp" />
+                <ScalarProperty Name="id_linea" ColumnName="id_linea" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="permisos_trabajo">
+            <EntityTypeMapping TypeName="MttoAppModel.permisos_trabajo">
+              <MappingFragment StoreEntitySet="permisos_trabajo">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="descripcion" ColumnName="descripcion" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="plantas">
+            <EntityTypeMapping TypeName="MttoAppModel.plantas">
+              <MappingFragment StoreEntitySet="plantas">
+                <ScalarProperty Name="image_path" ColumnName="image_path" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="nombre" ColumnName="nombre" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="porques">
+            <EntityTypeMapping TypeName="MttoAppModel.porques">
+              <MappingFragment StoreEntitySet="porques">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="id_ewo" ColumnName="id_ewo" />
+                <ScalarProperty Name="porque_1" ColumnName="porque_1" />
+                <ScalarProperty Name="porque_2" ColumnName="porque_2" />
+                <ScalarProperty Name="porque_3" ColumnName="porque_3" />
+                <ScalarProperty Name="porque_4" ColumnName="porque_4" />
+                <ScalarProperty Name="porque_5" ColumnName="porque_5" />
+                <ScalarProperty Name="SSMA_TimeStamp" ColumnName="SSMA_TimeStamp" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="programadores">
+            <EntityTypeMapping TypeName="MttoAppModel.programadores">
+              <MappingFragment StoreEntitySet="programadores">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="Cedula" ColumnName="Cedula" />
+                <ScalarProperty Name="foto" ColumnName="foto" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="repuestos_utilizados">
+            <EntityTypeMapping TypeName="MttoAppModel.repuestos_utilizados">
+              <MappingFragment StoreEntitySet="repuestos_utilizados">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="codigo_sap" ColumnName="codigo_sap" />
+                <ScalarProperty Name="descripcion" ColumnName="descripcion" />
+                <ScalarProperty Name="cantidad" ColumnName="cantidad" />
+                <ScalarProperty Name="costo" ColumnName="costo" />
+                <ScalarProperty Name="id_ewo" ColumnName="id_ewo" />
+                <ScalarProperty Name="image_path" ColumnName="image_path" />
+                <ScalarProperty Name="SSMA_TimeStamp" ColumnName="SSMA_TimeStamp" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sistemas">
+            <EntityTypeMapping TypeName="MttoAppModel.sistemas">
+              <MappingFragment StoreEntitySet="sistemas">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="id_maquina" ColumnName="id_maquina" />
+                <ScalarProperty Name="image_path" ColumnName="image_path" />
+                <ScalarProperty Name="SSMA_TimeStamp" ColumnName="SSMA_TimeStamp" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="smp">
+            <EntityTypeMapping TypeName="MttoAppModel.smp">
+              <MappingFragment StoreEntitySet="smp">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="consecutivo" ColumnName="consecutivo" />
+                <ScalarProperty Name="nombre" ColumnName="nombre" />
+                <ScalarProperty Name="numero" ColumnName="numero" />
+                <ScalarProperty Name="id_linea" ColumnName="id_linea" />
+                <ScalarProperty Name="id_equipo" ColumnName="id_equipo" />
+                <ScalarProperty Name="feha_smp" ColumnName="feha_smp" />
+                <ScalarProperty Name="clasificacion" ColumnName="clasificacion" />
+                <ScalarProperty Name="tipo_mtto" ColumnName="tipo_mtto" />
+                <ScalarProperty Name="tecnicos_req" ColumnName="tecnicos_req" />
+                <ScalarProperty Name="duracion_actividad" ColumnName="duracion_actividad" />
+                <ScalarProperty Name="equipo_parado" ColumnName="equipo_parado" />
+                <ScalarProperty Name="frecuencia" ColumnName="frecuencia" />
+                <ScalarProperty Name="tipo_frecuencia" ColumnName="tipo_frecuencia" />
+                <ScalarProperty Name="id_elaborador" ColumnName="id_elaborador" />
+                <ScalarProperty Name="id_aprobador" ColumnName="id_aprobador" />
+                <ScalarProperty Name="loto" ColumnName="loto" />
+                <ScalarProperty Name="permisos" ColumnName="permisos" />
+                <ScalarProperty Name="imagen_1" ColumnName="imagen_1" />
+                <ScalarProperty Name="imagen_2" ColumnName="imagen_2" />
+                <ScalarProperty Name="user_id" ColumnName="user_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="smp_pasos">
+            <EntityTypeMapping TypeName="MttoAppModel.smp_pasos">
+              <MappingFragment StoreEntitySet="smp_pasos">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="paso" ColumnName="paso" />
+                <ScalarProperty Name="descripcion" ColumnName="descripcion" />
+                <ScalarProperty Name="duracion" ColumnName="duracion" />
+                <ScalarProperty Name="image_path" ColumnName="image_path" />
+                <ScalarProperty Name="categoria_id" ColumnName="categoria_id" />
+                <ScalarProperty Name="id_smp" ColumnName="id_smp" />
+                <ScalarProperty Name="SSMA_TimeStamp" ColumnName="SSMA_TimeStamp" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="smp_util">
+            <EntityTypeMapping TypeName="MttoAppModel.smp_util">
+              <MappingFragment StoreEntitySet="smp_util">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="id_smp" ColumnName="id_smp" />
+                <ScalarProperty Name="id_util" ColumnName="id_util" />
+                <ScalarProperty Name="id_tipo" ColumnName="id_tipo" />
+                <ScalarProperty Name="cantidad" ColumnName="cantidad" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sop">
+            <EntityTypeMapping TypeName="MttoAppModel.sop">
+              <MappingFragment StoreEntitySet="sop">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="codigo_formato" ColumnName="codigo_formato" />
+                <ScalarProperty Name="codigo_categoria" ColumnName="codigo_categoria" />
+                <ScalarProperty Name="fecha" ColumnName="fecha" />
+                <ScalarProperty Name="consecutivo" ColumnName="consecutivo" />
+                <ScalarProperty Name="numero_revision" ColumnName="numero_revision" />
+                <ScalarProperty Name="codigo_maquina" ColumnName="codigo_maquina" />
+                <ScalarProperty Name="codigo_tipo" ColumnName="codigo_tipo" />
+                <ScalarProperty Name="codigo_usuario_preparador" ColumnName="codigo_usuario_preparador" />
+                <ScalarProperty Name="codigo_area_aprobadora" ColumnName="codigo_area_aprobadora" />
+                <ScalarProperty Name="codigo_lider_area" ColumnName="codigo_lider_area" />
+                <ScalarProperty Name="personas_requeridas" ColumnName="personas_requeridas" />
+                <ScalarProperty Name="tiempo_persona" ColumnName="tiempo_persona" />
+                <ScalarProperty Name="duracion_tarea" ColumnName="duracion_tarea" />
+                <ScalarProperty Name="maquina_parada" ColumnName="maquina_parada" />
+                <ScalarProperty Name="codigo_frecuencia" ColumnName="codigo_frecuencia" />
+                <ScalarProperty Name="titulo" ColumnName="titulo" />
+                <ScalarProperty Name="numero_sop" ColumnName="numero_sop" />
+                <ScalarProperty Name="user_id" ColumnName="user_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sop_pasos">
+            <EntityTypeMapping TypeName="MttoAppModel.sop_pasos">
+              <MappingFragment StoreEntitySet="sop_pasos">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="num_paso" ColumnName="num_paso" />
+                <ScalarProperty Name="descripcion" ColumnName="descripcion" />
+                <ScalarProperty Name="image_path" ColumnName="image_path" />
+                <ScalarProperty Name="duracion" ColumnName="duracion" />
+                <ScalarProperty Name="codigo_herramienta" ColumnName="codigo_herramienta" />
+                <ScalarProperty Name="id_smp" ColumnName="id_smp" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sop_utils">
+            <EntityTypeMapping TypeName="MttoAppModel.sop_utils">
+              <MappingFragment StoreEntitySet="sop_utils">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="id_sop" ColumnName="id_sop" />
+                <ScalarProperty Name="id_util" ColumnName="id_util" />
+                <ScalarProperty Name="id_tipo" ColumnName="id_tipo" />
+                <ScalarProperty Name="cantidad" ColumnName="cantidad" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tecnicos">
+            <EntityTypeMapping TypeName="MttoAppModel.tecnicos">
+              <MappingFragment StoreEntitySet="tecnicos">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="usuario" ColumnName="usuario" />
+                <ScalarProperty Name="password" ColumnName="password" />
+                <ScalarProperty Name="id_rol" ColumnName="id_rol" />
+                <ScalarProperty Name="activo" ColumnName="activo" />
+                <ScalarProperty Name="tipo_usuario" ColumnName="tipo_usuario" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tipo_averia">
+            <EntityTypeMapping TypeName="MttoAppModel.tipo_averia">
+              <MappingFragment StoreEntitySet="tipo_averia">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="descripcion" ColumnName="descripcion" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tipos">
+            <EntityTypeMapping TypeName="MttoAppModel.tipos">
+              <MappingFragment StoreEntitySet="tipos">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="descripcion" ColumnName="descripcion" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tipos_data">
+            <EntityTypeMapping TypeName="MttoAppModel.tipos_data">
+              <MappingFragment StoreEntitySet="tipos_data">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="id_tipo" ColumnName="id_tipo" />
+                <ScalarProperty Name="descripcion" ColumnName="descripcion" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="turnos">
+            <EntityTypeMapping TypeName="MttoAppModel.turnos">
+              <MappingFragment StoreEntitySet="turnos">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="turno" ColumnName="turno" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="C__MigrationHistory">
+            <EntityTypeMapping TypeName="MttoAppModel.C__MigrationHistory">
+              <MappingFragment StoreEntitySet="__MigrationHistory">
+                <ScalarProperty Name="ProductVersion" ColumnName="ProductVersion" />
+                <ScalarProperty Name="Model" ColumnName="Model" />
+                <ScalarProperty Name="ContextKey" ColumnName="ContextKey" />
+                <ScalarProperty Name="MigrationId" ColumnName="MigrationId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="AspNetRoles">
+            <EntityTypeMapping TypeName="MttoAppModel.AspNetRoles">
+              <MappingFragment StoreEntitySet="AspNetRoles">
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="AspNetUserClaims">
+            <EntityTypeMapping TypeName="MttoAppModel.AspNetUserClaims">
+              <MappingFragment StoreEntitySet="AspNetUserClaims">
+                <ScalarProperty Name="ClaimValue" ColumnName="ClaimValue" />
+                <ScalarProperty Name="ClaimType" ColumnName="ClaimType" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="AspNetUserLogins">
+            <EntityTypeMapping TypeName="MttoAppModel.AspNetUserLogins">
+              <MappingFragment StoreEntitySet="AspNetUserLogins">
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="ProviderKey" ColumnName="ProviderKey" />
+                <ScalarProperty Name="LoginProvider" ColumnName="LoginProvider" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="AspNetUsers">
+            <EntityTypeMapping TypeName="MttoAppModel.AspNetUsers">
+              <MappingFragment StoreEntitySet="AspNetUsers">
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="AccessFailedCount" ColumnName="AccessFailedCount" />
+                <ScalarProperty Name="LockoutEnabled" ColumnName="LockoutEnabled" />
+                <ScalarProperty Name="LockoutEndDateUtc" ColumnName="LockoutEndDateUtc" />
+                <ScalarProperty Name="TwoFactorEnabled" ColumnName="TwoFactorEnabled" />
+                <ScalarProperty Name="PhoneNumberConfirmed" ColumnName="PhoneNumberConfirmed" />
+                <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
+                <ScalarProperty Name="SecurityStamp" ColumnName="SecurityStamp" />
+                <ScalarProperty Name="PasswordHash" ColumnName="PasswordHash" />
+                <ScalarProperty Name="EmailConfirmed" ColumnName="EmailConfirmed" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Registrado" ColumnName="Registrado" />
+                <ScalarProperty Name="TipoUsuario" ColumnName="TipoUsuario" />
+                <ScalarProperty Name="IdRol" ColumnName="IdRol" />
+                <ScalarProperty Name="Apellidos" ColumnName="Apellidos" />
+                <ScalarProperty Name="Nombres" ColumnName="Nombres" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="AspNetUserRoles" TypeName="MttoAppModel.AspNetUserRoles" StoreEntitySet="AspNetUserRoles">
+            <EndProperty Name="AspNetUsers">
+              <ScalarProperty Name="Id" ColumnName="UserId" />
+            </EndProperty>
+            <EndProperty Name="AspNetRoles">
+              <ScalarProperty Name="Id" ColumnName="RoleId" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <EntitySetMapping Name="tiempos_carga">
+            <EntityTypeMapping TypeName="MttoAppModel.tiempos_carga">
+              <MappingFragment StoreEntitySet="tiempos_carga">
+                <ScalarProperty Name="tiempo_carga" ColumnName="tiempo_carga" />
+                <ScalarProperty Name="mes" ColumnName="mes" />
+                <ScalarProperty Name="year" ColumnName="year" />
+                <ScalarProperty Name="id_linea" ColumnName="id_linea" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

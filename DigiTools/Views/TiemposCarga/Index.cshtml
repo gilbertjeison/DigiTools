@@ -1,0 +1,526 @@
+﻿@using System.Globalization;
+@model IEnumerable<DigiTools.Models.TiemposCargaViewModel>
+
+<!-- Bootstrap Select Css -->
+<link href="~/Scripts/plugins/bootstrap-select/css/bootstrap-select.min.css" rel="stylesheet" />
+<!--SLICKGRID CSS-->
+<link href="~/Scripts/plugins/slickgrid/slick.grid.css" rel="stylesheet" />
+<link href="~/Scripts/plugins/slickgrid/css/jquery-ui.css" rel="stylesheet" />
+<link href="~/Scripts/plugins/slickgrid/examples.css" rel="stylesheet" />
+<!--YEARPICKER CSS-->
+<link href="~/Scripts/plugins/yearpicker/yearpicker.css" rel="stylesheet" />
+
+<style>
+    .input-group .form-line {
+        border-bottom: none;
+    }
+
+    .gridTC {
+        width: 70%;
+        height: 400px;
+        margin: 0 auto;
+        border: 1px solid #2779aa;
+    }
+
+    .reallyHidden {
+        display: none !important;
+    }
+
+    .optb {
+        width: 200px;
+    }
+
+    .modal-header h1 {
+        margin-top: 15px !important;
+        margin-bottom: 8px;
+        font-size: 25px !important;
+        text-align: center;
+    }
+
+    .note {
+        border: 1px dotted gray;
+        color: #fff;
+        background-color: #fff;
+        width: 100%;
+        height: 100px;
+        padding: 5px;
+    }
+</style>
+<div class="card">
+    <div class="header bg-blue">
+        <h2>
+            TIEMPOS DE CARGA <small>Detalle de tiempos de carga...</small>
+        </h2>
+    </div>
+    <div class="body">
+        <div class="row">
+            <div class="col-sm-3">
+                <label for="TipoLinea">Planta</label>
+                <div class="input-group">
+                    <div class="form-line">
+                        <select name="IdPlanta" id="IdPlanta" class="selectpicker show-tick IdPlanta" data-width="auto" required>
+                            @foreach (var item in ViewBag.PlantasList)
+                            {
+                                <option value="@item.Value">@item.Text</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <label for="TipoLinea">Línea</label>
+                <div class="input-group">
+                    <div class="form-line">
+                        <select name="IdLinea"
+                                class="selectpicker show-tick IdLinea"
+                                data-width="auto"
+                                data-size="5"
+                                data-noneSelectedText='Nada seleccionado...'
+                                data-live-search="true" required></select>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <label for="TipoLinea">Año</label>
+                <div class="input-group">
+                    <div class="form-line">
+                        <select name="IdAno"
+                                class="selectpicker show-tick IdAno"
+                                data-width="auto"
+                                data-size="5"
+                                data-noneSelectedText='Nada seleccionado...'
+                                data-live-search="true" required></select>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <button id="btnFiltrar" class="btn btn-default waves-effect align-center" style="margin-top:6%;">
+                    <i class="material-icons">filter_list</i>
+                    <span>Aplicar filtro</span>
+                </button>
+            </div>
+        </div>
+        <hr />
+        <div class="row clearfix m-l-15">
+
+            <button type="button" class="btn btn-primary waves-effect optb" data-toggle="modal" data-target="#AddModal">
+                <i class="material-icons">library_add</i>
+                <span>Nuevo tiempo de carga</span>
+            </button>
+        </div>
+        <hr />
+
+        <div id="gridTC" class="gridTC"></div>
+        <input type="hidden" name="id_line" id="id_line" />
+        <input type="hidden" name="year" id="year" />
+    </div>
+</div>
+@*MODAL PARA AGREGAR NUEVA LINEA*@
+<div class="modal fade" id="AddModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-blue">
+                <h1 class="modal-title">NUEVO TIEMPO DE CARGA</h1>
+            </div>
+            <div class="modal-body clearfix">
+                <form class="form-horizontal" role="form" enctype="multipart/form-data" method="post" id="formNewTc">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <label for="IdPlantaMod">Planta</label>
+                            <div class="input-group">
+                                <div class="form-line">
+                                    <select name="IdPlantaMod" 
+                                            id="IdPlantaMod" 
+                                            class="selectpicker show-tick IdPlantaMod" 
+                                            data-width="auto" required>
+                                        @foreach (var item in ViewBag.PlantasList)
+                                        {
+                                            <option value="@item.Value">@item.Text</option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <label for="IdLineaMod">Línea</label>
+                            <div class="input-group">
+                                <div class="form-line">
+                                    <select name="IdLineaMod"
+                                            id="IdLineaMod"
+                                            class="selectpicker show-tick IdLineaMod"
+                                            data-width="auto"
+                                            data-size="5"
+                                            data-noneSelectedText='Nada seleccionado...'
+                                            data-live-search="true" required></select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6" style="margin-top: 35px;">
+                            <label for="yearMod">Seleccione año</label>
+                            <div class="input-group">
+                                <div class="form-line">
+                                    <input type="text" name="YearMod" value="" class="yearpicker form-control" required/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="note">
+                                <div style="background:#E6E6E6;padding:2px;">
+                                    <span style="color:black">
+                                        <i><strong>NOTA:</strong>&nbsp;Automáticamente se generará el tiempo de carga por cada mes en el año seleccionado, el valor inicial de cada tiempo es <strong>0</strong></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-link waves-effect" onclick="addTcServer()">GUARDAR</button>
+                <button type="button" class="btn btn-link waves-effect" data-dismiss="modal">CERRAR</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Select Plugin Js -->
+<script src="~/Scripts/plugins/bootstrap-select/js/bootstrap-select.min.js"></script>
+
+<!--SLICKGRID JS-->
+<script src="~/Scripts/plugins/slickgrid/lib/jquery-ui-1.11.3.js"></script>
+<script src="~/Scripts/plugins/slickgrid/lib/jquery.event.drag-2.3.0.js"></script>
+
+<script src="~/Scripts/plugins/slickgrid/slick.core.js"></script>
+<script src="~/Scripts/plugins/slickgrid/lib/firebugx.js"></script>
+<script src="~/Scripts/plugins/slickgrid/plugins/slick.cellrangedecorator.js"></script>
+<script src="~/Scripts/plugins/slickgrid/plugins/slick.cellrangeselector.js"></script>
+<script src="~/Scripts/plugins/slickgrid/slick.formatters.js"></script>
+<script src="~/Scripts/plugins/slickgrid/slick.editors.js"></script>
+<script src="~/Scripts/plugins/slickgrid/slick.grid.js"></script>
+<!--YEARPICKER JS-->
+<script src="~/Scripts/plugins/yearpicker/yearpicker.js"></script>
+
+
+<script>
+
+    //SLICKGRID
+    var data = [];
+    var grid;
+
+    var columns = [
+        { id: "id", name: "Id", field: "Id" },
+        { id: "year", name: "Año", field: "Year" },
+        { id: "mes", name: "Mes", field: "MesName", sortable:true },
+        { id: "tiempo_carga", name: "Tiempo de carga", field: "TiempoCarga", editor: Slick.Editors.Float }
+    ];
+
+    var options = {
+        editable: true,
+        enableCellNavigation: true,
+        enableColumnReorder: false,
+        forceFitColumns: true,
+        multiColumnSort: true
+    }
+
+    function initGrid() {
+        grid = new Slick.Grid("#gridTC", data, columns, options);
+
+        //HABILITAR ORDENACIÓN
+        grid.onSort.subscribe(function (e, args) {
+            var cols = args.sortCols;
+
+            data.sort(function (dataRow1, dataRow2) {
+                for (var i = 0, l = cols.length; i < l; i++) {
+                    var field = cols[i].sortCol.field;
+                    var sign = cols[i].sortAsc ? 1 : -1;
+                    var value1 = dataRow1[field], value2 = dataRow2[field];
+                    var result = (value1 == value2 ? 0 : (value1 > value2 ? 1 : -1)) * sign;
+                    if (result != 0) {
+                        return result;
+                    }
+                }
+                return 0;
+
+            });
+            grid.invalidate();
+            grid.render();
+
+        });
+
+        grid.onCellChange.subscribe(function (e, args) {
+            var item = args.item;
+
+
+            //GUARDAR CAMBIO EN BASE DE DATOS
+            $.ajax({
+                //PARAMETRIZAR SERVICIO AJAX
+                url: '@Url.Content("~/")' + "TiemposCarga/UpdateTcAsync",
+                type: 'post',
+                data: { id: item.Id, ntc:item.TiempoCarga.toString() },
+                //MOSTRAR LOADER ANTES DE INICIAR LA SOLICITUD
+                beforeSend: function () {
+                    $('.page-loader-wrapper').fadeIn();
+                },
+                success: function (response) {
+                    console.log(response);
+
+                    //OCULTAR LOADER UNA VEZ CARAGADA LA INFORMACIÓN
+                    $('.page-loader-wrapper').fadeOut();
+                },
+                //EN CASO DE ERROR, IMPRIMIRLO
+                error: function (error) {
+                    alert(error.responseText);
+                }
+            });
+
+        });
+
+        $('#gridTC').show("slow");
+    }
+
+    //ORDENAR POR MES
+    var sortColumn = "mes";
+    var sortDir = 1;
+
+    $(function ()
+    {
+        //YEARPICKER
+        $('.yearpicker').yearpicker();
+
+        //OCULTAR GRID
+        $('#gridTC').hide(1000);
+
+        //AL MOMENTO DE SELECCIONAR UNA PLANTA, SE DISPARA EL EVENTO
+        $('.IdPlanta').change(function ()
+        {
+            //OBTENER ID SELECCIONADO
+            var idPlanta = $(this).find("option:selected").val();
+            //URL PARA OBTENER LOS DATOS
+            var url = '@Url.Content("~/")' + "TiemposCarga/GetLineAsync";
+            //RECREAR EL OBJETO SELECTPICKER
+            $('.IdLinea').selectpicker('destroy');
+            $('.IdLinea').empty();
+            //INICIALIZAR OBJETO AJAX PARA TRAER DATOS DEL SERVIDOR
+            $.ajax({
+                //PARAMETRIZAR SERVICIO AJAX
+                url: url,
+                type: 'post',
+                data: { id: idPlanta },
+                //MOSTRAR LOADER ANTES DE INICIAR LA SOLICITUD
+                beforeSend: function () {
+                    $('.page-loader-wrapper').fadeIn();
+                },
+                success: function (response) {
+                    //ITERAR CON LA LISTA DE RESULTADOS
+                    $.each(response, function (i, linea) {
+                        //CREAR ITEM CON CADA ITERACIÓN
+                        $('.IdLinea').append($('<option>', {
+                            value: linea.Value,
+                            text: linea.Text
+                        }));
+                    });
+                    //REFRESCAR Y RECARGAR EL OBJETO
+                    $('.IdLinea').selectpicker('refresh');
+                    //OCULTAR LOADER UNA VEZ CARAGADA LA INFORMACIÓN
+                    $('.page-loader-wrapper').fadeOut();
+                },
+                //EN CASO DE ERROR, IMPRIMIRLO
+                error: function (error) {
+                    alert(error);
+                }
+            });
+        });
+
+
+        //AL MOMENTO DE SELECCIONAR UNA LINEA, SE DISPARA EL EVENTO
+        $('.IdLinea').change(function ()
+        {
+            //OBTENER ID SELECCIONADO
+            var idLinea = $(this).find("option:selected").val();
+            //URL PARA OBTENER LOS DATOS
+            var url = '@Url.Content("~/")' + "TiemposCarga/GetDistinctYearAsync";
+            //RECREAR EL OBJETO SELECTPICKER
+            $('.IdAno').selectpicker('destroy');
+            $('.IdAno').empty();
+            //INICIALIZAR OBJETO AJAX PARA TRAER DATOS DEL SERVIDOR
+            $.ajax({
+                //PARAMETRIZAR SERVICIO AJAX
+                url: url,
+                type: 'post',
+                data: { id_linea: idLinea },
+                //MOSTRAR LOADER ANTES DE INICIAR LA SOLICITUD
+                beforeSend: function () {
+                    $('.page-loader-wrapper').fadeIn();
+                },
+                success: function (response) {
+
+                    //ITERAR CON LA LISTA DE RESULTADOS
+                    $.each(response, function (i, linea) {
+                        //CREAR ITEM CON CADA ITERACIÓN
+                        $('.IdAno').append($('<option>', {
+                            value: linea,
+                            text: linea
+                        }));
+                    });
+                    //REFRESCAR Y RECARGAR EL OBJETO
+                    $('.IdAno').selectpicker('refresh');
+                    //OCULTAR LOADER UNA VEZ CARAGADA LA INFORMACIÓN
+                    $('.page-loader-wrapper').fadeOut();
+                },
+                //EN CASO DE ERROR, IMPRIMIRLO
+                error: function (error) {
+                    alert(error);
+                }
+            });
+        });
+
+
+        $('#btnFiltrar').click(function () {
+
+            var id_line = $('.IdLinea').find("option:selected").val();
+            var year = $('.IdAno').find("option:selected").val();
+
+            //VALIDAR LOS FILTROS
+            if (id_line > 0 && $.isNumeric(year)) {
+                //window.location = '@Url.Action("FilterTCAsync", "TiemposCarga")?id_line=' + id_line + '&year=' + year;
+                var url_filter = '@Url.Content("~/")' + "TiemposCarga/FilterTCAsync";
+
+                //INICIALIZAR OBJETO AJAX PARA TRAER DATOS DEL SERVIDOR
+                $.ajax({
+                    //PARAMETRIZAR SERVICIO AJAX
+                    url: url_filter,
+                    type: 'post',
+                    data: { id_line: id_line, year: year },
+                    //MOSTRAR LOADER ANTES DE INICIAR LA SOLICITUD
+                    beforeSend: function () {
+                        $('.page-loader-wrapper').fadeIn();
+                    },
+                    success: function (response) {
+
+                        data = response;
+                        initGrid();
+
+                        //OCULTAR LOADER UNA VEZ CARAGADA LA INFORMACIÓN
+                        $('.page-loader-wrapper').fadeOut();
+                    },
+                    //EN CASO DE ERROR, IMPRIMIRLO
+                    error: function (request, status, error) {
+                        alert('Error al aplicar filtros a tiempos de carga: ' + request.responseText);
+
+                    }
+                });
+            }
+            else {
+                swal("Tiempos de carga", "Debe seleccionar Línea y Año", "warning");
+            }
+        });
+
+        //AL MOMENTO DE SELECCIONAR UNA PLANTA DEL MODAL, SE DISPARA EL EVENTO
+        $('.IdPlantaMod').change(function ()
+        {
+            //OBTENER ID SELECCIONADO
+            var idPlanta = $(this).find("option:selected").val();
+            //URL PARA OBTENER LOS DATOS
+            var url = '@Url.Content("~/")' + "TiemposCarga/GetLineAsync";
+            //RECREAR EL OBJETO SELECTPICKER
+            $('.IdLineaMod').selectpicker('destroy');
+            $('.IdLineaMod').empty();
+            //INICIALIZAR OBJETO AJAX PARA TRAER DATOS DEL SERVIDOR
+            $.ajax({
+                //PARAMETRIZAR SERVICIO AJAX
+                url: url,
+                type: 'post',
+                data: { id: idPlanta },
+                //MOSTRAR LOADER ANTES DE INICIAR LA SOLICITUD
+                beforeSend: function () {
+                    $('.page-loader-wrapper').fadeIn();
+                },
+                success: function (response) {
+                    //ITERAR CON LA LISTA DE RESULTADOS
+                    $.each(response, function (i, linea) {
+                        //CREAR ITEM CON CADA ITERACIÓN
+                        $('.IdLineaMod').append($('<option>', {
+                            value: linea.Value,
+                            text: linea.Text
+                        }));
+                    });
+                    //REFRESCAR Y RECARGAR EL OBJETO
+                    $('.IdLineaMod').selectpicker('refresh');
+                    //OCULTAR LOADER UNA VEZ CARAGADA LA INFORMACIÓN
+                    $('.page-loader-wrapper').fadeOut();
+                },
+                //EN CASO DE ERROR, IMPRIMIRLO
+                error: function (error) {
+                    alert(error);
+                }
+            });
+        });
+    });
+
+    function addTcServer() {
+        var validate = $('#formNewTc').validate({
+            highlight: function (input) {
+                $(input).parents('.form-line').addClass('error');
+            },
+            unhighlight: function (element, errorClass, validClass) {
+                $(element).parents('.form-line').removeClass('error');
+            },
+            rules: {
+                'IdPlantaMod': { valueNotEquals: "0" },
+                'IdLineaMod': { valueNotEquals: "0" }
+            },
+            success: function (label, element) {
+                label.parent().removeClass('error');
+                label.remove();
+            }
+        });
+
+        if (!validate.form()) {
+            return false;
+        }
+
+        //MOSTRAR LOADER
+        $('.page-loader-wrapper').fadeIn();
+
+        var form = $('#formNewTc')[0];
+        var dataString = new FormData(form);
+        
+
+        //VERIFICAR QUE LOS TIEMPOS DE CARGA DE LOS PARÁMETROS SELECCIONADOS NO EXISTAN EN LA BASE DE DATOS
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("AddTcAsync", "TiemposCarga")',
+            data: dataString,
+            success: function (response) {
+
+                if (response == 12) {
+
+                }
+                console.log(response);
+                //MENSAJE DE CONFIRMACIÓN O ERROR
+                //if (response == "OK") {
+                swal("Tiempos de carga", "Tiempos: " + response, "success");
+                //    $('#AddModal').modal('hide');
+                //    GotoLines();
+                //}
+                //else {
+                //    swal("Machine Ledger", response, "warning");
+                //}
+
+                $('.page-loader-wrapper').fadeOut();
+            },
+            error: function (error) {
+                alert(error);
+            },            
+            cache: false,
+            contentType: false,
+            processData:false
+        });
+    }
+
+
+</script>
+
+

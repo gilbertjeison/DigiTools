@@ -1,0 +1,82 @@
+﻿@model List<DigiTools.Models.PlantasViewModel>
+
+
+@foreach (var item in Model)
+{
+    <div class="col-md-4 col-sm-6 col-xs-12 cardUn">
+        <article class="material-card Blue">
+            <h2>
+                <span>@item.Nombre</span>
+                <strong>
+                    <i class="fa fa-th-list"></i>
+                    @item.ListLineas.Count Líneas
+                </strong>
+            </h2>
+            <div class="mc-content">
+                <div class="img-container">
+                    <img class="img-responsive" src="@Url.Content(item.Image)" alt="imagen de @item.Nombre" />
+                </div>
+            </div>
+            <div class="mc-description" style="overflow-y: scroll;">
+                <strong>Vista previa de líneas</strong>
+                <div class="list-group">
+                    @foreach (var ll in item.ListLineas)
+                    {
+                        <a class="list-group-item">@ll.nombre</a>
+                    }
+                </div>
+            </div>
+            <div class="mc-btn-action">
+                <i class="fa fa-bars"></i>
+            </div>
+            <div class="mc-footer">
+                <h4>ACCIONES</h4>
+                <button type="button" class="btn btn-primary waves-effect" onclick="Explorar(@item.Id,'@item.Nombre');">
+                    <i class="material-icons">search</i>
+                </button>
+                <button type="button" class="btn btn-primary waves-effect">
+                    <i class="material-icons">border_color</i>
+                </button>
+                <button type="button" class="btn btn-primary waves-effect">
+                    <i class="material-icons">delete</i>
+                </button>
+
+            </div>
+        </article>
+    </div>
+}
+
+<script>
+
+    $(function ()
+    {
+        $('.material-card').materialCard({
+            icon_close: 'fa-chevron-left',
+            icon_open: 'fa-bars',
+            icon_spin: 'fa-spin-fast',
+            card_activator: 'click'
+        });
+
+    });
+
+    function Explorar(id, nombre) {
+        $.ajax({
+            url: '@Url.Content("~/")' + "MachineLedger/GetLinesView",
+            type: 'GET',
+            data: { planta: id },
+            beforeSend: function () {
+                $('.page-loader-wrapper').fadeIn();
+            }
+        }).done(function (linesView, param) {
+
+            $('.breadcrumb li:eq(1)').show();
+            $('.breadcrumb li a:eq(1)').text(nombre);
+            $('#CurrentPlant').val(id)
+
+            $('.body').html(linesView);
+
+            $('.page-loader-wrapper').fadeOut();
+        });
+       
+    }
+</script>

@@ -1,0 +1,305 @@
+﻿@{
+                /**/
+
+                ViewBag.Title = "About";
+}
+<h2>@ViewBag.Title.</h2>
+<h3>@ViewBag.Message</h3>
+
+<!--SLICKGRID CSS-->
+<link href="~/Scripts/plugins/slickgrid/slick.grid.css" rel="stylesheet" />
+<link href="~/Scripts/plugins/slickgrid/css/jquery-ui.css" rel="stylesheet" />
+<link href="~/Scripts/plugins/slickgrid/examples.css" rel="stylesheet" />
+<link href="~/Scripts/plugins/slickgrid/css/select2.css" rel="stylesheet" />
+
+
+<div id="gridAcciones" style="width:100%;height:300px;"></div>
+
+
+<!-- JQuery Steps Plugin Js -->
+<script src="~/Scripts/plugins/jquery-steps/jquery.steps.js"></script>
+<!-- Select Plugin Js -->
+<script src="~/Scripts/plugins/bootstrap-select/js/bootstrap-select.min.js"></script>
+<!--TOOLTIPSTER JS-->
+<script type="text/javascript" src="~/Scripts/plugins/tooltipster-master/js/tooltipster.bundle.min.js"></script>
+<!-- Input Mask Plugin Js -->
+<script src="~/Scripts/plugins/jquery-inputmask/jquery.inputmask.bundle.js"></script>
+<!-- Editable Table Plugin Js -->
+<script src="~/Scripts/plugins/editable-table/mindmup-editabletable.js"></script>
+<script src="~/Scripts/plugins/editable-table/numeric-input-example.js"></script>
+<!-- Moment Plugin Js -->
+<script src="~/Scripts/plugins/momentjs/moment.js"></script>
+<!-- Bootstrap Material Datetime Picker Plugin Js -->
+<script src="~/Scripts/plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js"></script>
+<!-- TAGSINPUT Plugin Js -->
+<script src="~/Scripts/plugins/bootstrap-tagsinput/bootstrap-tagsinput.js"></script>
+<!-- TYPEHEAD Plugin Js -->
+<script src="~/Scripts/plugins/bootstrap-tagsinput/typeahead.bundle.js"></script>
+<!-- Bloodhound Plugin Js -->
+<script src="~/Scripts/plugins/bootstrap-tagsinput/bloodhound.js"></script>
+<!-- KATEX Plugin Js -->
+<script src="~/Scripts/plugins/katex/katex.js"></script>
+<script src="~/Scripts/plugins/katex/auto-render.min.js"></script>
+<!--CUSTOM DROPZONE-->
+<script src="~/Scripts/plugins/dropzone-custom/dropzone.js"></script>
+<!--SLICKGRID JS-->
+<script src="~/Scripts/plugins/slickgrid/lib/jquery.event.drag-2.3.0.js"></script>
+
+<script src="~/Scripts/plugins/slickgrid/slick.core.js"></script>
+<script src="~/Scripts/plugins/slickgrid/slick.grid.js"></script>
+<script src="~/Scripts/plugins/slickgrid/slick.formatters.js"></script>
+<script src="~/Scripts/plugins/slickgrid/slick.editors.js"></script>
+
+<script src="~/Scripts/plugins/slickgrid/lib/firebugx.js"></script>
+<script src="~/Scripts/plugins/slickgrid/lib/jquery-ui-1.11.3.js"></script>
+<script src="~/Scripts/plugins/slickgrid/lib/jquery-ui.min.js"></script>
+<script src="~/Scripts/plugins/slickgrid/lib/select2.js"></script>
+
+<script src="~/Scripts/plugins/slickgrid/plugins/slick.cellrangeselector.js"></script>
+<script src="~/Scripts/plugins/slickgrid/plugins/slick.cellselectionmodel.js"></script>
+<script src="~/Scripts/plugins/slickgrid/plugins/slick.cellrangedecorator.js"></script>
+
+<script>
+    //SLICKGRID
+    var grid;
+    var tiposAcciones = {
+        AP: 'Acción preventiva',
+        CM: 'Contramedidas o acciones inmediatas',
+        RH: 'Réplica horizontal'
+    };
+
+    function populateSelect(select, dataSource, addBlank) {
+        var index, len, newOption;
+
+        if (addBlank) { select.appendChild(new Option('', '')); }
+
+        $.each(dataSource, function (value, text) {
+            newOption = new Option(text.Nombre, text.Id);
+            select.appendChild(newOption);
+        });
+    };
+
+    function PopulateSelectTipo(select, dataSource, addBlank) {
+        var index, len, newOption;
+        if (addBlank) { select.appendChild(new Option('', '')); }
+        $.each(dataSource, function (value, text) {
+            newOption = new Option(text, value);
+            select.appendChild(newOption);
+        });
+    };
+
+    function SelectEditorTipo(args) {
+        var $input;
+        var defaultValue;
+        this.keyCaptureList = [Slick.keyCode.UP, Slick.keyCode.DOWN, Slick.keyCode.ENTER];
+
+        this.init = function () {
+            $input = $('<select></select>');
+            $input.width(args.container.clientWidth + 3);
+            PopulateSelectTipo($input[0], args.column.dataSource, true);
+            $input.appendTo(args.container);
+            $input.focus().select();
+
+            $input.select2({
+                placeholder: '-',
+                allowClear: true
+            });
+        };
+
+        this.destroy = function () {
+            $input.select2('destroy');
+        };
+
+        this.show = function () {
+
+        };
+        this.hide = function () {
+            $input.select('results_hide');
+        };
+        this.focus = function () {
+            $input.select2('input_focus');
+        };
+        this.loadValue = function (item) {
+            defaultValue = item[args.column.field];
+            $input.val(defaultValue);
+            $input[0].defaultValue = defaultValue;
+            $input.trigger('change.select2');
+        };
+        this.serializeValue = function () {
+            return $input.val();
+        };
+        this.applyValue = function (item, state) {
+            item[args.column.field] = state;
+        }
+        this.isValueChanged = function () {
+            return (!($input.val() == "" && defaultValue == null)) && ($input.val() != defaultValue);
+        };
+        this.validate = function () {
+            return {
+                valid: true,
+                msg: null
+            };
+        };
+        this.init();
+    }
+
+    function SelectEditor(args) {
+        var $input;
+        var defaultValue;
+        this.keyCaptureList = [Slick.keyCode.UP, Slick.keyCode.DOWN, Slick.keyCode.ENTER];
+
+        this.init = function () {
+            $input = $('<select></select>');
+            $input.width(args.container.clientWidth + 3);
+            populateSelect($input[0], args.column.dataSource, true);
+            $input.appendTo(args.container);
+            $input.focus().select();
+
+            $input.select2({
+                placeholder: '-',
+                allowClear: true
+            });
+        };
+
+        this.destroy = function () {
+            $input.select2('destroy');
+        };
+
+        this.show = function () {
+
+        };
+        this.hide = function () {
+            $input.select('results_hide');
+        };
+        this.focus = function () {
+            $input.select2('input_focus');
+        };
+        this.loadValue = function (item) {
+            defaultValue = item[args.column.field];
+            $input.val(defaultValue);
+            $input[0].defaultValue = defaultValue;
+            $input.trigger('change.select2');
+        };
+        this.serializeValue = function () {
+            return $input.val();
+        };
+        this.applyValue = function (item, state) {
+            item[args.column.field] = state;
+        }
+        this.isValueChanged = function () {
+            return (!($input.val() == "" && defaultValue == null)) && ($input.val() != defaultValue);
+        };
+        this.validate = function () {
+            return {
+                valid: true,
+                msg: null
+            };
+        };
+        this.init();
+    }
+
+    function select2Formatter(row, cell, value, columnDef, dataContext) {
+        if (value) {
+            return columnDef.dataSource.find((x) => x.Id === value).Nombre || '-';
+        }
+        else {
+            return '-';
+        }
+    }
+
+    function select2FormatterTipo(row, cell, value, columnDef, dataContext) {
+        return columnDef.dataSource[value] || '-';
+    }
+
+    function RemoveClick(index) {
+        var data = grid.getData();
+        data.splice(index, 1);
+        grid.setData(data);
+        grid.render();
+    }
+
+    function initGrid() {
+        var columns =
+            [
+                { id: "accion", name: "Acción", field: "accion", minWidth: 300, editable: true, editor: Slick.Editors.Text },
+                { id: "tipo_accion", name: "Tipo de acción", field: "TipoAccion", minWidth: 200, formatter: select2FormatterTipo, editor: SelectEditorTipo, dataSource: tiposAcciones },
+                //{ id: "id_responsable", name: "Responsable", field: "Nombre", minWidth: 200, formatter: select2Formatter, editor: SelectEditor, dataSource: user_data },
+                { id: "fecha", name: "Fecha", field: "fecha", minWidth: 130, editor: Slick.Editors.Date },
+                {
+                    id: 'id', name: '#', field: 'id', formatter: function (index, c, id, def, datactx) {
+                        return '<a id="deleteSG" class="btn btn-primary" style="padding:2px;" onclick="RemoveClick(' + index + ')">Eliminar</a>';
+                    }
+                }
+            ];
+
+        var options =
+        {
+            editable: true,
+            enableAddRow: true,
+            enableCellNavigation: true,
+            asyncEditorLoading: false,
+            autoEdit: false
+        };
+
+        var data = [];
+        for (var i = 0; i < 5; i++) {
+            var d = (data[i] = {});
+            d["accion"] = "Elemento " + i + 9;
+            d["TipoAccion"] = 'RH';
+            //d["Nombre"] = 2;
+            d["fecha"] = getCurrentDate();
+        }
+
+        grid = new Slick.Grid("#gridAcciones", data, columns, options);
+        grid.setSelectionModel(new Slick.CellSelectionModel());
+        grid.onAddNewRow.subscribe(function (e, args) {
+            var item = args.item;
+            grid.invalidateRow(data.length);
+            data.push(item);
+            grid.updateRowCount();
+            grid.render();
+        });
+
+        $('#gridAcciones').on('shown', grid.resizeCanvas());
+    }
+
+    function getCurrentDate() {
+        var today = new Date();
+        var dd = today.getDate();
+        var mm = today.getMonth() + 1; //January is 0!
+        var yyyy = today.getFullYear();
+
+        if (dd < 10) {
+            dd = '0' + dd;
+        }
+
+        if (mm < 10) {
+            mm = '0' + mm;
+        }
+
+        today = mm + '/' + dd + '/' + yyyy;
+        return today;
+    }
+
+    var user_data = {};
+         //INICIALIZAR OBJETO AJAX PARA TRAER DATOS DEL SERVIDOR
+        $.ajax({
+            //PARAMETRIZAR SERVICIO AJAX
+            url: '@Url.Action("GetAllUsersJsonAsync", "Home")',
+            type: 'post',
+            //MOSTRAR LOADER ANTES DE INICIAR LA SOLICITUD
+            beforeSend: function () {
+                $('.page-loader-wrapper').fadeIn();
+            },
+            success: function (response) {
+                user_data = response;
+                initGrid();
+                //OCULTAR LOADER UNA VEZ CARAGADA LA INFORMACIÓN
+                $('.page-loader-wrapper').fadeOut();
+            },
+            //EN CASO DE ERROR, IMPRIMIRLO
+            error: function (request, status, error) {
+                alert('Error al cargar usuarios Json: ' + request.responseText);
+            }
+    });
+</script>

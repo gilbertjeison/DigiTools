@@ -1,0 +1,163 @@
+﻿@model DigiTools.Models.RegisterViewModel
+@{
+    ViewBag.Title = "Registrarse";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+
+    <!-- Google Fonts -->
+    <link href="~/Content/google_fonts/font.css" rel="stylesheet" type="text/css">
+    <link href="~/Content/material_icons/material_icons.css" rel="stylesheet" type="text/css">
+
+    <!-- Bootstrap Core Css -->
+    <link href="~/Scripts/plugins/bootstrap/css/bootstrap.css" rel="stylesheet">
+
+    <!-- Waves Effect Css -->
+    <link href="~/Scripts/plugins/node-waves/waves.css" rel="stylesheet" />
+
+    <!-- Animation Css -->
+    <link href="~/Scripts/plugins/animate-css/animate.css" rel="stylesheet" />
+
+    <!-- Custom Css -->
+    <link href="~/Content/Adminbsb/style.css" rel="stylesheet">
+
+    @Styles.Render("~/Content/vegas")
+    @Scripts.Render("~/bundles/modernizr")
+    <style>
+        .logo {
+            margin: 0 auto 10px auto;
+            width: 183px;
+            height: 182px;
+            background: transparent url(@Url.Content("~/Content/images/logos_animation2.gif"));
+        }
+
+        #loginForm{
+            border-radius: 10px;
+            padding:3%;
+        }
+
+        .label{
+            border-radius: 5px;
+
+        }
+
+        h2{  text-align:center;}
+
+    </style>
+
+    <title>@ViewBag.Title - DIGITOOLS</title>
+</head>
+<body class="login-page">
+    <div class="login-box">
+        <div id="loginForm" class="card">
+            <div class="logo" id="logo"></div>
+            <div class="body">
+                @using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <h4>Crear una nueva cuenta</h4>
+                    <hr />
+                    @Html.ValidationSummary("", new { @class = "text-danger" })
+
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <i class="material-icons">person</i>
+                        </span>
+                        <div class="form-line">
+                            @Html.TextBoxFor(m => m.Nombres, new { @class = "form-control", placeholder = "Nombres..." })                            
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <i class="material-icons">person_outline</i>
+                        </span>
+                        <div class="form-line">
+                            @Html.TextBoxFor(m => m.Apellidos, new { @class = "form-control", placeholder = "Apellidos..." })                            
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <i class="material-icons">email</i>
+                        </span>
+                        <div class="form-line">
+                            @Html.TextBoxFor(m => m.Email, new { @class = "form-control", placeholder = "Correo electrónico corporativo..." })                            
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <i class="material-icons">vpn_key</i>
+                        </span>
+                        <div class="form-line">
+                            @Html.PasswordFor(m => m.Password, new { @class = "form-control", placeholder = "Contraseña..." })                           
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <i class="material-icons">vpn_key</i>
+                        </span>
+                        <div class="form-line">
+                            @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control", placeholder = "Confirmar contraseña..." })                            
+                        </div>
+                    </div>
+
+
+                    <input type="submit" class="btn btn-block bg-blue" value="Registrarse" />
+                    
+
+                }
+            </div>
+        </div>
+    </div>
+
+    <!-- Jquery Core Js -->
+    <script src="~/Scripts/plugins/jquery/jquery.min.js"></script>
+
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/vegas")
+
+    <!-- Bootstrap Core Js -->
+    <script src="~/Scripts/plugins/bootstrap/js/bootstrap.js"></script>
+
+    <!-- Waves Effect Plugin Js -->
+    <script src="~/Scripts/plugins/node-waves/waves.js"></script>
+
+    <!-- Validation Plugin Js -->
+    @*<script src="~/Scripts/plugins/jquery-validation/jquery.validate.js"></script>*@
+
+    <!-- Custom Js -->
+    <script src="~/Scripts/js/admin.js"></script>
+    <script src="~/Scripts/js/ex/sign-in.js"></script>
+
+    <script>
+    $(function () {
+        $('body').vegas({
+            delay: 20000,
+            cover: true,
+            overlay: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAACAQMAAABIeJ9nAAAAA3NCSVQICAjb4U" +
+                "/gAAAABlBMVEX///8AAABVwtN+AAAAAnRSTlMA/1uRIrUAAAAJcEhZcwAAAsQAAALEAVuRnQsAAAAWdEVYdENyZWF0" +
+                "aW9uIFRpbWUAMDQvMTMvMTGrW0T6AAAAHHRFWHRTb2Z0d2FyZQBBZG9iZSBGaXJld29ya3MgQ1M1cbXjNgAAAAxJREFUCJljaGBgAAABhACBrONIPgAAAABJRU5ErkJggg==",
+            slides: [
+                { src: '@Url.Content("~/Content/images/slides/IMAGEN_PLANTA.png")' },
+                { src: '@Url.Content("~/Content/images/slides/planta_1.JPG")' },               
+                { src: '@Url.Content("~/Content/images/slides/planta_4.JPG")' },
+                { src: '@Url.Content("~/Content/images/slides/planta_3.JPG")' },
+                { src: '@Url.Content("~/Content/images/slides/planta_2.JPG")'},
+                { src: '@Url.Content("~/Content/images/slides/jpeg.jpg")'}
+            ],
+            transition: ['fade', 'swirlLeft', 'zoomOut', 'flash']
+        });
+    });
+    </script>
+
+
+</body>
+</html>

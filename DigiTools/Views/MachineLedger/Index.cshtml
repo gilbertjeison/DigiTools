@@ -1,0 +1,429 @@
+﻿@model DigiTools.Models.MlModelView
+@{
+    ViewBag.Title = "Index";
+}
+
+<link href='http://fonts.googleapis.com/css?family=Raleway:400,300,200,500,600,700' rel='stylesheet' type='text/css'>
+<link rel="stylesheet" href="~/Scripts/plugins/font-awesome/css/font-awesome.min.css">
+<link rel="stylesheet" href="~/Scripts/plugins/material-cards-master/dist/material-cards.css">
+<!-- Bootstrap Select Css -->
+<link href="~/Scripts/plugins/bootstrap-select/css/bootstrap-select.min.css" rel="stylesheet" />
+<!-- SWEETALERT Css -->
+<link href="~/Scripts/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+
+<style>
+    .cardUn {
+        margin: 0 auto;
+    }
+
+    .img-responsive {
+        height: 100%;
+        border: 1px solid #2196f3;
+    }
+
+    .mc-footer .btn {
+        margin-top: 2px;
+    }
+
+    #loader {
+        position: fixed;
+        margin: 50%;
+        z-index: 9999;
+        height: 100%;
+        width: 100%;
+    }
+
+    ol li {
+        cursor: pointer;
+    }
+
+    .breadcrumb li a {
+        text-decoration: underline;
+    }
+
+    .bootstrap-select .btn {
+        padding: 0;
+    }
+
+    input[type=number] {
+        border: none;
+        text-align: center;
+    }
+
+    .modal-header h1 {
+        margin-top: 15px !important;
+        margin-bottom: 8px;
+        font-size: 25px !important;
+        text-align: center;
+    }
+
+    .ModalImage {
+        padding: 5px;
+        border: solid 1px #EFEFEF;
+        border-radius: 10px;
+        object-fit: cover;
+    }
+
+    .ModalImage:hover {
+        border: solid 1px #CCC;
+        -moz-box-shadow: 1px 1px 5px #999;
+        -webkit-box-shadow: 1px 1px 5px #999;
+        box-shadow: 1px 1px 5px #999;
+    }
+
+    .mc-btn-action i {
+        margin-top: 30%;
+    }
+</style>
+
+<div class="card clearfix">
+    <div class="header">
+        <h2>
+            Machine Ledger...
+        </h2>
+        <ol class="breadcrumb">
+            <li><a onclick="GotoPlantas()"><i class="material-icons">location_city</i> Plantas</a></li>
+            <li><a onclick="GotoLines()"><i class="material-icons">blur_linear</i> Líneas</a><input id="CurrentPlant" type="hidden" value="0" /></li>
+            @*<li><a href="javascript:void(0);"><i class="material-icons">directions_railway</i> Máquinas</a></li>
+                <li><a href="javascript:void(0);"><i class="material-icons">category</i> Sistemas</a></li>
+                <li><a href="javascript:void(0);"><i class="material-icons">developer_board</i> Conjuntos</a></li>
+                <li><a href="javascript:void(0);"><i class="material-icons">memory</i> Componentes</a></li>*@
+        </ol>
+    </div>
+    <div class="body" id="cardBody">
+
+    </div>
+</div>
+
+
+@* PRUEBA DE VISUALIZACIÓN eDRAWING *@
+
+@*<iframe scrolling='auto' 
+        frameborder='1' 
+        allowfullscreen='true' 
+        src='http://www.3dcontentcentral.com/external-site-embed.aspx?format=3D&catalogid=171&modelid=227418&width=250&height=250&edraw=true' name='PreviewFrame3D' id='PreviewFrame3D' width='400' height='355'>
+</iframe>
+<br />
+<a href='http://www.3dcontentcentral.com/download-model.aspx?catalogid=171&id=227418'>Download</a>*@
+
+
+@*MODAL PARA AGREGAR NUEVA LINEA*@
+<div class="modal fade" id="AddModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-blue">
+                <h1 class="modal-title">NUEVA LÍNEA</h1>
+            </div>
+            <div class="modal-body clearfix">     
+                <form class="form-horizontal" role="form" enctype="multipart/form-data" method="post" id="formNewLine">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <label for="Nombre">Nombre</label>
+                            <div class="input-group">
+                                <div class="form-line">
+                                    <input type="text" name="Nombre" placeholder="Aquí el nombre..." required />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <label for="TipoLinea">Tipo de línea</label>
+                            <div class="input-group">
+                                <div class="form-line">
+                                    <select name="TipoLinea" id="TipoLinea" class="selectpicker show-tick TipoLinea" data-width="180" required>
+                                        @foreach (var item in ViewBag.TipoLineaList)
+                                        {
+                                            <option value="@item.Value">@item.Text</option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                        </div>                      
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <label for="Image">Imágen</label>
+                            <div class="input-group">
+                                <div class="form-line">
+                                    <input type="file" name="Images" id="LineImageInp" value="" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row m-t--10">
+                        <div>
+                            <img src="~/Content/images/image_placeholder.png" alt="Alternate Text" class="center-block ModalImage" width="150" height="150" />
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-link waves-effect" onclick="AddLine()">GUARDAR</button>
+                <button type="button" class="btn btn-link waves-effect" data-dismiss="modal">CERRAR</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*MODAL PARA EDITAR LINEA*@
+<div class="modal fade" id="EditLinModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-blue">
+                <h1 class="modal-title">EDITAR LÍNEA</h1>
+            </div>
+            <div class="modal-body clearfix">
+                <form class="form-horizontal" role="form" enctype="multipart/form-data" method="post" id="formEditLine">
+                    <input type="hidden" name="Id" id="IdLineaEdit" value="0" />
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <label for="Nombre">Nombre</label>
+                            <div class="input-group">
+                                <div class="form-line">
+                                    <input type="text" name="Nombre" placeholder="Aquí el nombre..." id="EditLineName" required />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-4" style="margin-top: 4px;">
+                            <label for="TipoLinea">Tipo de línea</label>
+                            <div class="input-group">
+                                <div class="form-line">
+                                    <select name="TipoLinea" id="TipoLineaEdit" class="selectpicker show-tick TipoLinea" data-width="180" required>
+                                        @foreach (var item in ViewBag.TipoLineaList)
+                                        {
+                                            <option value="@item.Value">@item.Text</option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <label for="TiempoCarga">Tiempo de carga (@(DateTime.Now.ToString("MMMM").ToUpperInvariant() + " " + DateTime.Now.Year))</label>
+                            <div class="input-group">
+                                <div class="form-line">
+                                    <input type="text" readonly name="TiempoCarga" id="TiempoCargaEdit" placeholder="Aquí el tiempo de carga..." value="0" required />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <label for="Image">Imágen</label>
+                            <div class="input-group">
+                                <div class="form-line">
+                                    <input type="file" name="Images" id="LineImageInpEdit" value="" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row m-t--10">
+                        <div>
+                            <img src="~/Content/images/image_placeholder.png" id="LineImageEdit" alt="Alternate Text" class="center-block ModalImage" width="150" height="150" />
+                        </div>
+
+                    </div>
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-link waves-effect" onclick="EditLine()">GUARDAR</button>
+                <button type="button" class="btn btn-link waves-effect" data-dismiss="modal">CERRAR</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function ()
+    {
+        $.extend(jQuery.validator.messages, {
+            required: "Este campo es requerido..."
+        });
+
+        $.validator.addMethod("valueNotEquals", function (value, element, arg) {
+            return arg !== value;
+        }, "Este campo es requerido...");
+
+        $('#TipoLinea').change(function () {
+            $(this).parents('.form-line').removeClass('error');
+            $(this).removeClass('error');
+            $('#TipoLinea-error').remove();
+        });
+
+        GotoPlantas();
+
+        $('body').on('hidden.bs.modal', '.modal', function () {
+            $(this).find('form')[0].reset();
+            $('.ModalImage').attr('src', '/Content/images/image_placeholder.png');
+        });
+    });
+
+    function GotoPlantas() {
+        $.ajax({
+             url: '@Url.Content("~/")' + "MachineLedger/GetPlantsView",
+            type: 'GET',
+            beforeSend: function () {
+                $('.page-loader-wrapper').fadeIn();
+            }
+        }).done(function (plantsView) {
+
+            $('.body').html(plantsView);
+            $('.breadcrumb li:eq(1)').hide();
+            $('.page-loader-wrapper').fadeOut();
+        });
+    }
+
+    function GotoLines() {
+       $.ajax({
+            url: '@Url.Content("~/")' + "MachineLedger/GetLinesView",
+           type: 'GET',
+           data: { planta: $('#CurrentPlant').val() },
+           beforeSend: function () {
+                   $('.page-loader-wrapper').fadeIn();
+            }
+       }).done(function (linesView) {
+
+           $('.body').html(linesView);
+           $('.page-loader-wrapper').fadeOut();
+        });
+    }
+
+    function LoadImage(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                $('.ModalImage').attr('src', e.target.result);
+            }
+
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    $('input[type=file]').change(function () {
+        LoadImage(this);
+    });
+
+
+    function AddLine() {
+        var validate = $('#formNewLine').validate({
+            highlight: function (input) {
+                $(input).parents('.form-line').addClass('error');
+            },
+            unhighlight: function (element, errorClass, validClass) {
+                $(element).parents('.form-line').removeClass('error');
+            },
+            rules: {
+                'TipoLinea': { valueNotEquals: "0" }
+            },
+            success: function (label, element) {
+                label.parent().removeClass('error');
+                label.remove();
+            }
+
+        });
+
+        if (!validate.form()) {
+            return false;
+        }
+
+        //MOSTRAR LOADER
+        $('.page-loader-wrapper').fadeIn();
+
+        var form = $('#formNewLine')[0];
+        var dataString = new FormData(form);
+        console.log(dataString);
+
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("AddLine","MachineLedger")',
+            data: dataString,
+            success: function (response) {
+
+                //MENSAJE DE CONFIRMACIÓN O ERROR
+                if (response == "OK") {
+                    swal("Machine Ledger", "Línea agregada correctamemnte", "success");
+                    $('#AddModal').modal('hide');
+                    GotoLines();
+                }
+                else {
+                    swal("Machine Ledger", response, "warning");
+                }
+            },
+            cache: false,
+            contentType: false,
+            processData:false
+        });
+    }
+
+    function EditLine() {
+        var validate = $('#formEditLine').validate({
+            highlight: function (input) {
+                $(input).parents('.form-line').addClass('error');
+            },
+            unhighlight: function (element, errorClass, validClass) {
+                $(element).parents('.form-line').removeClass('error');
+            },
+            rules: {
+                'TipoLinea': { valueNotEquals: "0" }
+            },
+            success: function (label, element) {
+                label.parent().removeClass('error');
+                label.remove();
+            }
+
+        });
+
+        if (!validate.form()) {
+            return false;
+        }
+
+        //MOSTRAR LOADER
+        $('.page-loader-wrapper').fadeIn();
+
+        var form = $('#formEditLine')[0];
+        var dataString = new FormData(form);
+        console.log(dataString);
+
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("EditLine","MachineLedger")',
+            data: dataString,
+            success: function (response) {
+
+                //MENSAJE DE CONFIRMACIÓN O ERROR
+                if (response == "OK") {
+                    swal("Machine Ledger", "Línea editada correctamente", "success");
+                    $('#EditLinModal').modal('hide');
+                    GotoLines();
+                }
+                else {
+                    swal("Machine Ledger", response, "warning");
+                }
+            },
+            cache: false,
+            contentType: false,
+            processData:false
+        });
+    }
+</script>
+
+@*JQUERY MATERIAL CARD*@
+<script src="~/Scripts/plugins/material-cards-master/js/jquery.material-cards.min.js"></script>
+
+@*AJAX UNOBTRUSIVE*@
+<script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+
+@*AJAX FORM*@
+<script src="~/Scripts/plugins/jquery-form/jquery.form.min.js"></script>
+
+<!-- Select Plugin Js -->
+<script src="~/Scripts/plugins/bootstrap-select/js/bootstrap-select.min.js"></script>
+
+<!-- Jquery Validation Plugin Css -->
+<script src="~/Scripts/plugins/jquery-validation/jquery.validate.js"></script>
+
+<!-- SweetAlert Plugin Js -->
+<script src="~/Scripts/plugins/sweetalert/sweetalert.min.js"></script>
