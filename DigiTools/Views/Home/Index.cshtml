@@ -74,6 +74,16 @@
                 //VALIDAR QUE CUANDO SEA UN CAMBIO DE COMPONENTE, HAYAN REGISTROS EN LA TABLA
                 if (currentIndex == 1 &&  $('#cc').is(':checked')) {
                    //CAPTURAR RESGISTROS DE LA TABLA;
+                    var data = Array();
+
+                    $("#tblRepuestos tr").each(function (i, v) {
+                        data[i] = Array();
+                        $(this).children('td').each(function (ii, vv) {
+                            data[i][ii] = $(this).text();
+                        });
+                    })
+
+                    console.log(data);
                 }
 
                 if (currentIndex < newIndex) {
