@@ -67,23 +67,65 @@
 
                 
                 if (currentIndex == 1 && myDropzone1.files.length == 0) {
-                    swal("Descripción gráfica de la falla", "Debe cargar las imágenes realcionadas", "error");
+                    swal("Descripción gráfica de la falla", "Debe cargar las imágenes relacionadas", "error");
+                    return false;
+                }
+
+                if (currentIndex == 2 && myDropzone2.files.length == 0) {
+                    swal("Dibujo / Diagrama / Foto del 5 Por qué", "Debe cargar las imágenes relacionadas", "error");
                     return false;
                 }
 
                 //VALIDAR QUE CUANDO SEA UN CAMBIO DE COMPONENTE, HAYAN REGISTROS EN LA TABLA
                 if (currentIndex == 1 &&  $('#cc').is(':checked')) {
-                   //CAPTURAR RESGISTROS DE LA TABLA;
-                    var data = Array();
+                   //CAPTURAR RESGISTROS DE LA TABLA;                
+                    var repuestos = new Array();
+                    $("#tblRepuestos TBODY TR").each(function () {
+                        var row = $(this);
+                        var rep = {};
+                        rep.CodSap = row.find("TD").eq(0).html();
+                        rep.Descripcion = row.find("TD").eq(1).html();
+                        rep.Cantidad = row.find("TD").eq(2).html();
+                        rep.Costo = row.find("TD").eq(3).html();
+                        repuestos.push(rep);
+                    });
 
-                    $("#tblRepuestos tr").each(function (i, v) {
-                        data[i] = Array();
-                        $(this).children('td').each(function (ii, vv) {
-                            data[i][ii] = $(this).text();
-                        });
-                    })
+                    if (repuestos.length == 0) {
+                        swal("Repuestos utilizados", "Debe cargar los repuestos utilizados", "error");
+                        return false;
+                    };
+                }
 
-                    console.log(data);
+                //VALIDAR QUE LOS POR QUÉ ESTÉN DILIGENCIADOS
+                if (currentIndex == 2) {
+                    //CAPTURAR RESGISTROS DE LA TABLA              
+                    var porques = new Array();
+                    $("#tblPorque TBODY TR").each(function () {
+                        var row = $(this);
+                        var porque = {};
+                        porque.prq1 = row.find("TD").eq(0).html();
+                        porque.prq2 = row.find("TD").eq(1).html();
+                        porque.prq3 = row.find("TD").eq(2).html();
+                        porque.prq4 = row.find("TD").eq(3).html();
+                        porque.prq5 = row.find("TD").eq(4).html();
+
+                        porques.push(porque);
+                    });
+
+                    if (porques.length == 0) {
+                        swal("Análisis Por Qué", "Debe diligenciar los registros de por qué", "error");
+                        return false;
+                    };
+                }
+
+                //VALIDAR CONTRAMEDIDAS
+                if (currentIndex == 3) {
+                    var cmd = grid.getData();
+
+                    if (cmd.length == 0) {
+                        swal("Contramedidas - Responsables", "Las contramedidas deben estar diligenciadas", "error");
+                        return false;
+                    };                    
                 }
 
                 if (currentIndex < newIndex) {
@@ -93,8 +135,8 @@
 
                 form.validate().settings.ignore = ':disabled,:hidden';
 
-                //return form.valid();
-                return true;
+                return form.valid();
+                //return true;
             },
             onStepChanged: function (event, currentIndex, priorIndex) {
                 setButtonWavesEffect(event);
@@ -104,7 +146,19 @@
                     if (firstTime) {
                         initGrid();
                     }
+                                     
+                    //$('#gridAcciones').on('blur', 'input.editor-text', function () {
+                    //    Slick.GlobalEditorLock.commitCurrentEdit();
+                    //});
+                    //var $keywords = $("#IdDiligenciado").siblings(".bootstrap-tagsinput").children(".tag");
+                    //var tags = [];
+                    //for (var i = $keywords.length; i--;)
+                    //{
+                    //    tags.push($($keywords[i]).text().trim());
+                    //}
                 }
+
+                
             },
             onFinishing: function (event, currentIndex) {
                 form.validate().settings.ignore = ':disabled,.ignore';
@@ -115,23 +169,10 @@
             }
         });
 
-        //TOOLTIPSTER INIALITATION
-        $('.validateTool').tooltipster({ //find more options on the tooltipster page
-            trigger: 'custom', // default is 'hover' which is no good here
-            position: 'left',
-            animation: 'grow',
-            theme: 'tooltipster-Light',
-            functionPosition: function (instance, helper, position) {
-                position.coord.top += 5;
-                position.coord.left -= 140;
-                return position;
-            }
-        });
-
         form.validate({
 
             highlight: function (input) {
-                $(input).parents('.form-line').addClass('error');
+                $(input).parents('.form-line').addClass('error');                
             },
             unhighlight: function (element, errorClass, validClass) {                
                 if ($(element).hasClass("error")) {
@@ -461,6 +502,7 @@
             return false;
         });
 
+        
 
     });
 
@@ -478,6 +520,8 @@
     //        ]
     //    });
     //});
+
+   
 
 </script>
 
@@ -1013,7 +1057,9 @@
                                                 </div>
                                             </td>
                                             <td style="width:50%">
-                                                @Html.TextAreaFor(model => model.GembaDesc, 0, 40, new { @class = "form-control rounded-10", placeholder = "...", style = "width:100%; max-width:100%;" })
+                                                <div class="form-group" style="margin-bottom:0;">
+                                                    @Html.TextAreaFor(model => model.GembaDesc, 0, 40, new { @class = "form-control rounded-10", placeholder = "...", style = "width:100%; max-width:100%;", required = "required" })
+                                                </div>
                                             </td>
                                             <td style="width:20%">
                                                 <div class="gray_cube">
@@ -1033,7 +1079,9 @@
                                                 </div>
                                             </td>
                                             <td>
-                                                @Html.TextAreaFor(model => model.GembutsuDesc, 0, 40, new { @class = "form-control rounded-10", placeholder = "..." })
+                                                <div class="form-group" style="margin-bottom:0;">
+                                                    @Html.TextAreaFor(model => model.GembutsuDesc, 0, 40, new { @class = "form-control rounded-10", placeholder = "...", required = "required" })
+                                                </div>
                                             </td>
                                             <td style="width:20%">
                                                 <div class="gray_cube">
@@ -1053,7 +1101,9 @@
                                                 </div>
                                             </td>
                                             <td>
-                                                @Html.TextAreaFor(model => model.GenjitsuDesc, 0, 40, new { @class = "form-control rounded-10", placeholder = "..." })
+                                                <div class="form-group" style="margin-bottom:0;">
+                                                    @Html.TextAreaFor(model => model.GenjitsuDesc, 0, 40, new { @class = "form-control rounded-10", placeholder = "...", required = "required" })
+                                                </div>                                                    
                                             </td>
                                             <td style="width:20%">
                                                 <div class="gray_cube">
@@ -1073,7 +1123,9 @@
                                                 </div>
                                             </td>
                                             <td>
-                                                @Html.TextAreaFor(model => model.GenriDesc, 0, 40, new { @class = "form-control rounded-10", placeholder = "..." })
+                                                <div class="form-group" style="margin-bottom:0;">
+                                                    @Html.TextAreaFor(model => model.GenriDesc, 0, 40, new { @class = "form-control rounded-10", placeholder = "...", required = "required" })
+                                                </div>
                                             </td>
                                             <td style="width:20%">
                                                 <div class="gray_cube">
@@ -1093,7 +1145,9 @@
                                                 </div>
                                             </td>
                                             <td>
-                                                @Html.TextAreaFor(model => model.GensokuDesc, 0, 40, new { @class = "form-control rounded-10", placeholder = "..." })
+                                                <div class="form-group" style="margin-bottom:0;">
+                                                    @Html.TextAreaFor(model => model.GensokuDesc, 0, 40, new { @class = "form-control rounded-10", placeholder = "...", required = "required" })
+                                                </div>
                                             </td>
                                             <td style="width:20%">
                                                 <div class="gray_cube">
@@ -1129,7 +1183,9 @@
                                                 </div>
                                             </td>
                                             <td style="width:60%">
-                                                @Html.TextAreaFor(model => model.QueDesc, 0, 40, new { @class = "form-control rounded-10", placeholder = "...", style = "width:100%; max-width:100%;" })
+                                                <div class="form-group" style="margin-bottom:0;">
+                                                    @Html.TextAreaFor(model => model.QueDesc, 0, 40, new { @class = "form-control rounded-10", placeholder = "...", style = "width:100%; max-width:100%;", required = "required" })
+                                                </div>
                                             </td>
                                         </tr>
                                         <tr>
@@ -1142,7 +1198,9 @@
                                                 </div>
                                             </td>
                                             <td style="width:60%">
-                                                @Html.TextAreaFor(model => model.DondeDesc, 0, 40, new { @class = "form-control rounded-10", placeholder = "...", style = "width:100%; max-width:100%;" })
+                                                <div class="form-group" style="margin-bottom:0;">
+                                                    @Html.TextAreaFor(model => model.DondeDesc, 0, 40, new { @class = "form-control rounded-10", placeholder = "...", style = "width:100%; max-width:100%;", required = "required" })
+                                                </div>
                                             </td>
                                         </tr>
                                         <tr>
@@ -1155,7 +1213,9 @@
                                                 </div>
                                             </td>
                                             <td style="width:60%">
-                                                @Html.TextAreaFor(model => model.CuandoDesc, 0, 40, new { @class = "form-control rounded-10", placeholder = "...", style = "width:100%; max-width:100%;" })
+                                                <div class="form-group" style="margin-bottom:0;">
+                                                    @Html.TextAreaFor(model => model.CuandoDesc, 0, 40, new { @class = "form-control rounded-10", placeholder = "...", style = "width:100%; max-width:100%;", required = "required" })
+                                                </div>
                                             </td>
                                         </tr>
                                         <tr>
@@ -1168,7 +1228,9 @@
                                                 </div>
                                             </td>
                                             <td style="width:60%">
-                                                @Html.TextAreaFor(model => model.QuienDesc, 0, 40, new { @class = "form-control rounded-10", placeholder = "...", style = "width:100%; max-width:100%;" })
+                                                <div class="form-group" style="margin-bottom:0;">
+                                                    @Html.TextAreaFor(model => model.QuienDesc, 0, 40, new { @class = "form-control rounded-10", placeholder = "...", style = "width:100%; max-width:100%;", required = "required" })
+                                                </div>
                                             </td>
                                         </tr>
                                         <tr>
@@ -1181,7 +1243,9 @@
                                                 </div>
                                             </td>
                                             <td style="width:60%">
-                                                @Html.TextAreaFor(model => model.CualDesc, 0, 40, new { @class = "form-control rounded-10", placeholder = "...", style = "width:100%; max-width:100%;" })
+                                                <div class="form-group" style="margin-bottom:0;">
+                                                    @Html.TextAreaFor(model => model.CualDesc, 0, 40, new { @class = "form-control rounded-10", placeholder = "...", style = "width:100%; max-width:100%;", required = "required" })
+                                                </div>
                                             </td>
                                         </tr>
                                         <tr>
@@ -1194,7 +1258,9 @@
                                                 </div>
                                             </td>
                                             <td style="width:60%">
-                                                @Html.TextAreaFor(model => model.ComoDesc, 0, 40, new { @class = "form-control rounded-10", placeholder = "...", style = "width:100%; max-width:100%;" })
+                                                <div class="form-group" style="margin-bottom:0;">
+                                                    @Html.TextAreaFor(model => model.ComoDesc, 0, 40, new { @class = "form-control rounded-10", placeholder = "...", style = "width:100%; max-width:100%;", required = "required" })
+                                                </div>
                                             </td>
                                         </tr>
                                         <tr>
@@ -1209,7 +1275,9 @@
                                         </tr>
                                         <tr>
                                             <td style="width:100%" colspan="2">
-                                                @Html.TextAreaFor(model => model.FenomenoDesc, 0, 40, new { @class = "form-control rounded-10", placeholder = "...", style = "width:100%; max-width:100%;" })
+                                                <div class="form-group" style="margin-bottom:0;">
+                                                    @Html.TextAreaFor(model => model.FenomenoDesc, 0, 40, new { @class = "form-control rounded-10", placeholder = "...", style = "width:100%; max-width:100%;", required = "required" })
+                                                </div>
                                             </td>
                                         </tr>
                                     </tbody>
@@ -1291,7 +1359,7 @@
                                             <i class="material-icons">date_range</i>
                                         </span>
                                         <div class="form-line">
-                                            @Html.EditorFor(model => model.FchUltimoMtto, new { htmlAttributes = new { @class = "form-control datepicker", placeholder = "Seleccione fecha..." } })
+                                            @Html.EditorFor(model => model.FchUltimoMtto, new { htmlAttributes = new { @class = "form-control datepicker", placeholder = "Seleccione fecha...", required="required" } })
                                         </div>
                                     </div>
                                 </div>
@@ -1303,7 +1371,7 @@
                                             <i class="material-icons">date_range</i>
                                         </span>
                                         <div class="form-line">
-                                            @Html.EditorFor(model => model.FchProxMtto, new { htmlAttributes = new { @class = "form-control datepicker", placeholder = "Seleccione fecha..." } })
+                                            @Html.EditorFor(model => model.FchProxMtto, new { htmlAttributes = new { @class = "form-control datepicker", placeholder = "Seleccione fecha...", required = "required" } })
                                         </div>
                                     </div>
                                 </div>
@@ -1315,7 +1383,7 @@
                                                 @Html.RadioButton("OpBa", "1", new { @class = "with-gap", id = "a1" })
                                                 <label for="a1">Error humano (instalación)</label>
                                                 <br />
-                                                @Html.RadioButton("OpBa", "2", true, new { @class = "with-gap", id = "a2" })
+                                                @Html.RadioButton("OpBa", "2", false, new { @class = "with-gap", id = "a2" })
                                                 <label for="a2">Falla de diseño</label>
                                                 <br />
                                                 @Html.RadioButton("OpBa", "3", new { @class = "with-gap", id = "a3" })
@@ -1327,7 +1395,7 @@
                                                 @Html.RadioButton("OpBa", "4", new { @class = "with-gap", id = "a4" })
                                                 <label for="a4">Condiciones de operación</label>
                                                 <br />
-                                                @Html.RadioButton("OpBa", "5", true, new { @class = "with-gap", id = "a5" })
+                                                @Html.RadioButton("OpBa", "5", false, new { @class = "with-gap", id = "a5" })
                                                 <label for="a5">Condiciones básicas</label>
                                                 <br />
                                                 @Html.RadioButton("OpBa", "6", new { @class = "with-gap", id = "a6" })
@@ -1363,7 +1431,7 @@
                                 </div>
                                 <div id="FI1Opt">
                                     <div class="form-group">
-                                        @Html.RadioButton("OpCC", "1", new { @class = "with-gap", id = "cc1" })
+                                        @Html.RadioButton("OpCC", "1",true, new { @class = "with-gap", id = "cc1" })
                                         <label for="cc1"></label>
                                     </div>
                                 </div>
@@ -1430,8 +1498,7 @@
                                             <i class="material-icons">person</i>
                                         </span>
                                         <div class="form-line">
-                                            @Html.EditorFor(model => model.IdDiligenciado)
-                                            @Html.ValidationMessageFor(model => model.IdDiligenciado, "", new { @class = "text-danger" })
+                                            @Html.EditorFor(model => model.IdDiligenciado)                                            
                                         </div>
                                     </div>
                                 </div>
@@ -1442,8 +1509,7 @@
                                             <i class="material-icons">person</i>
                                         </span>
                                         <div class="form-line">
-                                            @Html.EditorFor(model => model.IdTecMattInv)
-                                            @Html.ValidationMessageFor(model => model.IdTecMattInv, "", new { @class = "text-danger" })
+                                            @Html.EditorFor(model => model.IdTecMattInv, new { @class = "required" })                                           
                                         </div>
                                     </div>
                                 </div>
@@ -1941,6 +2007,10 @@
             data.push(item);
             grid.updateRowCount();
             grid.render();
+        });
+
+        grid.onBeforeCellEditorDestroy.subscribe(function (e, args) {
+            alert(args);
         });
 
         firstTime = false;
