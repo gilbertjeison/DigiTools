@@ -269,7 +269,7 @@
     var calendarOpen = false;
 
     this.init = function () {
-      $input = $("<INPUT type=text class='editor-text' />");
+        $input = $("<INPUT type=text class='editor-text' id='dateed' />");
       $input.appendTo(args.container);
       $input.focus().select();
       $input.datepicker({
@@ -280,7 +280,7 @@
         },
         onClose: function () {
           calendarOpen = false
-        }
+          }     
       });
       $input.width($input.width() - 18);
     };
@@ -329,7 +329,8 @@
     };
 
     this.applyValue = function (item, state) {
-      item[args.column.field] = state;
+        item[args.column.field] = state;
+        
     };
 
     this.isValueChanged = function () {

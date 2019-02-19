@@ -59,6 +59,6 @@ namespace DigiTools.Database
         public virtual DbSet<AspNetUserClaims> AspNetUserClaims { get; set; }
         public virtual DbSet<AspNetUserLogins> AspNetUserLogins { get; set; }
         public virtual DbSet<AspNetUsers> AspNetUsers { get; set; }
-        public virtual DbSet<tiempos_carga> tiempos_carga { get; set; }
+        public virtual DbSet<kpis> kpis { get; set; }
     }
 }

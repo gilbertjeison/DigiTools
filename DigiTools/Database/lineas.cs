@@ -17,7 +17,7 @@ namespace DigiTools.Database
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public lineas()
         {
-            this.tiempos_carga = new HashSet<tiempos_carga>();
+            this.kpis = new HashSet<kpis>();
         }
     
         public int id { get; set; }
@@ -28,6 +28,6 @@ namespace DigiTools.Database
         public Nullable<int> tiempo_carga { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<tiempos_carga> tiempos_carga { get; set; }
+        public virtual ICollection<kpis> kpis { get; set; }
     }
 }

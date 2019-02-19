@@ -12,13 +12,15 @@ namespace DigiTools.Database
     using System;
     using System.Collections.Generic;
     
-    public partial class tiempos_carga
+    public partial class kpis
     {
         public int id { get; set; }
         public Nullable<int> id_linea { get; set; }
         public Nullable<int> year { get; set; }
         public Nullable<int> mes { get; set; }
         public Nullable<decimal> tiempo_carga { get; set; }
+        public Nullable<decimal> mttr { get; set; }
+        public Nullable<decimal> mtbf { get; set; }
     
         public virtual lineas lineas { get; set; }
     }

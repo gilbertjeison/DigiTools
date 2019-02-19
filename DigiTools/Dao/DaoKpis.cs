@@ -12,7 +12,7 @@ using System.Data.Entity;
 
 namespace DigiTools.Dao
 {
-    public class DaoTiemposCarga
+    public class DaoKpis
     {
         public async Task<List<TiemposCargaViewModel>> GetTiemposCargaAsync(Nullable<int> line)
         {
@@ -22,7 +22,7 @@ namespace DigiTools.Dao
             {
                 using (var context = new MttoAppEntities())
                 {
-                    var query = from td in context.tiempos_carga
+                    var query = from td in context.kpis
                                 join ln in context.lineas
                                 on td.id_linea equals ln.id
                                 where td.id_linea == line       
@@ -63,7 +63,7 @@ namespace DigiTools.Dao
             {
                 using (var context = new MttoAppEntities())
                 {
-                    var query = from td in context.tiempos_carga
+                    var query = from td in context.kpis
                                 join ln in context.lineas
                                 on td.id_linea equals ln.id
                                 where td.id_linea == line
@@ -104,7 +104,7 @@ namespace DigiTools.Dao
             {
                 using (var context = new MttoAppEntities())
                 {
-                    var query = from td in context.tiempos_carga
+                    var query = from td in context.kpis
                                 join ln in context.lineas
                                 on td.id_linea equals ln.id
                                 where td.id_linea == line
@@ -138,7 +138,7 @@ namespace DigiTools.Dao
             {
                 using (var context = new MttoAppEntities())
                 {
-                    var query = from td in context.tiempos_carga  
+                    var query = from td in context.kpis  
                                 where td.id_linea == line
                                 select td.year;
 
@@ -160,7 +160,7 @@ namespace DigiTools.Dao
        
         public async Task<int> EditTiempoCarga(int id, decimal ntc)
         {
-            tiempos_carga tc;
+            kpis tc;
 
             int regs = 0;
 
@@ -169,7 +169,7 @@ namespace DigiTools.Dao
                 //1. Get row from DB
                 using (var context = new MttoAppEntities())
                 {
-                    tc = context.tiempos_carga.Where(s => s.id == id).FirstOrDefault();
+                    tc = context.kpis.Where(s => s.id == id).FirstOrDefault();
                 }
 
                 //2. change data in disconnected mode (out of ctx scope)                
@@ -207,7 +207,7 @@ namespace DigiTools.Dao
                 {
                     for (int i = 0; i < 12; i++)
                     {
-                        context.tiempos_carga.Add(new tiempos_carga()
+                        context.kpis.Add(new kpis()
                         {
                             id_linea = IdLinea,
                             year = Year,

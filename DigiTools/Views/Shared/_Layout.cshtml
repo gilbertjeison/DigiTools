@@ -36,15 +36,7 @@
 
 }
 
-<style>
-    /*#loader {
-        position: fixed;
-        margin: 50%;
-        z-index: 9999;
-        height: 100%;
-        width: 100%;
-    }*/
-</style>
+
 
 <!DOCTYPE html>
 <html>
@@ -87,7 +79,15 @@
 
     <!-- SWEETALERT Css -->
     <link href="~/Scripts/plugins/sweetalert/sweetalert.css" rel="stylesheet">
-
+    <style>
+            /*#loader {
+            position: fixed;
+            margin: 50%;
+            z-index: 9999;
+            height: 100%;
+            width: 100%;
+        }*/
+    </style>
     <!-- Jquery Core Js -->
     @*<script src="~/Scripts/plugins/slickgrid/lib/jquery-1.11.2.min.js"></script>*@
     <script src="~/Scripts/plugins/jquery/jquery.min.js"></script>
@@ -471,11 +471,8 @@
                                 </a>
                                 <ul class="ml-menu">
                                     <li class="@IsActive("Index","Home")">
-                                        @Html.ActionLink("KPI's", "Index", "Home")
-                                    </li>
-                                    <li class="@IsActive("Index","Ewo")">
-                                        @Html.ActionLink("FORMATO EWO", "Index", "Ewo")
-                                    </li>
+                                        @Html.ActionLink("FORMATO EWO", "Index", "Home")
+                                    </li>                                    
                                 </ul>
                             </li>
                         </ul>

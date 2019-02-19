@@ -19,7 +19,7 @@ namespace DigiTools.Controllers
     {
         DaoLineas daoLin = new DaoLineas();
         DaoPlantas daoPla = new DaoPlantas();
-        DaoTiemposCarga daoTC = new DaoTiemposCarga();
+        DaoKpis daoTC = new DaoKpis();
 
         private MttoAppEntities db = new MttoAppEntities();
 
@@ -122,7 +122,7 @@ namespace DigiTools.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            tiempos_carga tiempos_carga = await db.tiempos_carga.FindAsync(id);
+            kpis tiempos_carga = await db.kpis.FindAsync(id);
             if (tiempos_carga == null)
             {
                 return HttpNotFound();
@@ -142,11 +142,11 @@ namespace DigiTools.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "id_linea,year,mes")] tiempos_carga tiempos_carga)
+        public async Task<ActionResult> Create([Bind(Include = "id_linea,year,mes")] kpis tiempos_carga)
         {
             if (ModelState.IsValid)
             {
-                db.tiempos_carga.Add(tiempos_carga);
+                db.kpis.Add(tiempos_carga);
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
@@ -162,7 +162,7 @@ namespace DigiTools.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            tiempos_carga tiempos_carga = await db.tiempos_carga.FindAsync(id);
+            kpis tiempos_carga = await db.kpis.FindAsync(id);
             if (tiempos_carga == null)
             {
                 return HttpNotFound();
@@ -176,7 +176,7 @@ namespace DigiTools.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "id,id_linea,year,mes")] tiempos_carga tiempos_carga)
+        public async Task<ActionResult> Edit([Bind(Include = "id,id_linea,year,mes")] kpis tiempos_carga)
         {
             if (ModelState.IsValid)
             {
@@ -195,7 +195,7 @@ namespace DigiTools.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            tiempos_carga tiempos_carga = await db.tiempos_carga.FindAsync(id);
+            kpis tiempos_carga = await db.kpis.FindAsync(id);
             if (tiempos_carga == null)
             {
                 return HttpNotFound();
@@ -208,8 +208,8 @@ namespace DigiTools.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmed(int id)
         {
-            tiempos_carga tiempos_carga = await db.tiempos_carga.FindAsync(id);
-            db.tiempos_carga.Remove(tiempos_carga);
+            kpis tiempos_carga = await db.kpis.FindAsync(id);
+            db.kpis.Remove(tiempos_carga);
             await db.SaveChangesAsync();
             return RedirectToAction("Index");
         }

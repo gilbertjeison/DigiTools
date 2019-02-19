@@ -43,8 +43,8 @@
         <AssociationConnector Association="MttoAppModel.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" />
         <AssociationConnector Association="MttoAppModel.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" />
         <AssociationConnector Association="MttoAppModel.AspNetUserRoles" />
-        <EntityTypeShape EntityType="MttoAppModel.tiempos_carga" Width="1.5" PointX="11" PointY="17.875" />
-        <AssociationConnector Association="MttoAppModel.FK_tiempos_carga_lineas" />
+        <EntityTypeShape EntityType="MttoAppModel.kpis" Width="1.5" PointX="11" PointY="21.875" />
+        <AssociationConnector Association="MttoAppModel.FK_tiempos_carga_lineas1" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

@@ -222,7 +222,7 @@
     <Compile Include="Dao\DaoPersonal.cs" />
     <Compile Include="Dao\DaoPlantas.cs" />
     <Compile Include="Dao\DaoRoles.cs" />
-    <Compile Include="Dao\DaoTiemposCarga.cs" />
+    <Compile Include="Dao\DaoKpis.cs" />
     <Compile Include="Dao\DaoTipoData.cs" />
     <Compile Include="Dao\DaoUsuarios.cs" />
     <Compile Include="Database\AspNetRoles.cs">
@@ -282,6 +282,9 @@
     <Compile Include="Database\herramientas.cs">
       <DependentUpon>Database.tt</DependentUpon>
     </Compile>
+    <Compile Include="Database\kpis.cs">
+      <DependentUpon>Database.tt</DependentUpon>
+    </Compile>
     <Compile Include="Database\lineas.cs">
       <DependentUpon>Database.tt</DependentUpon>
     </Compile>
@@ -328,9 +331,6 @@
       <DependentUpon>Database.tt</DependentUpon>
     </Compile>
     <Compile Include="Database\tecnicos.cs">
-      <DependentUpon>Database.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Database\tiempos_carga.cs">
       <DependentUpon>Database.tt</DependentUpon>
     </Compile>
     <Compile Include="Database\tipos.cs">

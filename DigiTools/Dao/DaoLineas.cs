@@ -14,7 +14,7 @@ namespace DigiTools.Dao
     {
         static string IMG_PATH = "~/Content/images/v1/";
         DaoMaquina daoMaq = new DaoMaquina();
-        DaoTiemposCarga daoTc = new DaoTiemposCarga();
+        DaoKpis daoTc = new DaoKpis();
 
         public async Task<List<lineas>> GetLinesAsync(int plant,int type)
         {

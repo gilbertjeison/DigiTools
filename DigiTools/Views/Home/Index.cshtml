@@ -35,7 +35,7 @@
         //#region Validations
         //Advanced form with validation
         var form = $('#wizard_validation').show();
-        form.steps({
+        form.steps({            
             headerTag: 'h3',
             bodyTag: 'section',
             transitionEffect: 'slideLeft',
@@ -64,69 +64,89 @@
                 if (currentIndex > newIndex) {
                     return true;
                 }
-
                 
-                if (currentIndex == 1 && myDropzone1.files.length == 0) {
-                    swal("Descripción gráfica de la falla", "Debe cargar las imágenes relacionadas", "error");
-                    return false;
-                }
+                //if (currentIndex == 1 && myDropzone1.files.length == 0) {
+                //    swal("Descripción gráfica de la falla", "Debe cargar las imágenes relacionadas", "error");
+                //    return false;
+                //}
 
-                if (currentIndex == 2 && myDropzone2.files.length == 0) {
-                    swal("Dibujo / Diagrama / Foto del 5 Por qué", "Debe cargar las imágenes relacionadas", "error");
-                    return false;
-                }
+                //if (currentIndex == 2 && myDropzone2.files.length == 0) {
+                //    swal("Dibujo / Diagrama / Foto del 5 Por qué", "Debe cargar las imágenes relacionadas", "error");
+                //    return false;
+                //}
 
-                //VALIDAR QUE CUANDO SEA UN CAMBIO DE COMPONENTE, HAYAN REGISTROS EN LA TABLA
-                if (currentIndex == 1 &&  $('#cc').is(':checked')) {
-                   //CAPTURAR RESGISTROS DE LA TABLA;                
-                    var repuestos = new Array();
-                    $("#tblRepuestos TBODY TR").each(function () {
-                        var row = $(this);
-                        var rep = {};
-                        rep.CodSap = row.find("TD").eq(0).html();
-                        rep.Descripcion = row.find("TD").eq(1).html();
-                        rep.Cantidad = row.find("TD").eq(2).html();
-                        rep.Costo = row.find("TD").eq(3).html();
-                        repuestos.push(rep);
-                    });
+                ////VALIDAR QUE CUANDO SEA UN CAMBIO DE COMPONENTE, HAYAN REGISTROS EN LA TABLA
+                //if (currentIndex == 1 &&  $('#cc').is(':checked')) {
+                //   //CAPTURAR RESGISTROS DE LA TABLA;                
+                //    var repuestos = new Array();
+                //    $("#tblRepuestos TBODY TR").each(function () {
+                //        var row = $(this);
+                //        var rep = {};
+                //        rep.CodSap = row.find("TD").eq(0).html();
+                //        rep.Descripcion = row.find("TD").eq(1).html();
+                //        rep.Cantidad = row.find("TD").eq(2).html();
+                //        rep.Costo = row.find("TD").eq(3).html();
+                //        repuestos.push(rep);
+                //    });
 
-                    if (repuestos.length == 0) {
-                        swal("Repuestos utilizados", "Debe cargar los repuestos utilizados", "error");
-                        return false;
-                    };
-                }
+                //    if (repuestos.length == 0) {
+                //        swal("Repuestos utilizados", "Debe cargar los repuestos utilizados", "error");
+                //        return false;
+                //    };
+                //}
 
-                //VALIDAR QUE LOS POR QUÉ ESTÉN DILIGENCIADOS
-                if (currentIndex == 2) {
-                    //CAPTURAR RESGISTROS DE LA TABLA              
-                    var porques = new Array();
-                    $("#tblPorque TBODY TR").each(function () {
-                        var row = $(this);
-                        var porque = {};
-                        porque.prq1 = row.find("TD").eq(0).html();
-                        porque.prq2 = row.find("TD").eq(1).html();
-                        porque.prq3 = row.find("TD").eq(2).html();
-                        porque.prq4 = row.find("TD").eq(3).html();
-                        porque.prq5 = row.find("TD").eq(4).html();
+                ////VALIDAR QUE LOS POR QUÉ ESTÉN DILIGENCIADOS
+                //if (currentIndex == 2) {
+                //    //CAPTURAR RESGISTROS DE LA TABLA              
+                //    var porques = new Array();
+                //    $("#tblPorque TBODY TR").each(function () {
+                //        var row = $(this);
+                //        var porque = {};
+                //        porque.prq1 = row.find("TD").eq(0).html();
+                //        porque.prq2 = row.find("TD").eq(1).html();
+                //        porque.prq3 = row.find("TD").eq(2).html();
+                //        porque.prq4 = row.find("TD").eq(3).html();
+                //        porque.prq5 = row.find("TD").eq(4).html();
 
-                        porques.push(porque);
-                    });
+                //        porques.push(porque);
+                //    });
 
-                    if (porques.length == 0) {
-                        swal("Análisis Por Qué", "Debe diligenciar los registros de por qué", "error");
-                        return false;
-                    };
-                }
+                //    if (porques.length == 0) {
+                //        swal("Análisis Por Qué", "Debe diligenciar los registros de por qué", "error");
+                //        return false;
+                //    };
+                //}
 
                 //VALIDAR CONTRAMEDIDAS
-                if (currentIndex == 3) {
-                    var cmd = grid.getData();
+                //if (currentIndex == 3) {
+                //    var cmd = grid.getData();
+                    
+                //    if (cmd.length == 0) {
+                //        swal("Contramedidas - Responsables", "Las contramedidas deben estar diligenciadas", "error");
+                //        return false;
+                //    };      
 
-                    if (cmd.length == 0) {
-                        swal("Contramedidas - Responsables", "Las contramedidas deben estar diligenciadas", "error");
-                        return false;
-                    };                    
-                }
+                //    //VALIDAR INVOLUCRADOS
+                //    var $IdDiligenciado = $("#IdDiligenciado").siblings(".bootstrap-tagsinput").children(".tag");
+                //    var $IdAnaElab = $("#IdAnaElab").siblings(".bootstrap-tagsinput").children(".tag");
+                //    var $IdContMedDef = $("#IdContMedDef").siblings(".bootstrap-tagsinput").children(".tag");
+                //    var $IdEjeValPor = $("#IdEjeValPor").siblings(".bootstrap-tagsinput").children(".tag");
+                //    var $IdTecMattInv = $("#IdTecMattInv").siblings(".bootstrap-tagsinput").children(".tag");
+                //    var $IdOpersInv = $("#IdOpersInv").siblings(".bootstrap-tagsinput").children(".tag");
+
+
+                //    if ($IdDiligenciado.length == 0 || $IdAnaElab.length == 0 || $IdContMedDef.length == 0 ||
+                //        $IdEjeValPor.length == 0 || $IdTecMattInv.length == 0 || $IdOpersInv.length == 0)
+                //    {
+                //        swal("Involucrados", "Todos los involucrados deben estar indicados.", "error");
+                //        return false;
+                //    }
+                //    //var tags = [];
+                //    //for (var i = $keywords.length; i--;)
+                //    //{
+                //    //    tags.push($($keywords[i]).text().trim());
+                //    //}
+                //}
 
                 if (currentIndex < newIndex) {
                     form.find('.body:eq(' + newIndex + ') label.error').remove();
@@ -135,8 +155,8 @@
 
                 form.validate().settings.ignore = ':disabled,:hidden';
 
-                return form.valid();
-                //return true;
+                //return form.valid();
+                return true;
             },
             onStepChanged: function (event, currentIndex, priorIndex) {
                 setButtonWavesEffect(event);
@@ -145,20 +165,9 @@
                     
                     if (firstTime) {
                         initGrid();
-                    }
-                                     
-                    //$('#gridAcciones').on('blur', 'input.editor-text', function () {
-                    //    Slick.GlobalEditorLock.commitCurrentEdit();
-                    //});
-                    //var $keywords = $("#IdDiligenciado").siblings(".bootstrap-tagsinput").children(".tag");
-                    //var tags = [];
-                    //for (var i = $keywords.length; i--;)
-                    //{
-                    //    tags.push($($keywords[i]).text().trim());
-                    //}
-                }
-
-                
+                    }                                          
+                    
+                }                
             },
             onFinishing: function (event, currentIndex) {
                 form.validate().settings.ignore = ':disabled,.ignore';
@@ -358,7 +367,6 @@
 
         //BOTÓN PARA CULCULAR LOS TIEMPOS TTR
         $('#btnCalTtr').click(function () {
-
             var horini = $('#txtHrNotAve').val().replace(/(\d{2})-(\d{2})-(\d{4})/, "$2/$1/$3"); 
             var hornot = $('#txtHrIni').val().replace(/(\d{2})-(\d{2})-(\d{4})/, "$2/$1/$3");
             var hofin = $('#txtHrFin').val().replace(/(\d{2})-(\d{2})-(\d{4})/, "$2/$1/$3");
@@ -384,8 +392,7 @@
                 });
 
                 //COMPRAR SI LA SUMA DE LOS TIEMPOS COINCIDEN CON LA HORA DE INICIO Y HORA DE
-                //FINALIZACIÓN DE LA AVERÍA
-                console.log('suma: ' + sum + ' minutes: ' + minutes);
+                //FINALIZACIÓN DE LA AVERÍA                
                 if (minutes == sum)
                 {
                     $('#txtTiempoTotal').val(sum);
@@ -500,10 +507,7 @@
             $("#tblPorque").find('tbody').find('tr').fadeOut(300, function () { $(this).remove(); });
 
             return false;
-        });
-
-        
-
+        });       
     });
 
     function showSweetAlert(titulo,mensaje,tipo) {
@@ -520,7 +524,6 @@
     //        ]
     //    });
     //});
-
    
 
 </script>
@@ -684,12 +687,16 @@
         padding: 4px;
         vertical-align: middle;
     }
+
+    #formula {
+        font: 16px/1.4 "Lato", "Helvetica Neue", Arial, Helvetica, sans-serif;
+    }
 </style>
 
 <div class="card js-sweetalert">
     <div class="header">
         <h2 class="tit">
-            KPI's<small>Control de Averías</small>
+            EWO (Emergency Work Order)<small>Diligenciamiento de nuevo formato ™</small>
         </h2>
     </div>
     <div class="body js-sweetalert clearfix">
@@ -1520,8 +1527,7 @@
                                             <i class="material-icons">person</i>
                                         </span>
                                         <div class="form-line">
-                                            @Html.EditorFor(model => model.IdOpersInv)
-                                            @Html.ValidationMessageFor(model => model.IdOpersInv, "", new { @class = "text-danger" })
+                                            @Html.EditorFor(model => model.IdOpersInv)                                           
                                         </div>
                                     </div>
                                 </div>
@@ -1534,8 +1540,7 @@
                                             <i class="material-icons">person</i>
                                         </span>
                                         <div class="form-line">
-                                            @Html.EditorFor(model => model.IdAnaElab)
-                                            @Html.ValidationMessageFor(model => model.IdAnaElab, "", new { @class = "text-danger" })
+                                            @Html.EditorFor(model => model.IdAnaElab)                                           
                                         </div>
                                     </div>
                                 </div>
@@ -1546,8 +1551,7 @@
                                             <i class="material-icons">date_range</i>
                                         </span>
                                         <div class="form-line">
-                                            @Html.EditorFor(model => model.FchAnaElab, new { htmlAttributes = new { @class = "datepicker", placeholder = "Seleccione fecha..." } })
-                                            @Html.ValidationMessageFor(model => model.FchAnaElab, "", new { @class = "text-danger" })
+                                            @Html.EditorFor(model => model.FchAnaElab, new { htmlAttributes = new { @class = "datepicker", placeholder = "Seleccione fecha...", required="required" } })                                            
                                         </div>
                                     </div>
                                 </div>
@@ -1560,8 +1564,7 @@
                                             <i class="material-icons">person</i>
                                         </span>
                                         <div class="form-line">
-                                            @Html.EditorFor(model => model.IdContMedDef)
-                                            @Html.ValidationMessageFor(model => model.IdContMedDef, "", new { @class = "text-danger" })
+                                            @Html.EditorFor(model => model.IdContMedDef)                                           
                                         </div>
                                     </div>
                                 </div>
@@ -1572,8 +1575,7 @@
                                             <i class="material-icons">date_range</i>
                                         </span>
                                         <div class="form-line">
-                                            @Html.EditorFor(model => model.FchDefConMed, new { htmlAttributes = new { @class = "datepicker", placeholder = "Seleccione fecha..." } })
-                                            @Html.ValidationMessageFor(model => model.FchDefConMed, "", new { @class = "text-danger" })
+                                            @Html.EditorFor(model => model.FchDefConMed, new { htmlAttributes = new { @class = "datepicker", placeholder = "Seleccione fecha...", required="required" } })                                           
                                         </div>
                                     </div>
                                 </div>
@@ -1586,8 +1588,7 @@
                                             <i class="material-icons">person</i>
                                         </span>
                                         <div class="form-line">
-                                            @Html.EditorFor(model => model.IdEjeValPor)
-                                            @Html.ValidationMessageFor(model => model.IdEjeValPor, "", new { @class = "text-danger" })
+                                            @Html.EditorFor(model => model.IdEjeValPor)                                           
                                         </div>
                                     </div>
                                 </div>
@@ -1598,28 +1599,29 @@
                                             <i class="material-icons">date_range</i>
                                         </span>
                                         <div class="form-line">
-                                            @Html.EditorFor(model => model.FchEjeVal, new { htmlAttributes = new { @class = "datepicker", placeholder = "Seleccione fecha..." } })
-                                            @Html.ValidationMessageFor(model => model.FchEjeVal, "", new { @class = "text-danger" })
+                                            @Html.EditorFor(model => model.FchEjeVal, new { htmlAttributes = new { @class = "datepicker", placeholder = "Seleccione fecha...", required="required" } })                                            
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-
-
+                    
                 </section>
                 
                 <h3>Resumen - Cálculo</h3>
                 <section>
                     <b>Procedimiento para calcular MTTR</b>
                     <hr />
-                    <span>
-                        $$\dfrac{TAverías}{NumAverías} $$
+                   @* <span>*@
+                    <div id="formula" class="gray_cube">
+                        <span class="katex" ></span>
+                    </div>
+                        @*$$\dfrac{TAverías}{NumAverías} $$
                         <br />
                         <br />
-                        Donde <b>TAverías</b> es la suma de los tiempos de la actual avería y <b>NumAverías</b> el número total de averías de la línea seleccionada.
-                    </span>
+                        Donde <b>TAverías</b> es la suma de los tiempos de la actual avería y <b>NumAverías</b> el número total de averías de la línea seleccionada.*@
+                    @*</span>*@
                 </section>
             }
         </div>
@@ -1671,7 +1673,6 @@
 <script src="~/Scripts/plugins/slickgrid/plugins/slick.cellrangeselector.js"></script>
 <script src="~/Scripts/plugins/slickgrid/plugins/slick.cellselectionmodel.js"></script>
 <script src="~/Scripts/plugins/slickgrid/plugins/slick.cellrangedecorator.js"></script>
-
 
 <script>
     var af1 = 0;
@@ -2009,8 +2010,14 @@
             grid.render();
         });
 
-        grid.onBeforeCellEditorDestroy.subscribe(function (e, args) {
-            alert(args);
+        $('#gridAcciones').on('focusout', '#dateed', function () {       
+
+            window.setTimeout(function () {
+
+                if (Slick.GlobalEditorLock.isActive())
+                    Slick.GlobalEditorLock.commitCurrentEdit();
+
+            },500);
         });
 
         firstTime = false;
@@ -2055,4 +2062,10 @@
                 alert('Error al cargar usuarios Json: ' + request.responseText);
             }
     });
+</script>
+<script>
+    katex.render(String.raw`\dfrac{TAverías}{NumAverías}`, document.getElementById("formula"), {
+        throwOnError: false
+    });
+
 </script>

@@ -232,6 +232,18 @@
           <Property Name="image_path" Type="nvarchar(max)" />
           <Property Name="SSMA_TimeStamp" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
         </EntityType>
+        <EntityType Name="kpis">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="id_linea" Type="int" />
+          <Property Name="year" Type="int" />
+          <Property Name="mes" Type="int" />
+          <Property Name="tiempo_carga" Type="decimal" Precision="18" Scale="2" />
+          <Property Name="mttr" Type="decimal" Precision="18" Scale="2" />
+          <Property Name="mtbf" Type="decimal" Precision="18" Scale="2" />
+        </EntityType>
         <EntityType Name="lineas">
           <Key>
             <PropertyRef Name="id" />
@@ -433,16 +445,6 @@
           <Property Name="activo" Type="int" />
           <Property Name="tipo_usuario" Type="int" />
         </EntityType>
-        <EntityType Name="tiempos_carga">
-          <Key>
-            <PropertyRef Name="id" />
-          </Key>
-          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="id_linea" Type="int" />
-          <Property Name="year" Type="int" />
-          <Property Name="mes" Type="int" />
-          <Property Name="tiempo_carga" Type="decimal" Precision="18" Scale="2" />
-        </EntityType>
         <EntityType Name="tipo_averia">
           <Key>
             <PropertyRef Name="Id" />
@@ -530,12 +532,12 @@
         </Association>
         <Association Name="FK_tiempos_carga_lineas">
           <End Role="lineas" Type="Self.lineas" Multiplicity="0..1" />
-          <End Role="tiempos_carga" Type="Self.tiempos_carga" Multiplicity="*" />
+          <End Role="kpis" Type="Self.kpis" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="lineas">
               <PropertyRef Name="id" />
             </Principal>
-            <Dependent Role="tiempos_carga">
+            <Dependent Role="kpis">
               <PropertyRef Name="id_linea" />
             </Dependent>
           </ReferentialConstraint>
@@ -568,6 +570,7 @@
           <EntitySet Name="equipos" EntityType="Self.equipos" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ewos" EntityType="Self.ewos" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="herramientas" EntityType="Self.herramientas" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="kpis" EntityType="Self.kpis" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="lineas" EntityType="Self.lineas" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="lista_acciones" EntityType="Self.lista_acciones" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="maquinas" EntityType="Self.maquinas" Schema="dbo" store:Type="Tables" />
@@ -584,7 +587,6 @@
           <EntitySet Name="sop_pasos" EntityType="Self.sop_pasos" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="sop_utils" EntityType="Self.sop_utils" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tecnicos" EntityType="Self.tecnicos" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="tiempos_carga" EntityType="Self.tiempos_carga" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tipo_averia" EntityType="Self.tipo_averia" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tipos" EntityType="Self.tipos" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tipos_data" EntityType="Self.tipos_data" Schema="dbo" store:Type="Tables" />
@@ -607,7 +609,7 @@
           </AssociationSet>
           <AssociationSet Name="FK_tiempos_carga_lineas" Association="Self.FK_tiempos_carga_lineas">
             <End Role="lineas" EntitySet="lineas" />
-            <End Role="tiempos_carga" EntitySet="tiempos_carga" />
+            <End Role="kpis" EntitySet="kpis" />
           </AssociationSet>
           <AssociationSet Name="FK_tipos_data_tipos" Association="Self.FK_tipos_data_tipos">
             <End Role="tipos" EntitySet="tipos" />
@@ -789,7 +791,7 @@
           <Property Name="image_path" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
           <Property Name="id_tipo_linea" Type="Int32" />
           <Property Name="tiempo_carga" Type="Int32" />
-          <NavigationProperty Name="tiempos_carga" Relationship="MttoAppModel.FK_tiempos_carga_lineas" FromRole="lineas" ToRole="tiempos_carga" />
+          <NavigationProperty Name="kpis" Relationship="MttoAppModel.FK_tiempos_carga_lineas1" FromRole="lineas" ToRole="kpis" />
         </EntityType>
         <EntityType Name="lista_acciones">
           <Key>
@@ -1075,10 +1077,10 @@
             <End Role="AspNetRoles" EntitySet="AspNetRoles" />
             <End Role="AspNetUsers" EntitySet="AspNetUsers" />
           </AssociationSet>
-          <EntitySet Name="tiempos_carga" EntityType="MttoAppModel.tiempos_carga" />
-          <AssociationSet Name="FK_tiempos_carga_lineas" Association="MttoAppModel.FK_tiempos_carga_lineas">
+          <EntitySet Name="kpis" EntityType="MttoAppModel.kpis" />
+          <AssociationSet Name="FK_tiempos_carga_lineas1" Association="MttoAppModel.FK_tiempos_carga_lineas1">
             <End Role="lineas" EntitySet="lineas" />
-            <End Role="tiempos_carga" EntitySet="tiempos_carga" />
+            <End Role="kpis" EntitySet="kpis" />
           </AssociationSet>
         </EntityContainer>
         <EntityType Name="C__MigrationHistory">
@@ -1177,25 +1179,27 @@
           <End Type="MttoAppModel.AspNetRoles" Role="AspNetRoles" Multiplicity="*" />
           <End Type="MttoAppModel.AspNetUsers" Role="AspNetUsers" Multiplicity="*" />
         </Association>
-        <EntityType Name="tiempos_carga">
+        <EntityType Name="kpis">
           <Key>
             <PropertyRef Name="id" />
           </Key>
-          <Property Name="id" Type="Int32" Nullable="false" />
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="id_linea" Type="Int32" />
           <Property Name="year" Type="Int32" />
           <Property Name="mes" Type="Int32" />
           <Property Name="tiempo_carga" Type="Decimal" Precision="18" Scale="2" />
-          <NavigationProperty Name="lineas" Relationship="MttoAppModel.FK_tiempos_carga_lineas" FromRole="tiempos_carga" ToRole="lineas" />
+          <Property Name="mttr" Type="Decimal" Precision="18" Scale="2" />
+          <NavigationProperty Name="lineas" Relationship="MttoAppModel.FK_tiempos_carga_lineas1" FromRole="kpis" ToRole="lineas" />
+          <Property Name="mtbf" Type="Decimal" Precision="18" Scale="2" />
         </EntityType>
-        <Association Name="FK_tiempos_carga_lineas">
+        <Association Name="FK_tiempos_carga_lineas1">
           <End Type="MttoAppModel.lineas" Role="lineas" Multiplicity="0..1" />
-          <End Type="MttoAppModel.tiempos_carga" Role="tiempos_carga" Multiplicity="*" />
+          <End Type="MttoAppModel.kpis" Role="kpis" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="lineas">
               <PropertyRef Name="id" />
             </Principal>
-            <Dependent Role="tiempos_carga">
+            <Dependent Role="kpis">
               <PropertyRef Name="id_linea" />
             </Dependent>
           </ReferentialConstraint>
@@ -1694,9 +1698,11 @@
               <ScalarProperty Name="Id" ColumnName="RoleId" />
             </EndProperty>
           </AssociationSetMapping>
-          <EntitySetMapping Name="tiempos_carga">
-            <EntityTypeMapping TypeName="MttoAppModel.tiempos_carga">
-              <MappingFragment StoreEntitySet="tiempos_carga">
+          <EntitySetMapping Name="kpis">
+            <EntityTypeMapping TypeName="MttoAppModel.kpis">
+              <MappingFragment StoreEntitySet="kpis">
+                <ScalarProperty Name="mtbf" ColumnName="mtbf" />
+                <ScalarProperty Name="mttr" ColumnName="mttr" />
                 <ScalarProperty Name="tiempo_carga" ColumnName="tiempo_carga" />
                 <ScalarProperty Name="mes" ColumnName="mes" />
                 <ScalarProperty Name="year" ColumnName="year" />
