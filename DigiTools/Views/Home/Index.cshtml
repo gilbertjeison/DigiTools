@@ -3,10 +3,6 @@
     ViewBag.Title = "Menú principal";
 }
 
-<!--JQUERY STEPS CSS-->
-@*<link rel="stylesheet" href="~/Scripts/plugins/jquery-steps/jquery.steps.css" />*@
-<!--TOOLTIPSTER CSS-->
-<link rel="stylesheet" href="~/Scripts/plugins/tooltipster-master/css/tooltipster.bundle.min.css" />
 <!-- Bootstrap Select Css -->
 <link href="~/Scripts/plugins/bootstrap-select/css/bootstrap-select.min.css" rel="stylesheet" />
 <!-- EDITABLE TABLE Css -->
@@ -171,7 +167,8 @@
             },
             onFinishing: function (event, currentIndex) {
                 form.validate().settings.ignore = ':disabled,.ignore';
-                return form.valid();
+                //return form.valid();
+                return true;
             },
             onFinished: function (event, currentIndex) {
                 swal("Good job!", "Submitted!", "success");
@@ -179,7 +176,6 @@
         });
 
         form.validate({
-
             highlight: function (input) {
                 $(input).parents('.form-line').addClass('error');                
             },
@@ -615,6 +611,7 @@
     }
 
     #divOpcionesBañera {
+        overflow-x:scroll;
         position: absolute;
         left: 10%;
         top: 55%;
@@ -703,7 +700,6 @@
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             @using (Html.BeginForm("CreateKpi", "Home", FormMethod.Post, new { @id = "wizard_validation" }))
             {
-
                 @Html.AntiForgeryToken()
                 <h3>Ubicación & Tiempos de avería</h3>
                 <section class="clearfix">                    
@@ -1366,7 +1362,7 @@
                                             <i class="material-icons">date_range</i>
                                         </span>
                                         <div class="form-line">
-                                            @Html.EditorFor(model => model.FchUltimoMtto, new { htmlAttributes = new { @class = "form-control datepicker", placeholder = "Seleccione fecha...", required="required" } })
+                                            @Html.EditorFor(model => model.FchUltimoMtto, new { htmlAttributes = new { @class = "form-control datepicker", placeholder = "Seleccione fecha...", required = "required" } })
                                         </div>
                                     </div>
                                 </div>
@@ -1383,9 +1379,27 @@
                                     </div>
                                 </div>
 
-                                <div id="divOpcionesBañera">
+                                <div class="col-md-3">
+                                    <p>
+                                        <b>With OptGroups</b>
+                                    </p>
+                                    <select class="form-control show-tick">
+                                        <optgroup label="Picnic">
+                                            <option>Mustard</option>
+                                            <option>Ketchup</option>
+                                            <option>Relish</option>
+                                        </optgroup>
+                                        <optgroup label="Camping">
+                                            <option>Tent</option>
+                                            <option>Flashlight</option>
+                                            <option>Toilet Paper</option>
+                                        </optgroup>
+                                    </select>
+                                </div>
+
+                                @*<div id="divOpcionesBañera">
                                     <div class="row">
-                                        <div class="col-md-4">
+                                        <div class="col-xs-4">
                                             <div class="form-group">
                                                 @Html.RadioButton("OpBa", "1", new { @class = "with-gap", id = "a1" })
                                                 <label for="a1">Error humano (instalación)</label>
@@ -1397,7 +1411,7 @@
                                                 <label for="a3">Calidad de repuestos (factores externos)</label>
                                             </div>
                                         </div>
-                                        <div class="col-md-4">
+                                        <div class="col-xs-4">
                                             <div class="form-group">
                                                 @Html.RadioButton("OpBa", "4", new { @class = "with-gap", id = "a4" })
                                                 <label for="a4">Condiciones de operación</label>
@@ -1409,7 +1423,7 @@
                                                 <label for="a6">Error humano (en operación)</label>
                                             </div>
                                         </div>
-                                        <div class="col-md-4">
+                                        <div class="col-xs-4">
                                             <div class="form-group">
                                                 @Html.RadioButton("OpBa", "7", new { @class = "with-gap", id = "a7" })
                                                 <label for="a7">No PM</label>
@@ -1419,7 +1433,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                </div>*@
 
                             </div>
                         </div>
@@ -1609,26 +1623,24 @@
                     
                 </section>
                 
-                <h3>Resumen - Cálculo</h3>
+                @*<h3>Resumen - Cálculo</h3>
                 <section>
                     <b>Procedimiento para calcular MTTR</b>
                     <hr />
                    @* <span>*@
-                    <div id="formula" class="gray_cube">
+                    @*<div id="formula" class="gray_cube">
                         <span class="katex" ></span>
-                    </div>
+                    </div>*@
                         @*$$\dfrac{TAverías}{NumAverías} $$
                         <br />
                         <br />
                         Donde <b>TAverías</b> es la suma de los tiempos de la actual avería y <b>NumAverías</b> el número total de averías de la línea seleccionada.*@
                     @*</span>*@
-                </section>
+                @*</section>*@
             }
         </div>
     </div>
 </div>
-
-
 
 
 <!-- JQuery Steps Plugin Js -->
@@ -1636,7 +1648,7 @@
 <!-- Select Plugin Js -->
 <script src="~/Scripts/plugins/bootstrap-select/js/bootstrap-select.min.js"></script>
 <!--TOOLTIPSTER JS-->
-<script type="text/javascript" src="~/Scripts/plugins/tooltipster-master/js/tooltipster.bundle.min.js"></script>
+@*<script type="text/javascript" src="~/Scripts/plugins/tooltipster-master/js/tooltipster.bundle.min.js"></script>*@
 <!-- Input Mask Plugin Js -->
 <script src="~/Scripts/plugins/jquery-inputmask/jquery.inputmask.bundle.js"></script>
 <!-- Editable Table Plugin Js -->
@@ -1653,8 +1665,8 @@
 <!-- Bloodhound Plugin Js -->
 <script src="~/Scripts/plugins/bootstrap-tagsinput/bloodhound.js"></script>
 <!-- KATEX Plugin Js -->
-<script src="~/Scripts/plugins/katex/katex.js"></script>
-<script src="~/Scripts/plugins/katex/auto-render.min.js"></script>
+@*<script src="~/Scripts/plugins/katex/katex.js"></script>*@
+@*<script src="~/Scripts/plugins/katex/auto-render.min.js"></script>*@
 <!--CUSTOM DROPZONE-->
 <script src="~/Scripts/plugins/dropzone-custom/dropzone.js"></script>
 <!--SLICKGRID JS-->
@@ -2063,9 +2075,9 @@
             }
     });
 </script>
-<script>
+@*<script>
     katex.render(String.raw`\dfrac{TAverías}{NumAverías}`, document.getElementById("formula"), {
         throwOnError: false
     });
 
-</script>
+</script>*@
