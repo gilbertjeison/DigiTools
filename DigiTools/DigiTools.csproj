@@ -217,6 +217,7 @@
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\TiemposCargaController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
+    <Compile Include="Dao\DaoEwo.cs" />
     <Compile Include="Dao\DaoLineas.cs" />
     <Compile Include="Dao\DaoMaquina.cs" />
     <Compile Include="Dao\DaoPersonal.cs" />

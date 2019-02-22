@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DigiTools.Database;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -10,46 +11,128 @@ namespace DigiTools.Models
 {
     public class KpiViewModel
     {
-        [Display(Name ="Planta")]
-        [Required(ErrorMessage ="Por favor seleccione planta")]
-        public int IdPlanta { get; set; }
-        public SelectList PlantaList { get; set; }
-
-        [Display(Name = "Tipo de línea")]
-        [Required(ErrorMessage = "Por favor seleccione un tipo de línea")]
-        public int IdTipoLinea { get; set; }
-        public SelectList TipoLineaList { get; set; }
+        public int Consecutivo { get; set; }
 
         [Display(Name = "Línea")]
-        [Required(ErrorMessage = "Por favor seleccione una línea")]
         public int IdLinea { get; set; }
         public SelectList LineaList { get; set; }
         
-
         [Display(Name = "Máquina")]
-        [Required(ErrorMessage = "Por favor seleccione una línea")]
         public int IdMaquina { get; set; }
         public SelectList MaquinaList { get; set; }
 
+        public DateTime Fecha { get; set; }
 
         [Display(Name = "Número de aviso")]
         public string NumAviso { get; set; }
-
 
         [Display(Name = "Tipo de avería")]
         public int IdTipoAveria { get; set; }
         public SelectList TipoAveriaList { get; set; }
 
+        [Display(Name = "Turno")]
+        public int Turno { get; set; }
 
-        [Display(Name = "Descripción de la avería")]
-        public string DescripcionAveria { get; set; }
+
+        [DisplayName("Notificación Avería (Hora)")]
+        public string HrNotAve { get; set; }
+
+        [DisplayName("Inicio de Reparación (Hora)")]
+        public string HrIniRep { get; set; }
+
+        [DisplayName("Tiempo de espera inicial del técnico (min)")]
+        public int TEspIniTec { get; set; }
+
+        [DisplayName("Tiempo de Diagnóstico (min)")]
+        public int TDiagn { get; set; }
+
+        [DisplayName("Tiempo de espera por repuestos (min)")]
+        public int TEspRep { get; set; }
+
+        [DisplayName("T. de Reparación/cambio de piezas (min)")]
+        public int TRepCamP { get; set; }
+
+        [DisplayName("Pruebas y Tiempo de arranque (min)")]
+        public int PruTieArr { get; set; }
+
+        [DisplayName("Fin reparación y entrega a AM (Hora)")]
+        public string HrFinRepEnt { get; set; }
+
+        [DisplayName("Tiempo Total (min)")]
+        public int TiempoTotal { get; set; }
+
+        public string PathImage1 { get; set; }
+        public string DescImg1 { get; set; }
+        public HttpPostedFileBase Image1 { get; set; }
 
         
+        public string PathImage2 { get; set; }
+        public string DescImg2 { get; set; }
+        public HttpPostedFileBase Image2 { get; set; }
+
+        public string PathImagePQ1 { get; set; }
+        public string DescImgPQ1 { get; set; }
+        public HttpPostedFileBase ImagePQ1 { get; set; }
+
+        public string PathImagePQ2 { get; set; }
+        public string DescImgPQ2 { get; set; }
+        public HttpPostedFileBase ImagePQ2 { get; set; }
+
+        [Display(Name = "Seleccione una acción")]
+        public int Accion { get; set; }
+       
+        public string RepUtil { get; set; }
+
         public string GembaDesc { get; set; }
         public string GembutsuDesc { get; set; }
         public string GenjitsuDesc { get; set; }
         public string GenriDesc { get; set; }
         public string GensokuDesc { get; set; }
+
+        public string GembaOk { get; set; }
+        public string GembutsuOk { get; set; }
+        public string GenjitsuOk { get; set; }
+        public string GenriOk { get; set; }
+        public string GensokuOk { get; set; }
+
+
+
+        [DisplayName("Diligenciada por")]
+        public string IdDiligenciado { get; set; }
+
+        [DisplayName("Técnicos de mantenimiento involucrados")]
+        public string IdTecMattInv { get; set; }
+
+        [DisplayName("Operarios involucrados")]
+        public string IdOpersInv { get; set; }
+
+        [DisplayName("Análisis elaborado por")]
+        public string IdAnaElab { get; set; }
+
+
+        [Display(Name ="Planta")]        
+        public int IdPlanta { get; set; }
+        public SelectList PlantaList { get; set; }
+
+        [Display(Name = "Tipo de línea")]
+        public int IdTipoLinea { get; set; }
+        public SelectList TipoLineaList { get; set; }
+
+        
+        
+
+
+
+        
+
+
+        
+
+
+        [Display(Name = "Descripción de la avería")]
+        public string DescripcionAveria { get; set; }
+
+       
 
         public string QueDesc { get; set; }
         public string DondeDesc { get; set; }
@@ -60,61 +143,10 @@ namespace DigiTools.Models
         public string FenomenoDesc { get; set; }
 
 
-        [Display(Name = "Seleccione una acción")]
-        public string Accion { get; set; }
-
-
-        [DisplayName("Notificación Avería (Hora)")]
-        [Required(ErrorMessage = "Se debe seleccionar una hora...")]
-        public string HrNotAve { get; set; }
-
-        [DisplayName("Inicio de Reparación (Hora)")]
-        [Required(ErrorMessage = "Se debe seleccionar una hora...")]
-        public string HrIniRep{ get; set; }
-
-        [DisplayName("Tiempo de espera inicial del técnico (min)")]
-        [Required(ErrorMessage = "Este campo es requerido...")]
-        public int TEspIniTec { get; set; }
-
-        [DisplayName("Tiempo de Diagnóstico (min)")]
-        [Required(ErrorMessage = "Este campo es requerido...")]
-        public int TDiagn { get; set; }
-
-        [DisplayName("Tiempo de espera por repuestos (min)")]
-        [Required(ErrorMessage = "Este campo es requerido...")]
-        public int TEspRep { get; set; }
-
-        [DisplayName("T. de Reparación/cambio de piezas (min)")]
-        [Required(ErrorMessage = "Este campo es requerido...")]
-        public int TRepCamP { get; set; }
-
-        [DisplayName("Pruebas y Tiempo de arranque (min)")]
-        [Required(ErrorMessage = "Este campo es requerido...")]
-        public int PruTieArr { get; set; }
-
-        [DisplayName("Fin reparación y entrega a AM (Hora)")]
-        [Required(ErrorMessage = "Se debe seleccionar una hora...")]
-        public string HrFinRepEnt { get; set; }
         
-        [DisplayName("Tiempo Total (min)")]
-        [Required(ErrorMessage = "Este campo es requerido...")]
-        public int TiempoTotal { get; set; }
 
-        [DisplayName("Diligenciada por")]
-        [Required(ErrorMessage = "Este campo es requerido...")]
-        public string IdDiligenciado { get; set; }
 
-        [DisplayName("Técnicos de mantenimiento involucrados")]
-        [Required(ErrorMessage = "Este campo es requerido...")]
-        public string IdTecMattInv { get; set; }
-
-        [DisplayName("Operarios involucrados")]
-        [Required(ErrorMessage = "Este campo es requerido...")]
-        public string IdOpersInv { get; set; }
-
-        [DisplayName("Análisis elaborado por")]
-        [Required(ErrorMessage = "Este campo es requerido...")]
-        public string IdAnaElab { get; set; }
+        
 
         [DisplayName("Fecha")]
         [Required(ErrorMessage = "Este campo es requerido...")]
@@ -138,5 +170,18 @@ namespace DigiTools.Models
 
         public string FchUltimoMtto { get; set; }
         public string FchProxMtto { get; set; }
+
+        public KpiViewModel()
+        {
+            //ListRep = new List<rep_util>();
+        }
     }
+
+    public class rep_util
+    {
+        public string codigo_sap { get; set; }
+        public string descripcion { get; set; }
+        public string cantidad { get; set; }
+        public string  costo { get; set; }
+    }   
 }

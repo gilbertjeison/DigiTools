@@ -9,10 +9,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Script.Serialization;
 
 namespace DigiTools.Controllers
 {
-    
+
     [Authorize]
     public class HomeController : Controller
     {
@@ -22,6 +23,7 @@ namespace DigiTools.Controllers
         DaoMaquina daoMaq = new DaoMaquina();
         DaoPersonal daoPer = new DaoPersonal();
         DaoUsuarios daoUser = new DaoUsuarios();
+        DaoEwo daoEwo = new DaoEwo();
         
         private static readonly int LINES = 21;
         private static readonly int BREAKDOWNSTYPES = 13;
@@ -50,6 +52,8 @@ namespace DigiTools.Controllers
                 listA.Insert(0, new Database.tipos_data() { Id = 0, descripcion = "Seleccione tipo de avería..." });
                 kpiWiewModel.TipoAveriaList = new SelectList(listA, "Id", "descripcion");
 
+                ViewBag.Cons = "00" +daoEwo.GetLastConsecutive();
+
                 return View(kpiWiewModel);
             }
             else
@@ -59,8 +63,18 @@ namespace DigiTools.Controllers
         }
 
         [HttpPost]
-        public int CreateKpi(HttpPostedFileBase file)
+        public int CreateKpi(KpiViewModel collection)
         {
+            var fc = collection;
+            JavaScriptSerializer ser = new JavaScriptSerializer();
+            List<rep_util> rep_Utils = ser.Deserialize<List<rep_util>>(collection.RepUtil);
+            //to do
+            //EVALUAR EL RESULTADO DE CADA CHECK Y CONVERTIRLO A BOOL
+            //INTERACTUAR CON CADA UNA DE LAS LISTAS DE ITEMS PARA INGRESAR EN SU DETERMINADA TABLA
+            //CONVERTIR FECHAS A DATETIME
+
+
+            var images = Request.Files;
             return 0;
         }
                

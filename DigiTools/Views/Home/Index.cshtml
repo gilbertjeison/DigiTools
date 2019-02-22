@@ -27,11 +27,14 @@
 
 <script>
     var firstTime = true;
+    var repuestos = new Array();
+
     $(function () {
+
         //#region Validations
         //Advanced form with validation
         var form = $('#wizard_validation').show();
-        form.steps({            
+        form.steps({
             headerTag: 'h3',
             bodyTag: 'section',
             transitionEffect: 'slideLeft',
@@ -60,7 +63,7 @@
                 if (currentIndex > newIndex) {
                     return true;
                 }
-                
+
                 //if (currentIndex == 1 && myDropzone1.files.length == 0) {
                 //    swal("Descripción gráfica de la falla", "Debe cargar las imágenes relacionadas", "error");
                 //    return false;
@@ -73,17 +76,22 @@
 
                 ////VALIDAR QUE CUANDO SEA UN CAMBIO DE COMPONENTE, HAYAN REGISTROS EN LA TABLA
                 //if (currentIndex == 1 &&  $('#cc').is(':checked')) {
-                //   //CAPTURAR RESGISTROS DE LA TABLA;                
-                //    var repuestos = new Array();
-                //    $("#tblRepuestos TBODY TR").each(function () {
-                //        var row = $(this);
-                //        var rep = {};
-                //        rep.CodSap = row.find("TD").eq(0).html();
-                //        rep.Descripcion = row.find("TD").eq(1).html();
-                //        rep.Cantidad = row.find("TD").eq(2).html();
-                //        rep.Costo = row.find("TD").eq(3).html();
-                //        repuestos.push(rep);
-                //    });
+                //   //CAPTURAR RESGISTROS DE LA TABLA;
+
+                
+                if (currentIndex == 1) {
+                    repuestos = [];
+                    $("#tblRepuestos TBODY TR").each(function () {
+                        var row = $(this);
+                        var rep = {};
+                        rep.codigo_sap = row.find("TD").eq(0).html();
+                        rep.descripcion = row.find("TD").eq(1).html();
+                        rep.cantidad = row.find("TD").eq(2).html();
+                        rep.costo = row.find("TD").eq(3).html();
+                        repuestos.push(rep);
+                    });
+                }
+                    
 
                 //    if (repuestos.length == 0) {
                 //        swal("Repuestos utilizados", "Debe cargar los repuestos utilizados", "error");
@@ -93,7 +101,7 @@
 
                 ////VALIDAR QUE LOS POR QUÉ ESTÉN DILIGENCIADOS
                 //if (currentIndex == 2) {
-                //    //CAPTURAR RESGISTROS DE LA TABLA              
+                //    //CAPTURAR RESGISTROS DE LA TABLA
                 //    var porques = new Array();
                 //    $("#tblPorque TBODY TR").each(function () {
                 //        var row = $(this);
@@ -116,11 +124,11 @@
                 //VALIDAR CONTRAMEDIDAS
                 //if (currentIndex == 3) {
                 //    var cmd = grid.getData();
-                    
+
                 //    if (cmd.length == 0) {
                 //        swal("Contramedidas - Responsables", "Las contramedidas deben estar diligenciadas", "error");
                 //        return false;
-                //    };      
+                //    };
 
                 //    //VALIDAR INVOLUCRADOS
                 //    var $IdDiligenciado = $("#IdDiligenciado").siblings(".bootstrap-tagsinput").children(".tag");
@@ -158,12 +166,11 @@
                 setButtonWavesEffect(event);
 
                 if (currentIndex == 3) {
-                    
+
                     if (firstTime) {
                         initGrid();
-                    }                                          
-                    
-                }                
+                    }
+                }
             },
             onFinishing: function (event, currentIndex) {
                 form.validate().settings.ignore = ':disabled,.ignore';
@@ -171,15 +178,67 @@
                 return true;
             },
             onFinished: function (event, currentIndex) {
-                swal("Good job!", "Submitted!", "success");
+                //MOSTRAR LOADER
+                $('.page-loader-wrapper').fadeIn();
+
+                var form = $('#wizard_validation')[0];
+                var dataString = new FormData(form);
+
+                //ADJUNTAR GRUPO DE IMÁGENES 1
+                myDropzone1.files.forEach((file, i) => {
+
+                    var text = $('#dropzoneJsForm').find('span[name^="dz_text"]').get(i).textContent;                        
+                    dataString.append('Image'+(i+1), file);
+                    dataString.append('DescImg'+(i+1), text);
+                })      
+
+                //ADJUNTAR GRUPO DE IMAGENES 2
+                myDropzone2.files.forEach((file, i) => {
+
+                    var text = $('#dropzoneJsFormCr').find('span[name^="dz_text"]').get(i).textContent;
+                    dataString.append('ImagePQ' + (i + 1), file);
+                    dataString.append('DescImgPQ' + (i + 1), text);                    
+                })
+
+                
+                //ADJUNTAR REPUESTOS
+                dataString.append('RepUtil', JSON.stringify(repuestos));    
+
+                console.log(JSON.stringify(repuestos));
+
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("CreateKpi","Home")',
+                    data: dataString,
+                    //dataType:'json',
+                    success: function (response) {
+
+                        //MENSAJE DE CONFIRMACIÓN O ERROR
+                        //if (response == "OK") {
+                        //    swal("Machine Ledger", "Línea agregada correctamente", "success");
+                        //    $('#AddModal').modal('hide');
+                        //    GotoLines();
+                        //}
+                        //else {
+                        //    swal("Machine Ledger", response, "warning");
+                        //}
+                    },
+                    cache: false,
+                    contentType: false,
+                    processData: false                    
+                });
+
+                $('.page-loader-wrapper').hide();
+                swal("Datos almacenados correctamente!", "Submitted!", "success");
+                $('.showSweetAlert h2').addClass('tit');
             }
         });
 
         form.validate({
             highlight: function (input) {
-                $(input).parents('.form-line').addClass('error');                
+                $(input).parents('.form-line').addClass('error');
             },
-            unhighlight: function (element, errorClass, validClass) {                
+            unhighlight: function (element, errorClass, validClass) {
                 if ($(element).hasClass("error")) {
                     $(element).parents('.form-line').removeClass('error');
                     $(element).removeClass(errorClass).addClass(validClass).tooltipster('close');
@@ -190,7 +249,7 @@
                 'IdPlanta': { valueNotEquals: "0" },
                 'IdTipoLinea': { valueNotEquals: "0" },
                 'IdLinea': { valueNotEquals: "0" },
-                'IdMaquina': { valueNotEquals: "0" }, 
+                'IdMaquina': { valueNotEquals: "0" },
                 'IdTipoAveria': { valueNotEquals: "0" },
                 'dz_text': { valueNotEquals: "" }
             },
@@ -211,8 +270,10 @@
 
         //#region DropDownList
 
+        $('select').selectpicker();
+
         //DROPDOWN CASCADE
-        $('.IdPlanta').change(function () {     
+        $('.IdPlanta').change(function () {
             $('.IdTipoLinea').selectpicker('deselectAll');
             return false;
         });
@@ -287,10 +348,6 @@
         });
         //#endregion
 
-        if (/Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent)) {
-            $('.selectpicker').selectpicker('mobile');
-        }
-
         $('#tblRepuestos').editableTableWidget().numericValidation();
 
         $('#btnAddRep').click(function () {
@@ -363,7 +420,7 @@
 
         //BOTÓN PARA CULCULAR LOS TIEMPOS TTR
         $('#btnCalTtr').click(function () {
-            var horini = $('#txtHrNotAve').val().replace(/(\d{2})-(\d{2})-(\d{4})/, "$2/$1/$3"); 
+            var horini = $('#txtHrNotAve').val().replace(/(\d{2})-(\d{2})-(\d{4})/, "$2/$1/$3");
             var hornot = $('#txtHrIni').val().replace(/(\d{2})-(\d{2})-(\d{4})/, "$2/$1/$3");
             var hofin = $('#txtHrFin').val().replace(/(\d{2})-(\d{2})-(\d{4})/, "$2/$1/$3");
             //VERIFICAR QUE LOS CAMPOS ESTÉN DILIGENCIADOS
@@ -388,7 +445,7 @@
                 });
 
                 //COMPRAR SI LA SUMA DE LOS TIEMPOS COINCIDEN CON LA HORA DE INICIO Y HORA DE
-                //FINALIZACIÓN DE LA AVERÍA                
+                //FINALIZACIÓN DE LA AVERÍA
                 if (minutes == sum)
                 {
                     $('#txtTiempoTotal').val(sum);
@@ -503,7 +560,7 @@
             $("#tblPorque").find('tbody').find('tr').fadeOut(300, function () { $(this).remove(); });
 
             return false;
-        });       
+        });
     });
 
     function showSweetAlert(titulo,mensaje,tipo) {
@@ -520,7 +577,7 @@
     //        ]
     //    });
     //});
-   
+
 
 </script>
 
@@ -611,19 +668,17 @@
     }
 
     #divOpcionesBañera {
-        overflow-x:scroll;
+        background-color: #f5f5f5;
         position: absolute;
         left: 10%;
         top: 55%;
         padding: 10px;
         width: 70%;
-        background-color: #f5f5f5;
         border: 1px solid #ccc;
         border-radius: 4px;
-        font-size: 12px;
     }
 
-
+  
     #FI1Opt {
         position: absolute;
         left: 11%;
@@ -688,13 +743,26 @@
     #formula {
         font: 16px/1.4 "Lato", "Helvetica Neue", Arial, Helvetica, sans-serif;
     }
+
+    .input-group .form-line{
+        border:none;
+    }
+
+    .dropdown-header {
+        padding: 3px 20px !important;
+        font-weight:bold;
+    }
 </style>
 
 <div class="card js-sweetalert">
     <div class="header">
         <h2 class="tit">
-            EWO (Emergency Work Order)<small>Diligenciamiento de nuevo formato ™</small>
+            EWO (Emergency Work Order)            
         </h2>
+        <h2 class="tit">
+            DOCUMENTO # @ViewBag.Cons<small>Diligenciamiento de nuevo formato ™</small>
+        </h2>
+
     </div>
     <div class="body js-sweetalert clearfix">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -705,67 +773,44 @@
                 <section class="clearfix">                    
                     <div class="row">
                         <div class="col-md-3">
-                            <b>@Html.LabelFor(model => model.IdPlanta)</b>
-                            <div class="input-group">
-                                <span class="input-group-addon">
-                                    <i class="material-icons">looks_one</i>
-                                </span>
-                                <div class="form-line">
-                                    <select name="IdPlanta" class="selectpicker show-tick IdPlanta" required>
-                                        @foreach (var item in Model.PlantaList)
-                                        {
-                                            <option value="@item.Value">@item.Text</option>
-                                        }
-                                    </select>
-                                </div>
-                            </div>
+                            <b>@Html.LabelFor(model => model.IdPlanta)</b>                              
+                            <div class="form-line form-group">
+                                <select name="IdPlanta" class="show-tick IdPlanta" required>
+                                    @foreach (var item in Model.PlantaList)
+                                    {
+                                        <option value="@item.Value">@item.Text</option>
+                                    }
+                                </select>
+                            </div>                                                                                 
                         </div>
                         <div class="col-md-3">
-                            <b>@Html.LabelFor(model => model.IdTipoLinea)</b>
-                            <div class="input-group">
-                                <span class="input-group-addon">
-                                    <i class="material-icons">looks_two</i>
-                                </span>
-                                <div class="form-line">
-                                    <select name="IdTipoLinea" class="selectpicker show-tick IdTipoLinea" required>
-                                        @foreach (var item in Model.TipoLineaList)
-                                        {
-                                            <option value="@item.Value">@item.Text</option>
-                                        }
-                                    </select>
-                                </div>
-                            </div>
+                            <b>@Html.LabelFor(model => model.IdTipoLinea)</b>                                                          
+                            <div class="form-line input-group">
+                                <select name="IdTipoLinea" class="show-tick IdTipoLinea" required>
+                                    @foreach (var item in Model.TipoLineaList)
+                                    {
+                                        <option value="@item.Value">@item.Text</option>
+                                    }
+                                </select>
+                            </div>                          
                         </div>
                         <div class="col-md-3">
-                            <b>@Html.LabelFor(model => model.IdLinea)</b>
-                            <div class="input-group">
-                                <span class="input-group-addon">
-                                    <i class="material-icons">looks_3</i>
-                                </span>
-                                <div class="form-line">
-                                    <select name="IdLinea"
-                                            class="selectpicker show-tick IdLinea"
-                                            data-width="auto"
-                                            data-size="5"
-                                            data-noneSelectedText='Nada seleccionado...'
-                                            data-live-search="true" required></select>
-                                </div>
-                            </div>
+                            <b>@Html.LabelFor(model => model.IdLinea)</b>                            
+                            <div class="form-line input-group">
+                                <select name="IdLinea"
+                                        class="show-tick IdLinea"                                           
+                                        data-size="5"
+                                        data-live-search="true" required></select>
+                            </div>                            
                         </div>
                         <div class="col-md-3">
-                            <b>@Html.LabelFor(model => model.IdMaquina)</b>
-                            <div class="input-group">
-                                <span class="input-group-addon">
-                                    <i class="material-icons">looks_4</i>
-                                </span>
-                                <div class="form-line">
-                                    <select name="IdMaquina"
-                                            class="selectpicker show-tick IdMaquina"
-                                            data-width="auto"
-                                            data-size="5"
-                                            data-live-search="true" required></select>
-                                </div>
-                            </div>
+                            <b>@Html.LabelFor(model => model.IdMaquina)</b>                            
+                            <div class="form-line input-group">
+                                <select name="IdMaquina"
+                                        class="show-tick IdMaquina"
+                                        data-size="5"
+                                        data-live-search="true" required></select>
+                            </div>                            
                         </div>
 
                     </div>
@@ -927,7 +972,7 @@
                                     <i class="material-icons">warning</i>
                                 </span>
                                 <div class="form-line">
-                                    <select name="IdTipoAveria" class="selectpicker show-tick IdTipoAveria" required>
+                                    <select name="IdTipoAveria" class="show-tick IdTipoAveria" required>
                                         @foreach (var item in Model.TipoAveriaList)
                                         {
                                             <option value="@item.Value">@item.Text</option>
@@ -943,7 +988,7 @@
                                     <i class="material-icons">work</i>
                                 </span>
                                 <div class="form-line">
-                                    <select name="IdTurno" class="selectpicker show-tick IdTurno" required>
+                                    <select name="Turno" class="selectpicker show-tick IdTurno" required>
                                         @for (int i = 1; i < 4; i++)
                                         {
                                             <option style="align-content:center;" value="@i">@i</option>
@@ -987,10 +1032,10 @@
                                 @Html.LabelFor(model => model.Accion)
                                 <br />
                                 <br />
-                                @Html.RadioButton("Accion", "Ajuste", new { @class = "with-gap", id = "a" })
+                                @Html.RadioButton("Accion", "0", new { @class = "with-gap", id = "a" })
                                 <label class="labelWOBold" for="a">Ajuste</label>
                                 <br />
-                                @Html.RadioButton("Accion", "Cambio de componente", true, new { @class = "with-gap", id = "cc" })
+                                @Html.RadioButton("Accion", "1", true, new { @class = "with-gap", id = "cc" })
                                 <label class="labelWOBold" for="cc">Cambio de componente</label>
                             </div>
                         </div>
@@ -1066,8 +1111,8 @@
                                             </td>
                                             <td style="width:20%">
                                                 <div class="gray_cube">
-                                                    <div class="switch">
-                                                        <label>NOK<input type="checkbox"><span class="lever"></span>OK</label>
+                                                    <div class="switch" >
+                                                        <label>NOK<input type="checkbox" name="GembaOk"><span class="lever"></span>OK</label>
                                                     </div>
                                                 </div>
                                             </td>
@@ -1089,7 +1134,7 @@
                                             <td style="width:20%">
                                                 <div class="gray_cube">
                                                     <div class="switch">
-                                                        <label>NOK<input type="checkbox"><span class="lever"></span>OK</label>
+                                                        <label>NOK<input type="checkbox" name="GembutsuOk"><span class="lever"></span>OK</label>
                                                     </div>
                                                 </div>
                                             </td>
@@ -1111,7 +1156,7 @@
                                             <td style="width:20%">
                                                 <div class="gray_cube">
                                                     <div class="switch">
-                                                        <label>NOK<input type="checkbox"><span class="lever"></span>OK</label>
+                                                        <label>NOK<input type="checkbox" name="GenjitsuOk"><span class="lever"></span>OK</label>
                                                     </div>
                                                 </div>
                                             </td>
@@ -1133,7 +1178,7 @@
                                             <td style="width:20%">
                                                 <div class="gray_cube">
                                                     <div class="switch">
-                                                        <label>NOK<input type="checkbox"><span class="lever"></span>OK</label>
+                                                        <label>NOK<input type="checkbox" name="GenriOk"><span class="lever"></span>OK</label>
                                                     </div>
                                                 </div>
                                             </td>
@@ -1155,7 +1200,7 @@
                                             <td style="width:20%">
                                                 <div class="gray_cube">
                                                     <div class="switch">
-                                                        <label>NOK<input type="checkbox"><span class="lever"></span>OK</label>
+                                                        <label>NOK<input type="checkbox" name="GenriOk"><span class="lever"></span>OK</label>
                                                     </div>
                                                 </div>
                                             </td>
@@ -1347,7 +1392,7 @@
                         <div class="header" style="background-color:#009688">
                             <h2>
                                 GRÁFICA DE LA BAÑERA
-                                <small class="col-white">¿Qué tipo de falla es? Diligencie las fechas de los mantenimiento planeados y selecciones la causa raiz basada en el gráfico de la bañera</small>
+                                <small class="col-white">¿Qué tipo de falla es? Diligencie las fechas de los mantenimiento planeados y seleccione la causa raiz basada en el gráfico de la bañera</small>
                             </h2>
                         </div>
                         <div class="body">
@@ -1379,23 +1424,30 @@
                                     </div>
                                 </div>
 
-                                <div class="col-md-3">
-                                    <p>
-                                        <b>With OptGroups</b>
-                                    </p>
-                                    <select class="form-control show-tick">
-                                        <optgroup label="Picnic">
-                                            <option>Mustard</option>
-                                            <option>Ketchup</option>
-                                            <option>Relish</option>
-                                        </optgroup>
-                                        <optgroup label="Camping">
-                                            <option>Tent</option>
-                                            <option>Flashlight</option>
-                                            <option>Toilet Paper</option>
-                                        </optgroup>
-                                    </select>
+                                <div id="divOpcionesBañera">
+                                    <div class="col-md-12">
+                                        <p>
+                                            <b>Seleccione la causa raiz</b>
+                                        </p>
+                                        <select class="form-control show-tick">
+                                            <optgroup label="Falla inicial">
+                                                <option value="1">Error humano</option>
+                                                <option value="2">Falla de diseño</option>
+                                                <option value="3">Calidad de repuestos</option>
+                                            </optgroup>
+                                            <optgroup label="Probabilidad de falla">
+                                                <option value="4">Condiciones de operación</option>
+                                                <option value="5">Condiciones básicas</option>
+                                                <option value="6">Error humano</option>                                              
+                                            </optgroup>
+                                            <optgroup label="Falla por desgaste">
+                                                <option value="7">No PM</option>
+                                                <option value="8">No AM</option>
+                                            </optgroup>
+                                        </select>
+                                    </div>
                                 </div>
+                               
 
                                 @*<div id="divOpcionesBañera">
                                     <div class="row">
@@ -1519,7 +1571,7 @@
                                             <i class="material-icons">person</i>
                                         </span>
                                         <div class="form-line">
-                                            @Html.EditorFor(model => model.IdDiligenciado)                                            
+                                            @Html.EditorFor(model => model.IdDiligenciado, new { htmlAttributes = new { placeholder = "Escriba aquí..." } })                                            
                                         </div>
                                     </div>
                                 </div>
@@ -1530,7 +1582,7 @@
                                             <i class="material-icons">person</i>
                                         </span>
                                         <div class="form-line">
-                                            @Html.EditorFor(model => model.IdTecMattInv, new { @class = "required" })                                           
+                                            @Html.EditorFor(model => model.IdTecMattInv, new { htmlAttributes = new { placeholder = "Escriba aquí..." } })                                           
                                         </div>
                                     </div>
                                 </div>
@@ -1541,7 +1593,7 @@
                                             <i class="material-icons">person</i>
                                         </span>
                                         <div class="form-line">
-                                            @Html.EditorFor(model => model.IdOpersInv)                                           
+                                            @Html.EditorFor(model => model.IdOpersInv, new { htmlAttributes = new { placeholder = "Escriba aquí..." } })                                           
                                         </div>
                                     </div>
                                 </div>
@@ -1554,7 +1606,7 @@
                                             <i class="material-icons">person</i>
                                         </span>
                                         <div class="form-line">
-                                            @Html.EditorFor(model => model.IdAnaElab)                                           
+                                            @Html.EditorFor(model => model.IdAnaElab, new { htmlAttributes = new { placeholder = "Escriba aquí..." } })                                           
                                         </div>
                                     </div>
                                 </div>
@@ -1578,7 +1630,7 @@
                                             <i class="material-icons">person</i>
                                         </span>
                                         <div class="form-line">
-                                            @Html.EditorFor(model => model.IdContMedDef)                                           
+                                            @Html.EditorFor(model => model.IdContMedDef, new { htmlAttributes = new { placeholder = "Escriba aquí..." } })                                           
                                         </div>
                                     </div>
                                 </div>
@@ -1602,7 +1654,7 @@
                                             <i class="material-icons">person</i>
                                         </span>
                                         <div class="form-line">
-                                            @Html.EditorFor(model => model.IdEjeValPor)                                           
+                                            @Html.EditorFor(model => model.IdEjeValPor, new { htmlAttributes = new { placeholder = "Escriba aquí..." } })                                           
                                         </div>
                                     </div>
                                 </div>
@@ -1647,6 +1699,7 @@
 <script src="~/Scripts/plugins/jquery-steps/jquery.steps.js"></script>
 <!-- Select Plugin Js -->
 <script src="~/Scripts/plugins/bootstrap-select/js/bootstrap-select.min.js"></script>
+<script src="~/Scripts/plugins/bootstrap-select/js/i18n/defaults-es_CL.js"></script>
 <!--TOOLTIPSTER JS-->
 @*<script type="text/javascript" src="~/Scripts/plugins/tooltipster-master/js/tooltipster.bundle.min.js"></script>*@
 <!-- Input Mask Plugin Js -->
@@ -1687,78 +1740,21 @@
 <script src="~/Scripts/plugins/slickgrid/plugins/slick.cellrangedecorator.js"></script>
 
 <script>
-    var af1 = 0;
-    var af2 = 0;
+    Dropzone.autoDiscover = false;
     var myDropzone1;
     var myDropzone2;
-    Dropzone.autoDiscover = false;
-    //DROPZONE
-    $(function () {
-    var fields = 0;
-    myDropzone1 = new Dropzone("div#dropzoneJsForm",
-        {
-            //prevents Dropzone from uploading dropped files immediately
+
+    $(function() {
+
+        myDropzone1 = new Dropzone("div#dropzoneJsForm", {
             autoProcessQueue: false,
             acceptedFiles: 'image/*',
             addRemoveLinks: true,
             dictRemoveFile: 'Remover archivo',
             maxFiles:2,
-            url: '@Url.Content("~/")' + "Home/CreateKpi",
-            init: function () {
-                var submitButton = document.querySelector("#submit-all");
-                var myDropzone = this; //closure
-
-                //submitButton.addEventListener("click", function () {
-                //    myDropzone.processQueue(); //tell Dropzone to process all queued files
-                //});
-            },
-            sending: function (file, xhr, formData) {
-                // Will send the filesize along with the file as POST data.
-
-                var text = $('#dropzoneJsForm').find('span[name^="dz_text"]').get(fields).textContent;
-                fields++;
-                //$('span[name^="dz_text"]').each(function () {
-                    console.log(text);
-                //});
-
-                formData.append("image_desc",text);
-            }
+            url: '@Url.Content("~/")' + "Home/CreateKpi"        
         });
 
-        @*Dropzone.options.dropzoneJsForm = {
-
-            //prevents Dropzone from uploading dropped files immediately
-            autoProcessQueue: false,
-            acceptedFiles: 'image/*',
-            addRemoveLinks: true,
-            dictRemoveFile: 'Remover archivo',
-            maxFiles:2,
-            url: '@Url.Content("~/")' + "Home/CreateKpi",
-            init: function () {
-                var submitButton = document.querySelector("#submit-all");
-                var myDropzone = this; //closure
-
-                //submitButton.addEventListener("click", function () {
-                //    myDropzone.processQueue(); //tell Dropzone to process all queued files
-                //});
-            },
-            sending: function (file, xhr, formData) {
-                // Will send the filesize along with the file as POST data.
-
-                var text = $('#dropzoneJsForm').find('span[name^="dz_text"]').get(fields).textContent;
-                fields++;
-                //$('span[name^="dz_text"]').each(function () {
-                    console.log(text);
-                //});
-
-                formData.append("image_desc",text);
-            }
-        };*@
-
-        
-        //DROPZONE CAUSAS RAICES
-        var fieldsCr = 0;
-        
         myDropzone2 = new Dropzone("#dropzoneJsFormCr",
             {
                 autoProcessQueue: false,
@@ -1766,57 +1762,8 @@
                 addRemoveLinks: true,
                 dictRemoveFile: 'Remover archivo',
                 maxFiles:2,
-                url: '@Url.Content("~/")' + "Home/CreateKpi",
-                init: function () {
-                    var submitButton = document.querySelector("#submit-all");
-                    var myDropzone = this; //closure
-
-                    //submitButton.addEventListener("click", function () {
-                    //    myDropzone.processQueue(); //tell Dropzone to process all queued files
-                    //});
-                },
-                sending: function (file, xhr, formData) {
-                    // Will send the filesize along with the file as POST data.
-
-                    var text = $('#dropzoneJsFormCr').find('span[name^="dz_text"]').get(fields).textContent;
-                    fieldsCr++;
-                    //$('span[name^="dz_text"]').each(function () {
-                        console.log(text);
-                    //});
-
-                    formData.append("image_desc",text);
-                }
-            });
-        //Dropzone.options.dropzoneJsFormCr
-        @*myDropzone.options = {
-
-            //prevents Dropzone from uploading dropped files immediately
-            autoProcessQueue: false,
-            acceptedFiles: 'image/*',
-            addRemoveLinks: true,
-            dictRemoveFile: 'Remover archivo',
-            maxFiles:2,
-            url: '@Url.Content("~/")' + "Home/CreateKpi",
-            init: function () {
-                var submitButton = document.querySelector("#submit-all");
-                var myDropzone = this; //closure
-
-                //submitButton.addEventListener("click", function () {
-                //    myDropzone.processQueue(); //tell Dropzone to process all queued files
-                //});
-            },
-            sending: function (file, xhr, formData) {
-                // Will send the filesize along with the file as POST data.
-
-                var text = $('#dropzoneJsFormCr').find('span[name^="dz_text"]').get(fields).textContent;
-                fieldsCr++;
-                //$('span[name^="dz_text"]').each(function () {
-                    console.log(text);
-                //});
-
-                formData.append("image_desc",text);
-            }
-        };*@
+                url: '@Url.Content("~/")' + "Home/CreateKpi"  
+            });       
     });
 
 </script>
