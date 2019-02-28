@@ -12,7 +12,6 @@
         <EntityTypeShape EntityType="MttoAppModel.conjuntos" Width="1.5" PointX="0.75" PointY="6.75" IsExpanded="true" />
         <EntityTypeShape EntityType="MttoAppModel.epps" Width="1.5" PointX="2.75" PointY="7.75" IsExpanded="true" />
         <EntityTypeShape EntityType="MttoAppModel.equipos" Width="1.5" PointX="4.75" PointY="7.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="MttoAppModel.ewos" Width="1.5" PointX="6.75" PointY="7.75" IsExpanded="true" />
         <EntityTypeShape EntityType="MttoAppModel.herramientas" Width="1.5" PointX="8.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="MttoAppModel.lineas" Width="1.5" PointX="8.75" PointY="3.75" IsExpanded="true" />
         <EntityTypeShape EntityType="MttoAppModel.lista_acciones" Width="1.5" PointX="8.75" PointY="6.75" IsExpanded="true" />
@@ -45,6 +44,7 @@
         <AssociationConnector Association="MttoAppModel.AspNetUserRoles" />
         <EntityTypeShape EntityType="MttoAppModel.kpis" Width="1.5" PointX="11" PointY="21.875" />
         <AssociationConnector Association="MttoAppModel.FK_tiempos_carga_lineas1" />
+        <EntityTypeShape EntityType="MttoAppModel.ewos" Width="1.5" PointX="5.375" PointY="10.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

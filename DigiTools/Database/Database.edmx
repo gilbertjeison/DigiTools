@@ -166,8 +166,8 @@
           <Property Name="id_area_linea" Type="int" />
           <Property Name="id_equipo" Type="int" />
           <Property Name="fecha_ewo" Type="datetime2" Precision="0" />
-          <Property Name="aviso_numero" Type="int" />
-          <Property Name="id_tecnico" Type="int" />
+          <Property Name="aviso_numero" Type="varchar" MaxLength="50" />
+          <Property Name="id_tecnico" Type="varchar" MaxLength="50" />
           <Property Name="id_tipo_averia" Type="int" />
           <Property Name="id_turno" Type="int" />
           <Property Name="notificacion_averia" Type="datetime2" Precision="0" />
@@ -706,71 +706,6 @@
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Nombre" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
         </EntityType>
-        <EntityType Name="ewos">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="consecutivo" Type="Int32" />
-          <Property Name="id_area_linea" Type="Int32" />
-          <Property Name="id_equipo" Type="Int32" />
-          <Property Name="fecha_ewo" Type="DateTime" Precision="0" />
-          <Property Name="aviso_numero" Type="Int32" />
-          <Property Name="id_tecnico" Type="Int32" />
-          <Property Name="id_tipo_averia" Type="Int32" />
-          <Property Name="id_turno" Type="Int32" />
-          <Property Name="notificacion_averia" Type="DateTime" Precision="0" />
-          <Property Name="inicio_reparacion" Type="DateTime" Precision="0" />
-          <Property Name="tiempo_espera_tecnico" Type="Int32" />
-          <Property Name="tiempo_diagnostico" Type="Int32" />
-          <Property Name="tiempo_espera_repuestos" Type="Int32" />
-          <Property Name="tiempo_reparacion" Type="Int32" />
-          <Property Name="tiempo_pruebas" Type="Int32" />
-          <Property Name="fin_reparacion" Type="DateTime" Precision="0" />
-          <Property Name="tiempo_total" Type="Int32" />
-          <Property Name="imagen_1" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="imagen_2" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="desc_imagen_1" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Name="desc_imagen_2" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Name="desc_averia" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="cambio_componente" Type="Boolean" />
-          <Property Name="ajuste" Type="Boolean" />
-          <Property Name="what" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="where" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="when" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="who" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="wich" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="how" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="fenomeno" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="gemba" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="gemba_ok" Type="Boolean" />
-          <Property Name="gembutsu" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="gembutsu_ok" Type="Boolean" />
-          <Property Name="genjitsu" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="genjitsu_ok" Type="Boolean" />
-          <Property Name="genri" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="genri_ok" Type="Boolean" />
-          <Property Name="gensoku" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="gensoku_ok" Type="Boolean" />
-          <Property Name="imagen_3" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="imagen_4" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="desc_imagen_3" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Name="desc_imagen_4" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Name="fecha_ultimo_mtto" Type="DateTime" Precision="0" />
-          <Property Name="fecha_proximo_mtto" Type="DateTime" Precision="0" />
-          <Property Name="falla_index" Type="Int32" />
-          <Property Name="causa_raiz_index" Type="Int32" />
-          <Property Name="tecnicos_man_involucrados" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="operarios_involucrados" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="elaborador_analisis" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="fecha_analisis" Type="DateTime" Precision="0" />
-          <Property Name="definidor_contramedidas" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="fecha_contramedida" Type="DateTime" Precision="0" />
-          <Property Name="validador_ejecucion" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="fecha_validacion" Type="DateTime" Precision="0" />
-          <Property Name="user_id" Type="Int32" />
-          <Property Name="kpi" Type="Boolean" />
-        </EntityType>
         <EntityType Name="herramientas">
           <Key>
             <PropertyRef Name="Id" />
@@ -1034,7 +969,6 @@
           <EntitySet Name="conjuntos" EntityType="Self.conjuntos" />
           <EntitySet Name="epps" EntityType="Self.epps" />
           <EntitySet Name="equipos" EntityType="Self.equipos" />
-          <EntitySet Name="ewos" EntityType="Self.ewos" />
           <EntitySet Name="herramientas" EntityType="Self.herramientas" />
           <EntitySet Name="lineas" EntityType="Self.lineas" />
           <EntitySet Name="lista_acciones" EntityType="Self.lista_acciones" />
@@ -1082,6 +1016,7 @@
             <End Role="lineas" EntitySet="lineas" />
             <End Role="kpis" EntitySet="kpis" />
           </AssociationSet>
+          <EntitySet Name="ewos" EntityType="MttoAppModel.ewos" />
         </EntityContainer>
         <EntityType Name="C__MigrationHistory">
           <Key>
@@ -1204,6 +1139,71 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="ewos">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="consecutivo" Type="Int32" />
+          <Property Name="id_area_linea" Type="Int32" />
+          <Property Name="id_equipo" Type="Int32" />
+          <Property Name="fecha_ewo" Type="DateTime" Precision="0" />
+          <Property Name="aviso_numero" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="id_tecnico" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="id_tipo_averia" Type="Int32" />
+          <Property Name="id_turno" Type="Int32" />
+          <Property Name="notificacion_averia" Type="DateTime" Precision="0" />
+          <Property Name="inicio_reparacion" Type="DateTime" Precision="0" />
+          <Property Name="tiempo_espera_tecnico" Type="Int32" />
+          <Property Name="tiempo_diagnostico" Type="Int32" />
+          <Property Name="tiempo_espera_repuestos" Type="Int32" />
+          <Property Name="tiempo_reparacion" Type="Int32" />
+          <Property Name="tiempo_pruebas" Type="Int32" />
+          <Property Name="fin_reparacion" Type="DateTime" Precision="0" />
+          <Property Name="tiempo_total" Type="Int32" />
+          <Property Name="imagen_1" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="imagen_2" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="desc_imagen_1" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="desc_imagen_2" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="desc_averia" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="cambio_componente" Type="Boolean" />
+          <Property Name="ajuste" Type="Boolean" />
+          <Property Name="what" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="where" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="when" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="who" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="wich" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="how" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="fenomeno" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="gemba" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="gemba_ok" Type="Boolean" />
+          <Property Name="gembutsu" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="gembutsu_ok" Type="Boolean" />
+          <Property Name="genjitsu" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="genjitsu_ok" Type="Boolean" />
+          <Property Name="genri" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="genri_ok" Type="Boolean" />
+          <Property Name="gensoku" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="gensoku_ok" Type="Boolean" />
+          <Property Name="imagen_3" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="imagen_4" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="desc_imagen_3" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="desc_imagen_4" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="fecha_ultimo_mtto" Type="DateTime" Precision="0" />
+          <Property Name="fecha_proximo_mtto" Type="DateTime" Precision="0" />
+          <Property Name="falla_index" Type="Int32" />
+          <Property Name="causa_raiz_index" Type="Int32" />
+          <Property Name="tecnicos_man_involucrados" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="operarios_involucrados" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="elaborador_analisis" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="fecha_analisis" Type="DateTime" Precision="0" />
+          <Property Name="definidor_contramedidas" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="fecha_contramedida" Type="DateTime" Precision="0" />
+          <Property Name="validador_ejecucion" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="fecha_validacion" Type="DateTime" Precision="0" />
+          <Property Name="user_id" Type="Int32" />
+          <Property Name="kpi" Type="Boolean" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1300,72 +1300,6 @@
               <MappingFragment StoreEntitySet="equipos">
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Nombre" ColumnName="Nombre" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="ewos">
-            <EntityTypeMapping TypeName="MttoAppModel.ewos">
-              <MappingFragment StoreEntitySet="ewos">
-                <ScalarProperty Name="kpi" ColumnName="kpi" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="consecutivo" ColumnName="consecutivo" />
-                <ScalarProperty Name="id_area_linea" ColumnName="id_area_linea" />
-                <ScalarProperty Name="id_equipo" ColumnName="id_equipo" />
-                <ScalarProperty Name="fecha_ewo" ColumnName="fecha_ewo" />
-                <ScalarProperty Name="aviso_numero" ColumnName="aviso_numero" />
-                <ScalarProperty Name="id_tecnico" ColumnName="id_tecnico" />
-                <ScalarProperty Name="id_tipo_averia" ColumnName="id_tipo_averia" />
-                <ScalarProperty Name="id_turno" ColumnName="id_turno" />
-                <ScalarProperty Name="notificacion_averia" ColumnName="notificacion_averia" />
-                <ScalarProperty Name="inicio_reparacion" ColumnName="inicio_reparacion" />
-                <ScalarProperty Name="tiempo_espera_tecnico" ColumnName="tiempo_espera_tecnico" />
-                <ScalarProperty Name="tiempo_diagnostico" ColumnName="tiempo_diagnostico" />
-                <ScalarProperty Name="tiempo_espera_repuestos" ColumnName="tiempo_espera_repuestos" />
-                <ScalarProperty Name="tiempo_reparacion" ColumnName="tiempo_reparacion" />
-                <ScalarProperty Name="tiempo_pruebas" ColumnName="tiempo_pruebas" />
-                <ScalarProperty Name="fin_reparacion" ColumnName="fin_reparacion" />
-                <ScalarProperty Name="tiempo_total" ColumnName="tiempo_total" />
-                <ScalarProperty Name="imagen_1" ColumnName="imagen_1" />
-                <ScalarProperty Name="imagen_2" ColumnName="imagen_2" />
-                <ScalarProperty Name="desc_imagen_1" ColumnName="desc_imagen_1" />
-                <ScalarProperty Name="desc_imagen_2" ColumnName="desc_imagen_2" />
-                <ScalarProperty Name="desc_averia" ColumnName="desc_averia" />
-                <ScalarProperty Name="cambio_componente" ColumnName="cambio_componente" />
-                <ScalarProperty Name="ajuste" ColumnName="ajuste" />
-                <ScalarProperty Name="what" ColumnName="what" />
-                <ScalarProperty Name="where" ColumnName="where" />
-                <ScalarProperty Name="when" ColumnName="when" />
-                <ScalarProperty Name="who" ColumnName="who" />
-                <ScalarProperty Name="wich" ColumnName="wich" />
-                <ScalarProperty Name="how" ColumnName="how" />
-                <ScalarProperty Name="fenomeno" ColumnName="fenomeno" />
-                <ScalarProperty Name="gemba" ColumnName="gemba" />
-                <ScalarProperty Name="gemba_ok" ColumnName="gemba_ok" />
-                <ScalarProperty Name="gembutsu" ColumnName="gembutsu" />
-                <ScalarProperty Name="gembutsu_ok" ColumnName="gembutsu_ok" />
-                <ScalarProperty Name="genjitsu" ColumnName="genjitsu" />
-                <ScalarProperty Name="genjitsu_ok" ColumnName="genjitsu_ok" />
-                <ScalarProperty Name="genri" ColumnName="genri" />
-                <ScalarProperty Name="genri_ok" ColumnName="genri_ok" />
-                <ScalarProperty Name="gensoku" ColumnName="gensoku" />
-                <ScalarProperty Name="gensoku_ok" ColumnName="gensoku_ok" />
-                <ScalarProperty Name="imagen_3" ColumnName="imagen_3" />
-                <ScalarProperty Name="imagen_4" ColumnName="imagen_4" />
-                <ScalarProperty Name="desc_imagen_3" ColumnName="desc_imagen_3" />
-                <ScalarProperty Name="desc_imagen_4" ColumnName="desc_imagen_4" />
-                <ScalarProperty Name="fecha_ultimo_mtto" ColumnName="fecha_ultimo_mtto" />
-                <ScalarProperty Name="fecha_proximo_mtto" ColumnName="fecha_proximo_mtto" />
-                <ScalarProperty Name="falla_index" ColumnName="falla_index" />
-                <ScalarProperty Name="causa_raiz_index" ColumnName="causa_raiz_index" />
-                <ScalarProperty Name="tecnicos_man_involucrados" ColumnName="tecnicos_man_involucrados" />
-                <ScalarProperty Name="operarios_involucrados" ColumnName="operarios_involucrados" />
-                <ScalarProperty Name="elaborador_analisis" ColumnName="elaborador_analisis" />
-                <ScalarProperty Name="fecha_analisis" ColumnName="fecha_analisis" />
-                <ScalarProperty Name="definidor_contramedidas" ColumnName="definidor_contramedidas" />
-                <ScalarProperty Name="fecha_contramedida" ColumnName="fecha_contramedida" />
-                <ScalarProperty Name="validador_ejecucion" ColumnName="validador_ejecucion" />
-                <ScalarProperty Name="fecha_validacion" ColumnName="fecha_validacion" />
-                <ScalarProperty Name="user_id" ColumnName="user_id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -1708,6 +1642,72 @@
                 <ScalarProperty Name="year" ColumnName="year" />
                 <ScalarProperty Name="id_linea" ColumnName="id_linea" />
                 <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ewos">
+            <EntityTypeMapping TypeName="MttoAppModel.ewos">
+              <MappingFragment StoreEntitySet="ewos">
+                <ScalarProperty Name="kpi" ColumnName="kpi" />
+                <ScalarProperty Name="user_id" ColumnName="user_id" />
+                <ScalarProperty Name="fecha_validacion" ColumnName="fecha_validacion" />
+                <ScalarProperty Name="validador_ejecucion" ColumnName="validador_ejecucion" />
+                <ScalarProperty Name="fecha_contramedida" ColumnName="fecha_contramedida" />
+                <ScalarProperty Name="definidor_contramedidas" ColumnName="definidor_contramedidas" />
+                <ScalarProperty Name="fecha_analisis" ColumnName="fecha_analisis" />
+                <ScalarProperty Name="elaborador_analisis" ColumnName="elaborador_analisis" />
+                <ScalarProperty Name="operarios_involucrados" ColumnName="operarios_involucrados" />
+                <ScalarProperty Name="tecnicos_man_involucrados" ColumnName="tecnicos_man_involucrados" />
+                <ScalarProperty Name="causa_raiz_index" ColumnName="causa_raiz_index" />
+                <ScalarProperty Name="falla_index" ColumnName="falla_index" />
+                <ScalarProperty Name="fecha_proximo_mtto" ColumnName="fecha_proximo_mtto" />
+                <ScalarProperty Name="fecha_ultimo_mtto" ColumnName="fecha_ultimo_mtto" />
+                <ScalarProperty Name="desc_imagen_4" ColumnName="desc_imagen_4" />
+                <ScalarProperty Name="desc_imagen_3" ColumnName="desc_imagen_3" />
+                <ScalarProperty Name="imagen_4" ColumnName="imagen_4" />
+                <ScalarProperty Name="imagen_3" ColumnName="imagen_3" />
+                <ScalarProperty Name="gensoku_ok" ColumnName="gensoku_ok" />
+                <ScalarProperty Name="gensoku" ColumnName="gensoku" />
+                <ScalarProperty Name="genri_ok" ColumnName="genri_ok" />
+                <ScalarProperty Name="genri" ColumnName="genri" />
+                <ScalarProperty Name="genjitsu_ok" ColumnName="genjitsu_ok" />
+                <ScalarProperty Name="genjitsu" ColumnName="genjitsu" />
+                <ScalarProperty Name="gembutsu_ok" ColumnName="gembutsu_ok" />
+                <ScalarProperty Name="gembutsu" ColumnName="gembutsu" />
+                <ScalarProperty Name="gemba_ok" ColumnName="gemba_ok" />
+                <ScalarProperty Name="gemba" ColumnName="gemba" />
+                <ScalarProperty Name="fenomeno" ColumnName="fenomeno" />
+                <ScalarProperty Name="how" ColumnName="how" />
+                <ScalarProperty Name="wich" ColumnName="wich" />
+                <ScalarProperty Name="who" ColumnName="who" />
+                <ScalarProperty Name="when" ColumnName="when" />
+                <ScalarProperty Name="where" ColumnName="where" />
+                <ScalarProperty Name="what" ColumnName="what" />
+                <ScalarProperty Name="ajuste" ColumnName="ajuste" />
+                <ScalarProperty Name="cambio_componente" ColumnName="cambio_componente" />
+                <ScalarProperty Name="desc_averia" ColumnName="desc_averia" />
+                <ScalarProperty Name="desc_imagen_2" ColumnName="desc_imagen_2" />
+                <ScalarProperty Name="desc_imagen_1" ColumnName="desc_imagen_1" />
+                <ScalarProperty Name="imagen_2" ColumnName="imagen_2" />
+                <ScalarProperty Name="imagen_1" ColumnName="imagen_1" />
+                <ScalarProperty Name="tiempo_total" ColumnName="tiempo_total" />
+                <ScalarProperty Name="fin_reparacion" ColumnName="fin_reparacion" />
+                <ScalarProperty Name="tiempo_pruebas" ColumnName="tiempo_pruebas" />
+                <ScalarProperty Name="tiempo_reparacion" ColumnName="tiempo_reparacion" />
+                <ScalarProperty Name="tiempo_espera_repuestos" ColumnName="tiempo_espera_repuestos" />
+                <ScalarProperty Name="tiempo_diagnostico" ColumnName="tiempo_diagnostico" />
+                <ScalarProperty Name="tiempo_espera_tecnico" ColumnName="tiempo_espera_tecnico" />
+                <ScalarProperty Name="inicio_reparacion" ColumnName="inicio_reparacion" />
+                <ScalarProperty Name="notificacion_averia" ColumnName="notificacion_averia" />
+                <ScalarProperty Name="id_turno" ColumnName="id_turno" />
+                <ScalarProperty Name="id_tipo_averia" ColumnName="id_tipo_averia" />
+                <ScalarProperty Name="id_tecnico" ColumnName="id_tecnico" />
+                <ScalarProperty Name="aviso_numero" ColumnName="aviso_numero" />
+                <ScalarProperty Name="fecha_ewo" ColumnName="fecha_ewo" />
+                <ScalarProperty Name="id_equipo" ColumnName="id_equipo" />
+                <ScalarProperty Name="id_area_linea" ColumnName="id_area_linea" />
+                <ScalarProperty Name="consecutivo" ColumnName="consecutivo" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

@@ -32,7 +32,6 @@ namespace DigiTools.Database
         public virtual DbSet<conjuntos> conjuntos { get; set; }
         public virtual DbSet<epps> epps { get; set; }
         public virtual DbSet<equipos> equipos { get; set; }
-        public virtual DbSet<ewos> ewos { get; set; }
         public virtual DbSet<herramientas> herramientas { get; set; }
         public virtual DbSet<lineas> lineas { get; set; }
         public virtual DbSet<lista_acciones> lista_acciones { get; set; }
@@ -60,5 +59,6 @@ namespace DigiTools.Database
         public virtual DbSet<AspNetUserLogins> AspNetUserLogins { get; set; }
         public virtual DbSet<AspNetUsers> AspNetUsers { get; set; }
         public virtual DbSet<kpis> kpis { get; set; }
+        public virtual DbSet<ewos> ewos { get; set; }
     }
 }

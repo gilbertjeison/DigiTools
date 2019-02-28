@@ -23,11 +23,13 @@
 <link href="~/Scripts/plugins/slickgrid/examples.css" rel="stylesheet" />
 <link href="~/Scripts/plugins/slickgrid/css/select2.css" rel="stylesheet" />
 
-
-
 <script>
+    //PARA CARGAR EL GRID LA PRIMERA VEZ LA QUE
+    //SE INTERACTUE CON LA PESTAÑA #3
     var firstTime = true;
     var repuestos = new Array();
+    var porques = new Array();
+    var cmd = new Array();
 
     $(function () {
 
@@ -65,21 +67,18 @@
                 }
 
                 //if (currentIndex == 1 && myDropzone1.files.length == 0) {
-                //    swal("Descripción gráfica de la falla", "Debe cargar las imágenes relacionadas", "error");
+                //    showSweetAlert("Descripción gráfica de la falla", "Debe cargar las imágenes relacionadas", "error");
                 //    return false;
                 //}
 
                 //if (currentIndex == 2 && myDropzone2.files.length == 0) {
-                //    swal("Dibujo / Diagrama / Foto del 5 Por qué", "Debe cargar las imágenes relacionadas", "error");
+                //    showSweetAlert("Dibujo / Diagrama / Foto del 5 Por qué", "Debe cargar las imágenes relacionadas", "error");
                 //    return false;
                 //}
 
-                ////VALIDAR QUE CUANDO SEA UN CAMBIO DE COMPONENTE, HAYAN REGISTROS EN LA TABLA
-                //if (currentIndex == 1 &&  $('#cc').is(':checked')) {
-                //   //CAPTURAR RESGISTROS DE LA TABLA;
-
-                
-                if (currentIndex == 1) {
+                //VALIDAR QUE CUANDO SEA UN CAMBIO DE COMPONENTE, HAYAN REGISTROS EN LA TABLA
+                if (currentIndex == 1 &&  $('#cc').is(':checked')) {
+                   //CAPTURAR RESGISTROS DE LA TABLA;
                     repuestos = [];
                     $("#tblRepuestos TBODY TR").each(function () {
                         var row = $(this);
@@ -90,67 +89,35 @@
                         rep.costo = row.find("TD").eq(3).html();
                         repuestos.push(rep);
                     });
+
+                    //if (repuestos.length == 0) {
+                    //    showSweetAlert("Repuestos utilizados", "Debe cargar los repuestos utilizados", "error");
+                    //    return false;
+                    //};
                 }
-                    
 
-                //    if (repuestos.length == 0) {
-                //        swal("Repuestos utilizados", "Debe cargar los repuestos utilizados", "error");
-                //        return false;
-                //    };
-                //}
+                //VALIDAR QUE LOS POR QUÉ ESTÉN DILIGENCIADOS
+                if (currentIndex == 2) {
+                    //CAPTURAR RESGISTROS DE LA TABLA
+                    porques = [];
+                    $("#tblPorque TBODY TR").each(function () {
+                        var row = $(this);
+                        var porque = {};
+                        porque.porque_1 = row.find("TD").eq(0).html();
+                        porque.porque_2 = row.find("TD").eq(1).html();
+                        porque.porque_3 = row.find("TD").eq(2).html();
+                        porque.porque_4 = row.find("TD").eq(3).html();
+                        porque.porque_5 = row.find("TD").eq(4).html();
 
-                ////VALIDAR QUE LOS POR QUÉ ESTÉN DILIGENCIADOS
-                //if (currentIndex == 2) {
-                //    //CAPTURAR RESGISTROS DE LA TABLA
-                //    var porques = new Array();
-                //    $("#tblPorque TBODY TR").each(function () {
-                //        var row = $(this);
-                //        var porque = {};
-                //        porque.prq1 = row.find("TD").eq(0).html();
-                //        porque.prq2 = row.find("TD").eq(1).html();
-                //        porque.prq3 = row.find("TD").eq(2).html();
-                //        porque.prq4 = row.find("TD").eq(3).html();
-                //        porque.prq5 = row.find("TD").eq(4).html();
+                        porques.push(porque);
+                    });
 
-                //        porques.push(porque);
-                //    });
-
-                //    if (porques.length == 0) {
-                //        swal("Análisis Por Qué", "Debe diligenciar los registros de por qué", "error");
-                //        return false;
-                //    };
-                //}
-
-                //VALIDAR CONTRAMEDIDAS
-                //if (currentIndex == 3) {
-                //    var cmd = grid.getData();
-
-                //    if (cmd.length == 0) {
-                //        swal("Contramedidas - Responsables", "Las contramedidas deben estar diligenciadas", "error");
-                //        return false;
-                //    };
-
-                //    //VALIDAR INVOLUCRADOS
-                //    var $IdDiligenciado = $("#IdDiligenciado").siblings(".bootstrap-tagsinput").children(".tag");
-                //    var $IdAnaElab = $("#IdAnaElab").siblings(".bootstrap-tagsinput").children(".tag");
-                //    var $IdContMedDef = $("#IdContMedDef").siblings(".bootstrap-tagsinput").children(".tag");
-                //    var $IdEjeValPor = $("#IdEjeValPor").siblings(".bootstrap-tagsinput").children(".tag");
-                //    var $IdTecMattInv = $("#IdTecMattInv").siblings(".bootstrap-tagsinput").children(".tag");
-                //    var $IdOpersInv = $("#IdOpersInv").siblings(".bootstrap-tagsinput").children(".tag");
-
-
-                //    if ($IdDiligenciado.length == 0 || $IdAnaElab.length == 0 || $IdContMedDef.length == 0 ||
-                //        $IdEjeValPor.length == 0 || $IdTecMattInv.length == 0 || $IdOpersInv.length == 0)
-                //    {
-                //        swal("Involucrados", "Todos los involucrados deben estar indicados.", "error");
-                //        return false;
-                //    }
-                //    //var tags = [];
-                //    //for (var i = $keywords.length; i--;)
-                //    //{
-                //    //    tags.push($($keywords[i]).text().trim());
-                //    //}
-                //}
+                    //if (porques.length == 0) {
+                    //    showSweetAlert("Análisis Por Qué", "Debe diligenciar los registros de por qué", "error");
+                    //    return false;
+                    //};
+                }
+                               
 
                 if (currentIndex < newIndex) {
                     form.find('.body:eq(' + newIndex + ') label.error').remove();
@@ -163,6 +130,7 @@
                 return true;
             },
             onStepChanged: function (event, currentIndex, priorIndex) {
+
                 setButtonWavesEffect(event);
 
                 if (currentIndex == 3) {
@@ -173,6 +141,70 @@
                 }
             },
             onFinishing: function (event, currentIndex) {
+
+                //VALIDAR DATOS DE LA ÚLTIMA PESTAÑA
+                cmd = [];
+                cmd = grid.getData();
+
+                //if (cmd.length == 0) {
+                //    showSweetAlert("Contramedidas - Responsables", "Las contramedidas deben estar diligenciadas", "error");
+                //    return false;
+                //};
+
+                //VALIDAR INVOLUCRADOS
+                var $IdDiligenciado = $("#IdDiligenciado").siblings(".bootstrap-tagsinput").children(".tag");
+                var $IdAnaElab = $("#IdAnaElab").siblings(".bootstrap-tagsinput").children(".tag");
+                var $IdContMedDef = $("#IdContMedDef").siblings(".bootstrap-tagsinput").children(".tag");
+                var $IdEjeValPor = $("#IdEjeValPor").siblings(".bootstrap-tagsinput").children(".tag");
+                var $IdTecMattInv = $("#IdTecMattInv").siblings(".bootstrap-tagsinput").children(".tag");
+                var $IdOpersInv = $("#IdOpersInv").siblings(".bootstrap-tagsinput").children(".tag");
+
+
+                //    if ($IdDiligenciado.length == 0 || $IdAnaElab.length == 0 || $IdContMedDef.length == 0 ||
+                //        $IdEjeValPor.length == 0 || $IdTecMattInv.length == 0 || $IdOpersInv.length == 0)
+                //    {
+                //        showSweetAlert("Involucrados", "Todos los involucrados deben estar indicados.", "error");
+                //        return false;
+                //    }
+
+                ////DILIGENCIADO POR
+                //tgsDiligenciado = [];
+                //for (var i = $IdDiligenciado.length; i--;)
+                //{
+                //    tgsDiligenciado.push($($IdDiligenciado[i]).text().trim());
+                //}
+
+                ////ELABORADO POR
+                //var tgsElaborado = [];
+                //for (var i = $IdAnaElab.length; i--;) {
+                //    tgsElaborado.push($($IdAnaElab[i]).text().trim());
+                //}
+
+                ////CONTRAMEDIDAS DEFINIDAS POR
+                //var tgsContMedDef = [];
+                //for (var i = $IdContMedDef.length; i--;) {
+                //    tgsContMedDef.push($($IdContMedDef[i]).text().trim());
+                //}
+                
+                ////EJECUCIÓN VALIDADAS POR
+                //var tgsEjeValPor = [];
+                //for (var i = $IdEjeValPor.length; i--;) {
+                //    tgsEjeValPor.push($($IdEjeValPor[i]).text().trim());
+                //}
+
+                ////TEC INVOLUCRADOS                
+                //var tgsTecMattInv = [];
+                //for (var i = $IdTecMattInv.length; i--;) {
+                //    tgsTecMattInv.push($($IdTecMattInv[i]).text().trim());
+                //}
+
+                ////OPE INVOLUCRADOS                
+                //var tgsOpersInv = [];
+                //for (var i = $IdOpersInv.length; i--;) {
+                //    tgsOpersInv.push($($IdOpersInv[i]).text().trim());
+                //}
+                
+
                 form.validate().settings.ignore = ':disabled,.ignore';
                 //return form.valid();
                 return true;
@@ -187,24 +219,27 @@
                 //ADJUNTAR GRUPO DE IMÁGENES 1
                 myDropzone1.files.forEach((file, i) => {
 
-                    var text = $('#dropzoneJsForm').find('span[name^="dz_text"]').get(i).textContent;                        
+                    var text = $('#dropzoneJsForm').find('span[name^="dz_text"]').get(i).textContent;
                     dataString.append('Image'+(i+1), file);
                     dataString.append('DescImg'+(i+1), text);
-                })      
+                })
 
                 //ADJUNTAR GRUPO DE IMAGENES 2
                 myDropzone2.files.forEach((file, i) => {
 
                     var text = $('#dropzoneJsFormCr').find('span[name^="dz_text"]').get(i).textContent;
                     dataString.append('ImagePQ' + (i + 1), file);
-                    dataString.append('DescImgPQ' + (i + 1), text);                    
+                    dataString.append('DescImgPQ' + (i + 1), text);
                 })
 
-                
-                //ADJUNTAR REPUESTOS
-                dataString.append('RepUtil', JSON.stringify(repuestos));    
 
-                console.log(JSON.stringify(repuestos));
+                //ADJUNTAR REPUESTOS
+                dataString.append('RepUtil', JSON.stringify(repuestos));
+                //ADJUNTAR PORQUES
+                dataString.append('Porques', JSON.stringify(porques));
+                //ADJUNTAR LISTA DE ACCIONES
+                dataString.append('Cmd', JSON.stringify(cmd));
+                
 
                 $.ajax({
                     type: "POST",
@@ -215,22 +250,21 @@
 
                         //MENSAJE DE CONFIRMACIÓN O ERROR
                         //if (response == "OK") {
-                        //    swal("Machine Ledger", "Línea agregada correctamente", "success");
+                        //    showSweetAlert("Machine Ledger", "Línea agregada correctamente", "success");
                         //    $('#AddModal').modal('hide');
                         //    GotoLines();
                         //}
                         //else {
-                        //    swal("Machine Ledger", response, "warning");
+                        //    showSweetAlert("Machine Ledger", response, "warning");
                         //}
                     },
                     cache: false,
                     contentType: false,
-                    processData: false                    
+                    processData: false
                 });
 
                 $('.page-loader-wrapper').hide();
-                swal("Datos almacenados correctamente!", "Submitted!", "success");
-                $('.showSweetAlert h2').addClass('tit');
+                //showSweetAlert("Datos almacenados correctamente!", "Submitted!", "success");
             }
         });
 
@@ -408,7 +442,7 @@
         });
 
         $('.datepicker').bootstrapMaterialDatePicker({
-            format: 'dddd DD MMMM YYYY',
+            format: 'DD-MM-YYYY',
             clearButton: true,
             weekStart: 1,
             time: false,
@@ -479,7 +513,7 @@
         tecNames.initialize();
 
 
-        $('.tags input:text:not(.datepicker,#IdEjeValPor)').tagsinput({
+        $('.tags input:text:not(.datepicker,#IdEjeValPor,#IdDiligenciado)').tagsinput({
             typeaheadjs: {
                 name: 'tecNames',
                 displayKey: 'Nombre',
@@ -565,6 +599,7 @@
 
     function showSweetAlert(titulo,mensaje,tipo) {
         swal(titulo, mensaje, tipo);
+        $('.showSweetAlert h2').addClass('tit');
     }
 
     //document.addEventListener("DOMContentLoaded", function () {
@@ -677,8 +712,7 @@
         border: 1px solid #ccc;
         border-radius: 4px;
     }
-
-  
+      
     #FI1Opt {
         position: absolute;
         left: 11%;
@@ -744,9 +778,9 @@
         font: 16px/1.4 "Lato", "Helvetica Neue", Arial, Helvetica, sans-serif;
     }
 
-    .input-group .form-line{
+    /*.input-group .form-line{
         border:none;
-    }
+    }*/
 
     .dropdown-header {
         padding: 3px 20px !important;
@@ -944,7 +978,7 @@
                         </div>
                     </div>
                     <div class="row text-center">
-                        <button id="btnCalTtr" class="btn bg-teal waves-effect" type="button" style="width:30%;">
+                        <button id="btnCalTtr" class="btn bg-teal waves-effect" type="button" style="width:50%;">
                             <i class="material-icons">update</i>
                             <span>Calcular tiempo</span>
                         </button>
@@ -1200,7 +1234,7 @@
                                             <td style="width:20%">
                                                 <div class="gray_cube">
                                                     <div class="switch">
-                                                        <label>NOK<input type="checkbox" name="GenriOk"><span class="lever"></span>OK</label>
+                                                        <label>NOK<input type="checkbox" name="GensokuOk"><span class="lever"></span>OK</label>
                                                     </div>
                                                 </div>
                                             </td>
@@ -1429,7 +1463,7 @@
                                         <p>
                                             <b>Seleccione la causa raiz</b>
                                         </p>
-                                        <select class="form-control show-tick">
+                                        <select name="CausaRaiz" class="form-control show-tick">
                                             <optgroup label="Falla inicial">
                                                 <option value="1">Error humano</option>
                                                 <option value="2">Falla de diseño</option>
@@ -1446,47 +1480,7 @@
                                             </optgroup>
                                         </select>
                                     </div>
-                                </div>
-                               
-
-                                @*<div id="divOpcionesBañera">
-                                    <div class="row">
-                                        <div class="col-xs-4">
-                                            <div class="form-group">
-                                                @Html.RadioButton("OpBa", "1", new { @class = "with-gap", id = "a1" })
-                                                <label for="a1">Error humano (instalación)</label>
-                                                <br />
-                                                @Html.RadioButton("OpBa", "2", false, new { @class = "with-gap", id = "a2" })
-                                                <label for="a2">Falla de diseño</label>
-                                                <br />
-                                                @Html.RadioButton("OpBa", "3", new { @class = "with-gap", id = "a3" })
-                                                <label for="a3">Calidad de repuestos (factores externos)</label>
-                                            </div>
-                                        </div>
-                                        <div class="col-xs-4">
-                                            <div class="form-group">
-                                                @Html.RadioButton("OpBa", "4", new { @class = "with-gap", id = "a4" })
-                                                <label for="a4">Condiciones de operación</label>
-                                                <br />
-                                                @Html.RadioButton("OpBa", "5", false, new { @class = "with-gap", id = "a5" })
-                                                <label for="a5">Condiciones básicas</label>
-                                                <br />
-                                                @Html.RadioButton("OpBa", "6", new { @class = "with-gap", id = "a6" })
-                                                <label for="a6">Error humano (en operación)</label>
-                                            </div>
-                                        </div>
-                                        <div class="col-xs-4">
-                                            <div class="form-group">
-                                                @Html.RadioButton("OpBa", "7", new { @class = "with-gap", id = "a7" })
-                                                <label for="a7">No PM</label>
-                                                <br />
-                                                @Html.RadioButton("OpBa", "8", true, new { @class = "with-gap", id = "a8" })
-                                                <label for="a8">No AM</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>*@
-
+                                </div>   
                             </div>
                         </div>
                     </div>
@@ -1504,37 +1498,37 @@
                                 </div>
                                 <div id="FI1Opt">
                                     <div class="form-group">
-                                        @Html.RadioButton("OpCC", "1",true, new { @class = "with-gap", id = "cc1" })
+                                        @Html.RadioButton("CicloRaiz", "1",true, new { @class = "with-gap", id = "cc1" })
                                         <label for="cc1"></label>
                                     </div>
                                 </div>
                                 <div id="FI2Opt">
                                     <div class="form-group">
-                                        @Html.RadioButton("OpCC", "2", new { @class = "with-gap", id = "cc2" })
+                                        @Html.RadioButton("CicloRaiz", "2", new { @class = "with-gap", id = "cc2" })
                                         <label for="cc2"></label>
                                     </div>
                                 </div>
                                 <div id="FI3Opt">
                                     <div class="form-group">
-                                        @Html.RadioButton("OpCC", "3", new { @class = "with-gap", id = "cc3" })
+                                        @Html.RadioButton("CicloRaiz", "3", new { @class = "with-gap", id = "cc3" })
                                         <label for="cc3"></label>
                                     </div>
                                 </div>
                                 <div id="FI4Opt">
                                     <div class="form-group">
-                                        @Html.RadioButton("OpCC", "4", new { @class = "with-gap", id = "cc4" })
+                                        @Html.RadioButton("CicloRaiz", "4", new { @class = "with-gap", id = "cc4" })
                                         <label for="cc4"></label>
                                     </div>
                                 </div>
                                 <div id="FI5Opt">
                                     <div class="form-group">
-                                        @Html.RadioButton("OpCC", "5", new { @class = "with-gap", id = "cc5" })
+                                        @Html.RadioButton("CicloRaiz", "5", new { @class = "with-gap", id = "cc5" })
                                         <label for="cc5"></label>
                                     </div>
                                 </div>
                                 <div id="FI6Opt">
                                     <div class="form-group">
-                                        @Html.RadioButton("OpCC", "6", new { @class = "with-gap", id = "cc6" })
+                                        @Html.RadioButton("CicloRaiz", "6", new { @class = "with-gap", id = "cc6" })
                                         <label for="cc6"></label>
                                     </div>
                                 </div>
@@ -1571,7 +1565,7 @@
                                             <i class="material-icons">person</i>
                                         </span>
                                         <div class="form-line">
-                                            @Html.EditorFor(model => model.IdDiligenciado, new { htmlAttributes = new { placeholder = "Escriba aquí..." } })                                            
+                                            @Html.EditorFor(model => model.IdDiligenciado, new { htmlAttributes = new { placeholder = "Escriba aquí...", @class= "font-bold col-teal", @readonly = "readonly" } })                                            
                                         </div>
                                     </div>
                                 </div>
@@ -1931,8 +1925,8 @@
         var columns =
             [
                 { id: "accion", name: "Acción", field: "accion", minWidth: 300, editable: true, editor: Slick.Editors.Text },
-                { id: "tipo_accion", name: "Tipo de acción", field: "TipoAccion", minWidth: 200, formatter: select2FormatterTipo, editor: SelectEditorTipo, dataSource: tiposAcciones },
-                { id: "id_responsable", name: "Responsable", field: "Nombre", minWidth: 200, formatter: select2Formatter, editor: SelectEditor, dataSource: user_data },
+                { id: "tipo_accion", name: "Tipo de acción", field: "tipo_accion", minWidth: 200, formatter: select2FormatterTipo, editor: SelectEditorTipo, dataSource: tiposAcciones },
+                { id: "id_responsable", name: "Responsable", field: "responsable", minWidth: 200, formatter: select2Formatter, editor: SelectEditor, dataSource: user_data },
                 { id: "fecha", name: "Fecha", field: "fecha", minWidth: 130, editor: Slick.Editors.Date },
                 {
                     id: 'id', name: '#', field: 'id', formatter: function (index, c, id, def, datactx) {
@@ -1969,7 +1963,7 @@
             grid.render();
         });
 
-        $('#gridAcciones').on('focusout', '#dateed', function () {       
+        $('#gridAcciones').on('focusout', '#dateed', function () {
 
             window.setTimeout(function () {
 

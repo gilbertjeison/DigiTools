@@ -217,11 +217,14 @@
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\TiemposCargaController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
+    <Compile Include="Dao\DaoAcciones.cs" />
     <Compile Include="Dao\DaoEwo.cs" />
     <Compile Include="Dao\DaoLineas.cs" />
     <Compile Include="Dao\DaoMaquina.cs" />
     <Compile Include="Dao\DaoPersonal.cs" />
     <Compile Include="Dao\DaoPlantas.cs" />
+    <Compile Include="Dao\DaoPorque.cs" />
+    <Compile Include="Dao\DaoRepuestos.cs" />
     <Compile Include="Dao\DaoRoles.cs" />
     <Compile Include="Dao\DaoKpis.cs" />
     <Compile Include="Dao\DaoTipoData.cs" />

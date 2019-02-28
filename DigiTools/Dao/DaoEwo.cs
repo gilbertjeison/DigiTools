@@ -1,7 +1,9 @@
 ﻿using DigiTools.Database;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 
 namespace DigiTools.Dao
@@ -25,6 +27,27 @@ namespace DigiTools.Dao
             }
 
             return max;
+        }
+
+        public async Task<int> AddEwo(ewos ewo)
+        {
+            int regs = 0;
+
+            try
+            {
+                using (var context = new MttoAppEntities())
+                {
+                    context.ewos.Add(ewo);
+                    await context.SaveChangesAsync();
+                    regs = ewo.Id;
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e.ToString());
+                regs = -1;
+            }
+            return regs;
         }
     }
 }

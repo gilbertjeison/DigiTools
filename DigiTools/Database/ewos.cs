@@ -19,8 +19,8 @@ namespace DigiTools.Database
         public Nullable<int> id_area_linea { get; set; }
         public Nullable<int> id_equipo { get; set; }
         public Nullable<System.DateTime> fecha_ewo { get; set; }
-        public Nullable<int> aviso_numero { get; set; }
-        public Nullable<int> id_tecnico { get; set; }
+        public string aviso_numero { get; set; }
+        public string id_tecnico { get; set; }
         public Nullable<int> id_tipo_averia { get; set; }
         public Nullable<int> id_turno { get; set; }
         public Nullable<System.DateTime> notificacion_averia { get; set; }

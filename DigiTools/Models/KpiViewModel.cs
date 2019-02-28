@@ -1,9 +1,6 @@
-﻿using DigiTools.Database;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
@@ -95,7 +92,22 @@ namespace DigiTools.Models
         public string GenriOk { get; set; }
         public string GensokuOk { get; set; }
 
+        public string QueDesc { get; set; }
+        public string DondeDesc { get; set; }
+        public string CuandoDesc { get; set; }
+        public string QuienDesc { get; set; }
+        public string CualDesc { get; set; }
+        public string ComoDesc { get; set; }
+        public string FenomenoDesc { get; set; }
 
+        public string Porques { get; set; }
+
+        public int CausaRaiz { get; set; }
+        public int CicloRaiz { get; set; }
+        public string FchUltimoMtto { get; set; }
+        public string FchProxMtto { get; set; }
+        
+        public string Cmd { get; set; }
 
         [DisplayName("Diligenciada por")]
         public string IdDiligenciado { get; set; }
@@ -108,6 +120,21 @@ namespace DigiTools.Models
 
         [DisplayName("Análisis elaborado por")]
         public string IdAnaElab { get; set; }
+
+        [DisplayName("Fecha")]
+        public string FchAnaElab { get; set; }
+
+        [DisplayName("Contramedidas definidas por")]
+        public string IdContMedDef { get; set; }
+
+        [DisplayName("Fecha")]
+        public string FchDefConMed { get; set; }
+
+        [DisplayName("Ejecución validada por")]
+        public string IdEjeValPor { get; set; }
+
+        [DisplayName("Fecha")]
+        public string FchEjeVal { get; set; }
 
 
         [Display(Name ="Planta")]        
@@ -122,54 +149,20 @@ namespace DigiTools.Models
         
 
 
-
-        
-
-
-        
-
-
         [Display(Name = "Descripción de la avería")]
         public string DescripcionAveria { get; set; }
 
        
 
-        public string QueDesc { get; set; }
-        public string DondeDesc { get; set; }
-        public string CuandoDesc { get; set; }
-        public string QuienDesc { get; set; }
-        public string CualDesc { get; set; }
-        public string ComoDesc { get; set; }
-        public string FenomenoDesc { get; set; }
-
-
         
 
 
         
 
-        [DisplayName("Fecha")]
-        [Required(ErrorMessage = "Este campo es requerido...")]
-        public string FchAnaElab { get; set; }
 
-        [DisplayName("Contramedidas definidas por")]
-        [Required(ErrorMessage = "Este campo es requerido...")]
-        public string IdContMedDef { get; set; }
+       
 
-        [DisplayName("Fecha")]
-        [Required(ErrorMessage = "Este campo es requerido...")]
-        public string FchDefConMed { get; set; }
-
-        [DisplayName("Ejecución validada por")]
-        [Required(ErrorMessage = "Este campo es requerido...")]
-        public string IdEjeValPor { get; set; }
-
-        [DisplayName("Fecha")]
-        [Required(ErrorMessage = "Este campo es requerido...")]
-        public string FchEjeVal { get; set; }
-
-        public string FchUltimoMtto { get; set; }
-        public string FchProxMtto { get; set; }
+       
 
         public KpiViewModel()
         {
