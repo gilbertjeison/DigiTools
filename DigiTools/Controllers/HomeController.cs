@@ -34,8 +34,10 @@ namespace DigiTools.Controllers
         DaoPorque daoPor = new DaoPorque();
         DaoAcciones daoAcc = new DaoAcciones();
         DaoEwo daoEwo = new DaoEwo();
+        DaoTecnicos daoTec = new DaoTecnicos();
         int Consecutivo = 0;
         AspNetUsers aspNetUsers;
+        static string ewo_images = "~/Content/images/ewo_images/";
         
         private static readonly int LINES = 21;
         private static readonly int BREAKDOWNSTYPES = 13;
@@ -65,7 +67,7 @@ namespace DigiTools.Controllers
                 kpiWiewModel.TipoAveriaList = new SelectList(listA, "Id", "descripcion");
 
                 kpiWiewModel.IdDiligenciado = aspNetUsers.Nombres +" " + aspNetUsers.Apellidos;
-                Consecutivo = daoEwo.GetLastConsecutive();
+                Consecutivo = await daoEwo.GetLastConsecutive();
                 ViewBag.Cons = "00" +Consecutivo;
 
                 //RUTAS DEL SERVIDOR
@@ -98,7 +100,7 @@ namespace DigiTools.Controllers
                 List<porques> porques = ser.Deserialize<List<porques>>(kvm.Porques);
                 List<lista_acciones> lista_acc = ser.Deserialize<List<lista_acciones>>(kvm.Cmd);
 
-                ewo.consecutivo = daoEwo.GetLastConsecutive();
+                ewo.consecutivo = await daoEwo.GetLastConsecutive();
                 ewo.id_area_linea = kvm.IdLinea;
                 ewo.id_equipo = kvm.IdMaquina;
                 ewo.fecha_ewo = DateTime.Now;
@@ -190,8 +192,19 @@ namespace DigiTools.Controllers
                     await daoPor.AddPorque(porques);
 
                     var descData = await daoEwo.GetEwoDesc(res);
+
+                    //QUEBRAR PROCESO DE EXCEL
+                    foreach (Process clsProcess in Process.GetProcesses())
+                    {
+                        if (clsProcess.ProcessName.Equals("EXCEL"))
+                        {
+                            clsProcess.Kill();
+                            break;
+                        }
+                    }
+
                     string filename = Server.MapPath("~/Content/formats/FEU.XLSX");
-                    string nfilename = Server.MapPath("~/Content/formats/nFEU.XLSX");
+                    string nfilename = Server.MapPath("~/Content/formats/FORMATO_EWO.XLSX");
 
                     //ESCRIBIR EN ARCHIVO ECXEL
                     FileInfo file = new FileInfo(filename);
@@ -237,6 +250,10 @@ namespace DigiTools.Controllers
                         eImg.From.ColumnOff = Pixel2MTU(2);
                         eImg.From.RowOff = Pixel2MTU(60);
 
+                        //GUARDAR IMAGEN EN SERVIDOR
+                        SaveImageEwoServer(kvm.Image1);
+                        SaveImageEwoServer(kvm.ImagePQ1);
+
                         //IMAGEN 2
                         if (kvm.Image2 != null)
                         {
@@ -248,6 +265,9 @@ namespace DigiTools.Controllers
                             // 2x2 px space for better alignment
                             eImg2.From.ColumnOff = Pixel2MTU(20);
                             eImg2.From.RowOff = Pixel2MTU(60);
+
+                            //GUARDAR IMAGEN EN SERVIDOR
+                            SaveImageEwoServer(kvm.Image2);
                         }
 
 
@@ -380,8 +400,6 @@ namespace DigiTools.Controllers
                             }
                         }
 
-
-
                         //IMAGEN 3
                         var eImg3 = ws.Drawings.AddPicture("image3", Image.FromStream(kvm.ImagePQ1.InputStream, true, true));
                         eImg3.From.Column = 0;
@@ -393,7 +411,7 @@ namespace DigiTools.Controllers
                         eImg3.From.RowOff = Pixel2MTU(30);
 
                         //IMAGEN 4
-                        if (kvm.Image2 != null)
+                        if (kvm.ImagePQ2 != null)
                         {
                             var eImg4 = ws.Drawings.AddPicture("image4", Image.FromStream(kvm.ImagePQ2.InputStream, true, true));
                             eImg4.From.Column = 5;
@@ -403,6 +421,9 @@ namespace DigiTools.Controllers
                             // 2x2 px space for better alignment
                             eImg4.From.ColumnOff = Pixel2MTU(60);
                             eImg4.From.RowOff = Pixel2MTU(30);
+
+                            //GUARDAR IMAGEN EN SERVIDOR
+                            SaveImageEwoServer(kvm.ImagePQ2);
                         }
                             
 
@@ -431,7 +452,7 @@ namespace DigiTools.Controllers
                                     }
                                     if (cols == 3)
                                     {
-                                        ws.SetValue(row, cols+5, lista_acc[row - 88].responsable);
+                                        ws.SetValue(row, cols+5,daoTec.GetTecnico(int.Parse(lista_acc[row - 88].responsable)).Nombre);
                                     }
                                     if (cols == 4)
                                     {
@@ -517,7 +538,7 @@ namespace DigiTools.Controllers
                 else
                 {
                     r = 0;
-                    message = "FAIL";
+                    message = "ERROR";
                 }      
             }
             catch (Exception e)
@@ -529,18 +550,26 @@ namespace DigiTools.Controllers
 
             GC.Collect();
 
-            return Json(new { response = r, message = message });
+            return Json(new { code = r, message = message });
         }
 
         public ActionResult DownloadEwoFile()
         {
-            return null;
+            string nfilename = Server.MapPath("~/Content/formats/FORMATO_EWO.XLSX");                       
+
+            return File(nfilename,"application/vnd.ms-excel","Ewo Web Format.xlsx");
         }
 
         public int Pixel2MTU(int pixels)
         {
             int mtus = pixels * 9525;
             return mtus;
+        }
+
+        private void SaveImageEwoServer(HttpPostedFileBase file)
+        {
+            string nameAndLocation = ewo_images + file.FileName;
+            file.SaveAs(Server.MapPath(nameAndLocation));
         }
 
         public ActionResult About()

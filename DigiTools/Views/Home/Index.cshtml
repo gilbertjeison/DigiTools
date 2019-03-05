@@ -66,15 +66,15 @@
                     return true;
                 }
 
-                //if (currentIndex == 1 && myDropzone1.files.length == 0) {
-                //    showSweetAlert("Descripción gráfica de la falla", "Debe cargar las imágenes relacionadas", "error");
-                //    return false;
-                //}
+                if (currentIndex == 1 && myDropzone1.files.length == 0) {
+                    showSweetAlert("Descripción gráfica de la falla", "Debe cargar las imágenes relacionadas", "error");
+                    return false;
+                }
 
-                //if (currentIndex == 2 && myDropzone2.files.length == 0) {
-                //    showSweetAlert("Dibujo / Diagrama / Foto del 5 Por qué", "Debe cargar las imágenes relacionadas", "error");
-                //    return false;
-                //}
+                if (currentIndex == 2 && myDropzone2.files.length == 0) {
+                    showSweetAlert("Dibujo / Diagrama / Foto del 5 Por qué", "Debe cargar las imágenes relacionadas", "error");
+                    return false;
+                }
 
                 //VALIDAR QUE CUANDO SEA UN CAMBIO DE COMPONENTE, HAYAN REGISTROS EN LA TABLA
                 if (currentIndex == 1 &&  $('#cc').is(':checked')) {
@@ -90,10 +90,10 @@
                         repuestos.push(rep);
                     });
 
-                    //if (repuestos.length == 0) {
-                    //    showSweetAlert("Repuestos utilizados", "Debe cargar los repuestos utilizados", "error");
-                    //    return false;
-                    //};
+                    if (repuestos.length == 0) {
+                        showSweetAlert("Repuestos utilizados", "Si es cambio de componente, debe cargar los repuestos utilizados", "error");
+                        return false;
+                    };
                 }
 
                 //VALIDAR QUE LOS POR QUÉ ESTÉN DILIGENCIADOS
@@ -112,12 +112,12 @@
                         porques.push(porque);
                     });
 
-                    //if (porques.length == 0) {
-                    //    showSweetAlert("Análisis Por Qué", "Debe diligenciar los registros de por qué", "error");
-                    //    return false;
-                    //};
+                    if (porques.length == 0) {
+                        showSweetAlert("Análisis Por Qué", "Debe diligenciar los registros de por qué", "error");
+                        return false;
+                    };
                 }
-                               
+
 
                 if (currentIndex < newIndex) {
                     form.find('.body:eq(' + newIndex + ') label.error').remove();
@@ -126,8 +126,8 @@
 
                 form.validate().settings.ignore = ':disabled,:hidden';
 
-                //return form.valid();
-                return true;
+                return form.valid();
+                //return true;
             },
             onStepChanged: function (event, currentIndex, priorIndex) {
 
@@ -146,13 +146,12 @@
                 cmd = [];
                 cmd = grid.getData();
 
-                //if (cmd.length == 0) {
-                //    showSweetAlert("Contramedidas - Responsables", "Las contramedidas deben estar diligenciadas", "error");
-                //    return false;
-                //};
+                if (cmd.length == 0) {
+                    showSweetAlert("Contramedidas - Responsables", "Las contramedidas deben estar diligenciadas", "error");
+                    return false;
+                };
 
                 //VALIDAR INVOLUCRADOS
-                var $IdDiligenciado = $("#IdDiligenciado").siblings(".bootstrap-tagsinput").children(".tag");
                 var $IdAnaElab = $("#IdAnaElab").siblings(".bootstrap-tagsinput").children(".tag");
                 var $IdContMedDef = $("#IdContMedDef").siblings(".bootstrap-tagsinput").children(".tag");
                 var $IdEjeValPor = $("#IdEjeValPor").siblings(".bootstrap-tagsinput").children(".tag");
@@ -160,12 +159,12 @@
                 var $IdOpersInv = $("#IdOpersInv").siblings(".bootstrap-tagsinput").children(".tag");
 
 
-                //    if ($IdDiligenciado.length == 0 || $IdAnaElab.length == 0 || $IdContMedDef.length == 0 ||
-                //        $IdEjeValPor.length == 0 || $IdTecMattInv.length == 0 || $IdOpersInv.length == 0)
-                //    {
-                //        showSweetAlert("Involucrados", "Todos los involucrados deben estar indicados.", "error");
-                //        return false;
-                //    }
+                    if ($IdAnaElab.length == 0 || $IdContMedDef.length == 0 ||
+                        $IdEjeValPor.length == 0 || $IdTecMattInv.length == 0 || $IdOpersInv.length == 0)
+                    {
+                        showSweetAlert("Involucrados", "Todos los involucrados deben estar indicados.", "error");
+                        return false;
+                    }
 
                 ////DILIGENCIADO POR
                 //tgsDiligenciado = [];
@@ -173,46 +172,12 @@
                 //{
                 //    tgsDiligenciado.push($($IdDiligenciado[i]).text().trim());
                 //}
-
-                ////ELABORADO POR
-                //var tgsElaborado = [];
-                //for (var i = $IdAnaElab.length; i--;) {
-                //    tgsElaborado.push($($IdAnaElab[i]).text().trim());
-                //}
-
-                ////CONTRAMEDIDAS DEFINIDAS POR
-                //var tgsContMedDef = [];
-                //for (var i = $IdContMedDef.length; i--;) {
-                //    tgsContMedDef.push($($IdContMedDef[i]).text().trim());
-                //}
                 
-                ////EJECUCIÓN VALIDADAS POR
-                //var tgsEjeValPor = [];
-                //for (var i = $IdEjeValPor.length; i--;) {
-                //    tgsEjeValPor.push($($IdEjeValPor[i]).text().trim());
-                //}
-
-                ////TEC INVOLUCRADOS                
-                //var tgsTecMattInv = [];
-                //for (var i = $IdTecMattInv.length; i--;) {
-                //    tgsTecMattInv.push($($IdTecMattInv[i]).text().trim());
-                //}
-
-                ////OPE INVOLUCRADOS                
-                //var tgsOpersInv = [];
-                //for (var i = $IdOpersInv.length; i--;) {
-                //    tgsOpersInv.push($($IdOpersInv[i]).text().trim());
-                //}
-                
-
                 form.validate().settings.ignore = ':disabled,.ignore';
-                //return form.valid();
-                return true;
+                return form.valid();
+                //return true;
             },
-            onFinished: function (event, currentIndex) {
-                //MOSTRAR LOADER
-                $('.page-loader-wrapper').fadeIn();
-
+            onFinished: function (event, currentIndex) {                
                 var form = $('#wizard_validation')[0];
                 var dataString = new FormData(form);
 
@@ -239,24 +204,30 @@
                 dataString.append('Porques', JSON.stringify(porques));
                 //ADJUNTAR LISTA DE ACCIONES
                 dataString.append('Cmd', JSON.stringify(cmd));
-                
+
 
                 $.ajax({
                     type: "POST",
                     url: '@Url.Action("CreateKpi","Home")',
                     data: dataString,
-                    //dataType:'json',
+                    beforeSend: function () {
+                        $('.page-loader-wrapper').fadeIn();
+                    },
                     success: function (response) {
 
+                        $('#downloadModal').modal('toggle');
+
                         //MENSAJE DE CONFIRMACIÓN O ERROR
-                        //if (response == "OK") {
-                        //    showSweetAlert("Machine Ledger", "Línea agregada correctamente", "success");
-                        //    $('#AddModal').modal('hide');
-                        //    GotoLines();
-                        //}
-                        //else {
-                        //    showSweetAlert("Machine Ledger", response, "warning");
-                        //}
+                        if (response.code == 1) {
+                            $('#modalMsg').text("Formato creado correctamente!");
+                            window.location = '/Home/DownloadEwoFile';
+                        }
+                        else if (response.code == -1) {
+                            $('#modalMsg').text("Error al crear formato!" + response.message);
+                        }
+                        else {
+                            $('#modalMsg').text("No se pudo crear formato, intente nuevamente!");
+                        }
                     },
                     cache: false,
                     contentType: false,
@@ -264,7 +235,6 @@
                 });
 
                 $('.page-loader-wrapper').hide();
-                //showSweetAlert("Datos almacenados correctamente!", "Submitted!", "success");
             }
         });
 
@@ -713,7 +683,7 @@
         border: 1px solid #ccc;
         border-radius: 4px;
     }
-      
+
     #FI1Opt {
         position: absolute;
         left: 11%;
@@ -785,14 +755,14 @@
 
     .dropdown-header {
         padding: 3px 20px !important;
-        font-weight:bold;
+        font-weight: bold;
     }
 </style>
 
 <div class="card js-sweetalert">
     <div class="header">
         <h2 class="tit">
-            EWO (Emergency Work Order)            
+            EWO (Emergency Work Order)
         </h2>
         <h2 class="tit">
             DOCUMENTO # @ViewBag.Cons<small>Diligenciamiento de nuevo formato ™</small>
@@ -805,10 +775,10 @@
             {
                 @*@Html.AntiForgeryToken()*@
                 <h3>Ubicación & Tiempos de avería</h3>
-                <section class="clearfix">                    
+                <section class="clearfix">
                     <div class="row">
                         <div class="col-md-3">
-                            <b>@Html.LabelFor(model => model.IdPlanta)</b>                              
+                            <b>@Html.LabelFor(model => model.IdPlanta)</b>
                             <div class="form-line form-group">
                                 <select name="IdPlanta" class="show-tick IdPlanta" required>
                                     @foreach (var item in Model.PlantaList)
@@ -816,10 +786,10 @@
                                         <option value="@item.Value">@item.Text</option>
                                     }
                                 </select>
-                            </div>                                                                                 
+                            </div>
                         </div>
                         <div class="col-md-3">
-                            <b>@Html.LabelFor(model => model.IdTipoLinea)</b>                                                          
+                            <b>@Html.LabelFor(model => model.IdTipoLinea)</b>
                             <div class="form-line input-group">
                                 <select name="IdTipoLinea" class="show-tick IdTipoLinea" required>
                                     @foreach (var item in Model.TipoLineaList)
@@ -827,25 +797,25 @@
                                         <option value="@item.Value">@item.Text</option>
                                     }
                                 </select>
-                            </div>                          
+                            </div>
                         </div>
                         <div class="col-md-3">
-                            <b>@Html.LabelFor(model => model.IdLinea)</b>                            
+                            <b>@Html.LabelFor(model => model.IdLinea)</b>
                             <div class="form-line input-group">
                                 <select name="IdLinea"
-                                        class="show-tick IdLinea"                                           
+                                        class="show-tick IdLinea"
                                         data-size="5"
                                         data-live-search="true" required></select>
-                            </div>                            
+                            </div>
                         </div>
                         <div class="col-md-3">
-                            <b>@Html.LabelFor(model => model.IdMaquina)</b>                            
+                            <b>@Html.LabelFor(model => model.IdMaquina)</b>
                             <div class="form-line input-group">
                                 <select name="IdMaquina"
                                         class="show-tick IdMaquina"
                                         data-size="5"
                                         data-live-search="true" required></select>
-                            </div>                            
+                            </div>
                         </div>
 
                     </div>
@@ -915,7 +885,7 @@
                                                 <i class="material-icons">timer</i>
                                             </span>
                                             <div class="form-line">
-                                                @Html.EditorFor(model => model.TEspRep, new { htmlAttributes = new { @class = "form-control ttr", placeholder = "Ingrese minutos...", @type = "number", @min = "0", required = "required" } })                                                
+                                                @Html.EditorFor(model => model.TEspRep, new { htmlAttributes = new { @class = "form-control ttr", placeholder = "Ingrese minutos...", @type = "number", @min = "0", required = "required" } })
                                             </div>
                                         </div>
                                     </div>
@@ -929,7 +899,7 @@
                                                 <i class="material-icons">timer</i>
                                             </span>
                                             <div class="form-line">
-                                                @Html.EditorFor(model => model.TRepCamP, new { htmlAttributes = new { @class = "form-control ttr", placeholder = "Ingrese minutos...", @type = "number", @min = "0", required = "required" } })                                                
+                                                @Html.EditorFor(model => model.TRepCamP, new { htmlAttributes = new { @class = "form-control ttr", placeholder = "Ingrese minutos...", @type = "number", @min = "0", required = "required" } })
                                             </div>
                                         </div>
                                     </div>
@@ -941,14 +911,14 @@
                                             </span>
                                             <div class="form-line">
                                                 @Html.EditorFor(model => model.PruTieArr, new { htmlAttributes = new { @class = "form-control ttr", placeholder = "Ingrese minutos...", @type = "number", @min = "0", required = "required" } })
-                                                
+
                                             </div>
                                         </div>
                                     </div>
                                     <div class="col-md-2"></div>
                                 </div>
                             </div>
-                        </div>, 
+                        </div>,
                     </div>
                     <div class="row">
                         <div class="col-md-2"></div>
@@ -959,7 +929,7 @@
                                     <i class="material-icons">access_time</i>
                                 </span>
                                 <div class="form-line">
-                                    @Html.EditorFor(model => model.HrFinRepEnt, new { htmlAttributes = new { @class = "form-control datetimepicker", placeholder = "Seleccione fecha y hora...", id = "txtHrFin", required = "required" } })                                    
+                                    @Html.EditorFor(model => model.HrFinRepEnt, new { htmlAttributes = new { @class = "form-control datetimepicker", placeholder = "Seleccione fecha y hora...", id = "txtHrFin", required = "required" } })
                                 </div>
                             </div>
                         </div>
@@ -970,7 +940,7 @@
                                     <i class="material-icons">timer</i>
                                 </span>
                                 <div class="form-line">
-                                    @Html.EditorFor(model => model.TiempoTotal, new { htmlAttributes = new { @class = "form-control", placeholder = "Ingrese minutos...", @type = "number", @min = "0", id = "txtTiempoTotal", @readonly = "readonly", style = "font-weight:bold", required = "required" } })                                
+                                    @Html.EditorFor(model => model.TiempoTotal, new { htmlAttributes = new { @class = "form-control", placeholder = "Ingrese minutos...", @type = "number", @min = "0", id = "txtTiempoTotal", @readonly = "readonly", style = "font-weight:bold", required = "required" } })
                                 </div>
                             </div>
                         </div>
@@ -996,7 +966,7 @@
                                     <i class="material-icons">confirmation_number</i>
                                 </span>
                                 <div class="form-line">
-                                    @Html.EditorFor(model => model.NumAviso, new { htmlAttributes = new { @class = "form-control", placeholder = "Escriba el número de aviso aquí...", required="required" } })                                   
+                                    @Html.EditorFor(model => model.NumAviso, new { htmlAttributes = new { @class = "form-control", placeholder = "Escriba el número de aviso aquí...", required = "required" } })
                                 </div>
                             </div>
                         </div>
@@ -1059,7 +1029,7 @@
                         <div class="col-md-8">
                             <div class="form-group">
                                 @Html.LabelFor(model => model.DescripcionAveria)
-                                @Html.TextAreaFor(model => model.DescripcionAveria, 4, 0, new { @class = "form-control rounded-10", placeholder = "Si la reparación no se ha terminado en su totalidad, indique que necesita que se realice para terminarla...", required="required" })
+                                @Html.TextAreaFor(model => model.DescripcionAveria, 4, 0, new { @class = "form-control rounded-10", placeholder = "Si la reparación no se ha terminado en su totalidad, indique que necesita que se realice para terminarla...", required = "required" })
                             </div>
                         </div>
                         <div class="col-md-4">
@@ -1146,7 +1116,7 @@
                                             </td>
                                             <td style="width:20%">
                                                 <div class="gray_cube">
-                                                    <div class="switch" >
+                                                    <div class="switch">
                                                         <label>NOK<input type="checkbox" name="GembaOk"><span class="lever"></span>OK</label>
                                                     </div>
                                                 </div>
@@ -1186,7 +1156,7 @@
                                             <td>
                                                 <div class="form-group" style="margin-bottom:0;">
                                                     @Html.TextAreaFor(model => model.GenjitsuDesc, 0, 40, new { @class = "form-control rounded-10", placeholder = "...", required = "required" })
-                                                </div>                                                    
+                                                </div>
                                             </td>
                                             <td style="width:20%">
                                                 <div class="gray_cube">
@@ -1473,7 +1443,7 @@
                                             <optgroup label="Probabilidad de falla">
                                                 <option value="4">Condiciones de operación</option>
                                                 <option value="5">Condiciones básicas</option>
-                                                <option value="6">Error humano</option>                                              
+                                                <option value="6">Error humano</option>
                                             </optgroup>
                                             <optgroup label="Falla por desgaste">
                                                 <option value="7">No PM</option>
@@ -1481,7 +1451,7 @@
                                             </optgroup>
                                         </select>
                                     </div>
-                                </div>   
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -1499,7 +1469,7 @@
                                 </div>
                                 <div id="FI1Opt">
                                     <div class="form-group">
-                                        @Html.RadioButton("CicloRaiz", "1",true, new { @class = "with-gap", id = "cc1" })
+                                        @Html.RadioButton("CicloRaiz", "1", true, new { @class = "with-gap", id = "cc1" })
                                         <label for="cc1"></label>
                                     </div>
                                 </div>
@@ -1539,7 +1509,7 @@
                 </section>
 
                 <h3>Contramedidas - Responsables</h3>
-                <section>                    
+                <section>
                     <div class="card clearfix" style="width:100%; margin-top: 30px;">
                         <div class="header" style="background-color:#009688">
                             <h2>
@@ -1566,7 +1536,7 @@
                                             <i class="material-icons">person</i>
                                         </span>
                                         <div class="form-line">
-                                            @Html.EditorFor(model => model.IdDiligenciado, new { htmlAttributes = new { placeholder = "Escriba aquí...", @class= "font-bold col-teal", @readonly = "readonly" } })                                            
+                                            @Html.EditorFor(model => model.IdDiligenciado, new { htmlAttributes = new { placeholder = "Escriba aquí...", @class = "font-bold col-teal", @readonly = "readonly" } })
                                         </div>
                                     </div>
                                 </div>
@@ -1577,7 +1547,7 @@
                                             <i class="material-icons">person</i>
                                         </span>
                                         <div class="form-line">
-                                            @Html.EditorFor(model => model.IdTecMattInv, new { htmlAttributes = new { placeholder = "Escriba aquí..." } })                                           
+                                            @Html.EditorFor(model => model.IdTecMattInv, new { htmlAttributes = new { placeholder = "Escriba aquí..." } })
                                         </div>
                                     </div>
                                 </div>
@@ -1588,7 +1558,7 @@
                                             <i class="material-icons">person</i>
                                         </span>
                                         <div class="form-line">
-                                            @Html.EditorFor(model => model.IdOpersInv, new { htmlAttributes = new { placeholder = "Escriba aquí..." } })                                           
+                                            @Html.EditorFor(model => model.IdOpersInv, new { htmlAttributes = new { placeholder = "Escriba aquí..." } })
                                         </div>
                                     </div>
                                 </div>
@@ -1601,7 +1571,7 @@
                                             <i class="material-icons">person</i>
                                         </span>
                                         <div class="form-line">
-                                            @Html.EditorFor(model => model.IdAnaElab, new { htmlAttributes = new { placeholder = "Escriba aquí..." } })                                           
+                                            @Html.EditorFor(model => model.IdAnaElab, new { htmlAttributes = new { placeholder = "Escriba aquí..." } })
                                         </div>
                                     </div>
                                 </div>
@@ -1612,7 +1582,7 @@
                                             <i class="material-icons">date_range</i>
                                         </span>
                                         <div class="form-line">
-                                            @Html.EditorFor(model => model.FchAnaElab, new { htmlAttributes = new { @class = "datepicker", placeholder = "Seleccione fecha...", required="required" } })                                            
+                                            @Html.EditorFor(model => model.FchAnaElab, new { htmlAttributes = new { @class = "datepicker", placeholder = "Seleccione fecha...", required = "required" } })
                                         </div>
                                     </div>
                                 </div>
@@ -1625,7 +1595,7 @@
                                             <i class="material-icons">person</i>
                                         </span>
                                         <div class="form-line">
-                                            @Html.EditorFor(model => model.IdContMedDef, new { htmlAttributes = new { placeholder = "Escriba aquí..." } })                                           
+                                            @Html.EditorFor(model => model.IdContMedDef, new { htmlAttributes = new { placeholder = "Escriba aquí..." } })
                                         </div>
                                     </div>
                                 </div>
@@ -1636,7 +1606,7 @@
                                             <i class="material-icons">date_range</i>
                                         </span>
                                         <div class="form-line">
-                                            @Html.EditorFor(model => model.FchDefConMed, new { htmlAttributes = new { @class = "datepicker", placeholder = "Seleccione fecha...", required="required" } })                                           
+                                            @Html.EditorFor(model => model.FchDefConMed, new { htmlAttributes = new { @class = "datepicker", placeholder = "Seleccione fecha...", required = "required" } })
                                         </div>
                                     </div>
                                 </div>
@@ -1649,7 +1619,7 @@
                                             <i class="material-icons">person</i>
                                         </span>
                                         <div class="form-line">
-                                            @Html.EditorFor(model => model.IdEjeValPor, new { htmlAttributes = new { placeholder = "Escriba aquí..." } })                                           
+                                            @Html.EditorFor(model => model.IdEjeValPor, new { htmlAttributes = new { placeholder = "Escriba aquí..." } })
                                         </div>
                                     </div>
                                 </div>
@@ -1660,31 +1630,49 @@
                                             <i class="material-icons">date_range</i>
                                         </span>
                                         <div class="form-line">
-                                            @Html.EditorFor(model => model.FchEjeVal, new { htmlAttributes = new { @class = "datepicker", placeholder = "Seleccione fecha...", required="required" } })                                            
+                                            @Html.EditorFor(model => model.FchEjeVal, new { htmlAttributes = new { @class = "datepicker", placeholder = "Seleccione fecha...", required = "required" } })
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    
+
                 </section>
-                
+
                 @*<h3>Resumen - Cálculo</h3>
-                <section>
-                    <b>Procedimiento para calcular MTTR</b>
-                    <hr />
-                   @* <span>*@
-                    @*<div id="formula" class="gray_cube">
+                    <section>
+                        <b>Procedimiento para calcular MTTR</b>
+                        <hr />
+                       @* <span>*@
+                @*<div id="formula" class="gray_cube">
                         <span class="katex" ></span>
                     </div>*@
-                        @*$$\dfrac{TAverías}{NumAverías} $$
-                        <br />
-                        <br />
-                        Donde <b>TAverías</b> es la suma de los tiempos de la actual avería y <b>NumAverías</b> el número total de averías de la línea seleccionada.*@
-                    @*</span>*@
+                @*$$\dfrac{TAverías}{NumAverías} $$
+                    <br />
+                    <br />
+                    Donde <b>TAverías</b> es la suma de los tiempos de la actual avería y <b>NumAverías</b> el número total de averías de la línea seleccionada.*@
+                @*</span>*@
                 @*</section>*@
             }
+        </div>
+    </div>
+</div>
+
+@*MODAL PARA DESCARGAR FORMATO*@
+<div class="modal fade" id="downloadModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-blue">
+                <h1 class="modal-title">FORMATO EWO</h1>
+            </div>
+            <div class="modal-body clearfix">
+                <p id="modalMsg" style="font-size:16px;"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-link waves-effect" onclick="downloadFile()">Descargar</button>
+                <button type="button" class="btn btn-link waves-effect" data-dismiss="modal">Cerrar</button>
+            </div>
         </div>
     </div>
 </div>
@@ -1735,6 +1723,21 @@
 <script src="~/Scripts/plugins/slickgrid/plugins/slick.cellrangedecorator.js"></script>
 
 <script>
+    function downloadFile() {
+
+        window.location = '/Home/DownloadEwoFile';
+        @*$.post('@Url.Action("DownloadEwoFile", "Home")', function (data) {
+            if (data) {
+               
+                
+            }
+            else {
+               
+            }
+        });*@    
+    }
+</script>
+<script>
     Dropzone.autoDiscover = false;
     var myDropzone1;
     var myDropzone2;
@@ -1747,7 +1750,7 @@
             addRemoveLinks: true,
             dictRemoveFile: 'Remover archivo',
             maxFiles:2,
-            url: '@Url.Content("~/")' + "Home/CreateKpi"        
+            url: '@Url.Content("~/")' + "Home/CreateKpi"
         });
 
         myDropzone2 = new Dropzone("#dropzoneJsFormCr",
@@ -1757,8 +1760,8 @@
                 addRemoveLinks: true,
                 dictRemoveFile: 'Remover archivo',
                 maxFiles:2,
-                url: '@Url.Content("~/")' + "Home/CreateKpi"  
-            });       
+                url: '@Url.Content("~/")' + "Home/CreateKpi"
+            });
     });
 
 </script>
@@ -2018,8 +2021,8 @@
     });
 </script>
 @*<script>
-    katex.render(String.raw`\dfrac{TAverías}{NumAverías}`, document.getElementById("formula"), {
-        throwOnError: false
-    });
+        katex.render(String.raw`\dfrac{TAverías}{NumAverías}`, document.getElementById("formula"), {
+            throwOnError: false
+        });
 
-</script>*@
+    </script>*@

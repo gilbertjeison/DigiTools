@@ -238,6 +238,7 @@
     <Compile Include="Dao\DaoRepuestos.cs" />
     <Compile Include="Dao\DaoRoles.cs" />
     <Compile Include="Dao\DaoKpis.cs" />
+    <Compile Include="Dao\DaoTecnicos.cs" />
     <Compile Include="Dao\DaoTipoData.cs" />
     <Compile Include="Dao\DaoUsuarios.cs" />
     <Compile Include="Database\AspNetRoles.cs">
@@ -480,6 +481,7 @@
     <Content Include="Content\cremallera2.eprt" />
     <Content Include="Content\formats\FEU.XLSX" />
     <None Include="Properties\PublishProfiles\CustomProfile.pubxml" />
+    <None Include="Properties\PublishProfiles\Default Settings.pubxml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />
@@ -4425,6 +4427,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Content\images\ewo_images\" />
     <Folder Include="Views\Shared\Lines\" />
   </ItemGroup>
   <ItemGroup>

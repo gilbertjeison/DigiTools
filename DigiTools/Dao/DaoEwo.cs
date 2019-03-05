@@ -12,7 +12,7 @@ namespace DigiTools.Dao
 {
     public class DaoEwo
     {
-        public int GetLastConsecutive()
+        public async Task<int> GetLastConsecutive()
         {
             int max = 0;
 
@@ -20,11 +20,21 @@ namespace DigiTools.Dao
             {
                 using (var context = new MttoAppEntities())
                 {
-                    max = (int)context.ewos.OrderByDescending(u => u.Id).FirstOrDefault().consecutivo + 1;
+                    var maxv = await context.ewos.OrderByDescending(u => u.Id).FirstOrDefaultAsync();
+                    if (maxv != null)
+                    {
+                        max = (int)maxv.consecutivo + 1;
+                    }
+                    else
+                    {
+                        max = 1;
+                    }
+
                 }
             }
             catch (Exception e)
             {
+                Debug.WriteLine("Error al consultar consecutivo de ewo: " + e.ToString());
                 max = -1;
             }
 
