@@ -152,22 +152,14 @@ namespace DigiTools.Models
         [Display(Name = "Descripción de la avería")]
         public string DescripcionAveria { get; set; }
 
-       
 
-        
+        #region CAMPOS DESCRIPTIVOS
+        public string AreaLinea { get; set; }
+        public string Equipo { get; set; }
+        public string DiligenciadoPor { get; set; }
+        public string TipoAveria { get; set; }
 
-
-        
-
-
-       
-
-       
-
-        public KpiViewModel()
-        {
-            //ListRep = new List<rep_util>();
-        }
+        #endregion
     }
 
     public class rep_util

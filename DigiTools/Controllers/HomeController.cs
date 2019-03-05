@@ -3,15 +3,20 @@ using DigiTools.Database;
 using DigiTools.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using Microsoft.Office.Interop.Excel;
+using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Script.Serialization;
+using ExcelApp = Microsoft.Office.Interop.Excel ;
 
 namespace DigiTools.Controllers
 {
@@ -63,6 +68,13 @@ namespace DigiTools.Controllers
                 Consecutivo = daoEwo.GetLastConsecutive();
                 ViewBag.Cons = "00" +Consecutivo;
 
+                //RUTAS DEL SERVIDOR
+                //Debug.WriteLine(Server.MapPath("."));
+                //Debug.WriteLine(Server.MapPath("~"));
+                //Debug.WriteLine(Server.MapPath("/"));
+
+                
+
                 return View(kpiWiewModel);
             }
             else
@@ -72,8 +84,11 @@ namespace DigiTools.Controllers
         }
 
         [HttpPost]
-        public async Task<int> CreateKpi(KpiViewModel kvm)
+        public async Task<JsonResult> CreateKpi(KpiViewModel kvm)
         {
+            int r;
+            string message;
+
             try
             {
                 ewos ewo = new ewos();
@@ -93,14 +108,14 @@ namespace DigiTools.Controllers
                 ewo.id_turno = kvm.Turno;
 
                 //CONVERTIR FECHAS A DATETIME
-                ewo.notificacion_averia = DateTime.ParseExact(kvm.HrNotAve, "dd-MM-yyyy HH:mm",CultureInfo.InvariantCulture);
-                ewo.inicio_reparacion = DateTime.ParseExact(kvm.HrIniRep, "dd-MM-yyyy HH:mm", CultureInfo.InvariantCulture);
-                ewo.fin_reparacion = DateTime.ParseExact(kvm.HrFinRepEnt, "dd-MM-yyyy HH:mm", CultureInfo.InvariantCulture);
-                ewo.fecha_ultimo_mtto = DateTime.ParseExact(kvm.FchUltimoMtto, "dd-MM-yyyy", CultureInfo.InvariantCulture);
-                ewo.fecha_proximo_mtto = DateTime.ParseExact(kvm.FchProxMtto, "dd-MM-yyyy", CultureInfo.InvariantCulture);
-                ewo.fecha_analisis = DateTime.ParseExact(kvm.FchAnaElab, "dd-MM-yyyy", CultureInfo.InvariantCulture);
-                ewo.fecha_validacion = DateTime.ParseExact(kvm.FchEjeVal, "dd-MM-yyyy", CultureInfo.InvariantCulture);
-                ewo.fecha_contramedida = DateTime.ParseExact(kvm.FchDefConMed, "dd-MM-yyyy", CultureInfo.InvariantCulture);
+                ewo.notificacion_averia = kvm.HrNotAve == null? DateTime.Now :DateTime.ParseExact(kvm.HrNotAve, "dd-MM-yyyy HH:mm",CultureInfo.InvariantCulture);
+                ewo.inicio_reparacion = kvm.HrIniRep == null ? DateTime.Now : DateTime.ParseExact(kvm.HrIniRep, "dd-MM-yyyy HH:mm", CultureInfo.InvariantCulture);
+                ewo.fin_reparacion = kvm.HrFinRepEnt == null ? DateTime.Now : DateTime.ParseExact(kvm.HrFinRepEnt, "dd-MM-yyyy HH:mm", CultureInfo.InvariantCulture);
+                ewo.fecha_ultimo_mtto = kvm.FchUltimoMtto == null ? DateTime.Now : DateTime.ParseExact(kvm.FchUltimoMtto, "dd-MM-yyyy", CultureInfo.InvariantCulture);
+                ewo.fecha_proximo_mtto = kvm.FchProxMtto == null ? DateTime.Now : DateTime.ParseExact(kvm.FchProxMtto, "dd-MM-yyyy", CultureInfo.InvariantCulture);
+                ewo.fecha_analisis = kvm.FchAnaElab == null ? DateTime.Now : DateTime.ParseExact(kvm.FchAnaElab, "dd-MM-yyyy", CultureInfo.InvariantCulture);
+                ewo.fecha_validacion = kvm.FchEjeVal == null ? DateTime.Now : DateTime.ParseExact(kvm.FchEjeVal, "dd-MM-yyyy", CultureInfo.InvariantCulture);
+                ewo.fecha_contramedida = kvm.FchDefConMed == null ? DateTime.Now : DateTime.ParseExact(kvm.FchDefConMed, "dd-MM-yyyy", CultureInfo.InvariantCulture);
 
                 ewo.tiempo_espera_tecnico = kvm.TEspIniTec;
                 ewo.tiempo_diagnostico = kvm.TDiagn;
@@ -145,7 +160,7 @@ namespace DigiTools.Controllers
                 //to do
                 //EVALUAR EL RESULTADO DE CADA CHECK Y CONVERTIRLO A BOOL                
                 ewo.gemba_ok = kvm.GembaOk != null ? true:false;
-                ewo.genjitsu_ok = kvm != null ? true : false;
+                ewo.genjitsu_ok = kvm.GenjitsuOk != null ? true : false;
                 ewo.genri_ok = kvm.GenriOk != null ? true : false;
                 ewo.gensoku_ok = kvm.GensokuOk != null ? true : false;
                 ewo.gembutsu_ok = kvm.GembutsuOk != null ? true : false;
@@ -173,21 +188,361 @@ namespace DigiTools.Controllers
                     await daoAcc.AddAcciones(lista_acc);
                     await daoRep.AddRepUtil(rep_Utils);
                     await daoPor.AddPorque(porques);
-                }
-                                
 
-                
-                
+                    var descData = await daoEwo.GetEwoDesc(res);
+                    string filename = Server.MapPath("~/Content/formats/FEU.XLSX");
+                    string nfilename = Server.MapPath("~/Content/formats/nFEU.XLSX");
+
+                    //ESCRIBIR EN ARCHIVO ECXEL
+                    FileInfo file = new FileInfo(filename);
+                    FileInfo fileN = new FileInfo(nfilename);
+
+                    if (fileN.Exists)
+                    {
+                        fileN.Delete();                        
+                    }
+
+                    file.CopyTo(nfilename);
+
+                    using (ExcelPackage excelPackage = new ExcelPackage(fileN))
+                    {
+                        var ws = excelPackage.Workbook.Worksheets["EWO"];
+
+                        ws.Cells["A3"].Value = ewo.consecutivo;
+                        ws.Cells["B3"].Value = descData.AreaLinea;
+                        ws.Cells["C3"].Value = descData.Equipo;
+                        ws.Cells["E3"].Value = ewo.fecha_ewo.Value.ToShortDateString();
+                        ws.Cells["F3"].Value = ewo.aviso_numero;
+                        ws.Cells["G3"].Value = descData.DiligenciadoPor;
+                        ws.Cells["H3"].Value = descData.TipoAveria;
+                        ws.Cells["J3"].Value = ewo.id_turno;
+
+                        ws.Cells["A6"].Value = ewo.notificacion_averia;
+                        ws.Cells["B6"].Value = ewo.inicio_reparacion;
+                        ws.Cells["C6"].Value = ewo.tiempo_espera_tecnico;
+                        ws.Cells["D6"].Value = ewo.tiempo_diagnostico;
+                        ws.Cells["E6"].Value = ewo.tiempo_espera_repuestos;
+                        ws.Cells["F6"].Value = ewo.tiempo_reparacion;
+                        ws.Cells["G6"].Value = ewo.tiempo_pruebas;
+                        ws.Cells["H6"].Value = ewo.fin_reparacion;
+                        ws.Cells["I6"].Value = ewo.tiempo_total;
+
+                        //IMAGEN 1
+                        var eImg = ws.Drawings.AddPicture("image1", Image.FromStream(kvm.Image1.InputStream, true, true));
+                        eImg.From.Column = 0;
+                        eImg.From.Row = 7;
+                        eImg.SetSize(170, 220);
+
+                        // 2x2 px space for better alignment
+                        eImg.From.ColumnOff = Pixel2MTU(2);
+                        eImg.From.RowOff = Pixel2MTU(60);
+
+                        //IMAGEN 2
+                        if (kvm.Image2 != null)
+                        {
+                            var eImg2 = ws.Drawings.AddPicture("image2", Image.FromStream(kvm.Image2.InputStream, true, true));
+                            eImg2.From.Column = 2;
+                            eImg2.From.Row = 7;
+                            eImg2.SetSize(220, 220);
+
+                            // 2x2 px space for better alignment
+                            eImg2.From.ColumnOff = Pixel2MTU(20);
+                            eImg2.From.RowOff = Pixel2MTU(60);
+                        }
+
+
+                        ws.Cells["A16"].Value = ewo.desc_imagen_1;
+                        ws.Cells["C16"].Value = ewo.desc_imagen_2;
+                        ws.Cells["F8"].Value = ewo.desc_averia;
+
+                        //CAMBIO DE REPUESTO O AJUSTE
+                        string a = "", c = "";
+                        if (ewo.ajuste == true) { a = "X"; } else { c = "X"; }
+                        ws.Cells["F12"].Value = "( " + c + "  ) Cambio de Componente                    (  " + a + "  ) Ajuste";
+
+                        if (rep_Utils.Count > 0)
+                        {
+                            for (int row = 15; row < rep_Utils.Count + 15; row++)
+                            {
+                                for (int cols = 6; cols < 10; cols++)
+                                {
+                                    if (cols == 6)
+                                    {
+                                        ws.SetValue(row, cols, rep_Utils[row - 15].codigo_sap);
+                                    }
+                                    if (cols == 7)
+                                    {
+                                        ws.SetValue(row, cols, rep_Utils[row - 15].descripcion);
+                                    }
+                                    if (cols == 8)
+                                    {
+                                        ws.SetValue(row, cols + 1, rep_Utils[row - 15].cantidad);
+                                    }
+                                    if (cols == 9)
+                                    {
+                                        ws.SetValue(row, cols + 1, "$" + rep_Utils[row - 15].costo);
+                                    }
+                                }
+                            }
+                        }
+
+                        //5G CHECK
+                        if (ewo.gemba_ok == true)
+                        {
+                            ws.Cells["J22"].Value = "X";
+                        }
+                        else
+                        {
+                            ws.Cells["I22"].Value = "X";
+                        }
+
+                        if (ewo.gembutsu_ok == true)
+                        {
+                            ws.Cells["J23"].Value = "X";
+                        }
+                        else
+                        {
+                            ws.Cells["I23"].Value = "X";
+                        }
+
+                        if (ewo.genjitsu_ok == true)
+                        {
+                            ws.Cells["J24"].Value = "X";
+                        }
+                        else
+                        {
+                            ws.Cells["I24"].Value = "X";
+                        }
+
+                        if (ewo.genri_ok == true)
+                        {
+                            ws.Cells["J25"].Value = "X";
+                        }
+                        else
+                        {
+                            ws.Cells["I25"].Value = "X";
+                        }
+
+                        if (ewo.gensoku_ok == true)
+                        {
+                            ws.Cells["J26"].Value = "X";
+                        }
+                        else
+                        {
+                            ws.Cells["I26"].Value = "X";
+                        }
+
+                        //5G TEXT
+                        ws.Cells["C22"].Value = ewo.gemba;
+                        ws.Cells["C23"].Value = ewo.gembutsu;
+                        ws.Cells["C24"].Value = ewo.genjitsu;
+                        ws.Cells["C25"].Value = ewo.genri;
+                        ws.Cells["C26"].Value = ewo.gensoku;
+
+                        //5W + 1H
+                        ws.Cells["C28"].Value = ewo.what;
+                        ws.Cells["C29"].Value = ewo.where;
+                        ws.Cells["C30"].Value = ewo.when;
+                        ws.Cells["C31"].Value = ewo.who;
+                        ws.Cells["C32"].Value = ewo.wich;
+                        ws.Cells["C33"].Value = ewo.how;
+
+                        ws.Cells["A35"].Value = ewo.fenomeno;
+
+                        //CUADRO PORQUE PORQUE
+                        if (porques.Count > 0)
+                        {
+                            for (int row = 38; row < porques.Count + 38; row++)
+                            {
+                                for (int cols = 1; cols <= 10; cols += 2)
+                                {
+                                    if (cols == 1)
+                                    {
+                                        ws.SetValue(row, cols, porques[row - 38].porque_1);
+                                    }
+                                    if (cols == 3)
+                                    {
+                                        ws.SetValue(row, cols, porques[row - 38].porque_2);
+                                    }
+                                    if (cols == 5)
+                                    {
+                                        ws.SetValue(row, cols, porques[row - 38].porque_3);
+                                    }
+                                    if (cols == 7)
+                                    {
+                                        ws.SetValue(row, cols, porques[row - 38].porque_4);
+                                    }
+                                    if (cols == 9)
+                                    {
+                                        ws.SetValue(row, cols, porques[row - 38].porque_5);
+                                    }
+                                }
+                            }
+                        }
+
+
+
+                        //IMAGEN 3
+                        var eImg3 = ws.Drawings.AddPicture("image3", Image.FromStream(kvm.ImagePQ1.InputStream, true, true));
+                        eImg3.From.Column = 0;
+                        eImg3.From.Row = 42;
+                        eImg3.SetSize(320, 235);
+
+                        // 2x2 px space for better alignment
+                        eImg3.From.ColumnOff = Pixel2MTU(60);
+                        eImg3.From.RowOff = Pixel2MTU(30);
+
+                        //IMAGEN 4
+                        if (kvm.Image2 != null)
+                        {
+                            var eImg4 = ws.Drawings.AddPicture("image4", Image.FromStream(kvm.ImagePQ2.InputStream, true, true));
+                            eImg4.From.Column = 5;
+                            eImg4.From.Row = 42;
+                            eImg4.SetSize(320, 235);
+
+                            // 2x2 px space for better alignment
+                            eImg4.From.ColumnOff = Pixel2MTU(60);
+                            eImg4.From.RowOff = Pixel2MTU(30);
+                        }
+                            
+
+                        //DESC IMAGE XQ
+                        ws.Cells["A55"].Value = ewo.desc_imagen_3;
+                        ws.Cells["F55"].Value = ewo.desc_imagen_4;
+
+                        ws.Cells["B64"].Value = ewo.fecha_ultimo_mtto.Value.ToShortDateString();
+                        ws.Cells["H64"].Value = ewo.fecha_proximo_mtto.Value.ToShortDateString();
+                        
+                        
+                        //CUADRO PORQUE PORQUE
+                        if (lista_acc.Count > 0)
+                        {
+                            for (int row = 88; row < lista_acc.Count + 88; row++)
+                            {
+                                for (int cols = 1; cols <= 4; cols++)
+                                {
+                                    if (cols == 1)
+                                    {
+                                        ws.SetValue(row, cols+1, lista_acc[row - 88].accion);
+                                    }
+                                    if (cols == 2)
+                                    {
+                                        ws.SetValue(row, cols+5, lista_acc[row - 88].tipo_accion);
+                                    }
+                                    if (cols == 3)
+                                    {
+                                        ws.SetValue(row, cols+5, lista_acc[row - 88].responsable);
+                                    }
+                                    if (cols == 4)
+                                    {
+                                        ws.SetValue(row, cols+6, lista_acc[row - 88].fecha);
+                                    }
+                                }
+                            }
+                        }
+
+                        //RESPONSABLES
+                        ws.Cells["A103"].Value = ewo.tecnicos_man_involucrados == null ? "" : ewo.tecnicos_man_involucrados.Replace(",", " - ");
+                        ws.Cells["F103"].Value = ewo.operarios_involucrados == null ? "" :ewo.operarios_involucrados.Replace(",", " - ");
+                        ws.Cells["A105"].Value = ewo.elaborador_analisis == null ? "" : ewo.elaborador_analisis.Replace(",", " - ");
+                        ws.Cells["C105"].Value = ewo.fecha_analisis == null ? "" : ewo.fecha_analisis.Value.ToShortDateString();
+                        ws.Cells["D105"].Value = ewo.definidor_contramedidas == null ? "" : ewo.definidor_contramedidas.Replace(",", " - ");
+                        ws.Cells["G105"].Value = ewo.fecha_contramedida == null ? "" : ewo.fecha_contramedida.Value.ToShortDateString();
+                        ws.Cells["J105"].Value = ewo.fecha_validacion == null ? "" : ewo.fecha_validacion.Value.ToShortDateString();
+                        ws.Cells["H105"].Value = ewo.validador_ejecucion == null ? "" : ewo.validador_ejecucion.Replace(",", " - ");
+
+                        excelPackage.SaveAs(fileN);
+                    }
+
+                    //ABRIR CON INTEROP PARA DILIGENCIAR CAMPOS PENDIENTES
+                    ExcelApp.Application xlApp = new ExcelApp.Application();
+                    xlApp.Visible = false;
+                    Workbook wb = xlApp.Workbooks.Open(nfilename);
+                    Worksheet ws2 = (Worksheet)wb.Worksheets[1];
+
+                    OptionButton opt =
+                           (OptionButton)ws2.OptionButtons(ewo.falla_index);
+                    opt.Value = true;
+
+                    //CAUSA RAIZ
+                    Range rango1 = (Range)ws2.Cells[69, 1];
+                    Range rango2 = (Range)ws2.Cells[69, 2];
+                    Range rango3 = (Range)ws2.Cells[69, 4];
+                    Range rango4 = (Range)ws2.Cells[69, 5];
+                    Range rango5 = (Range)ws2.Cells[69, 7];
+                    Range rango6 = (Range)ws2.Cells[69, 9];
+
+                    float pri = (float)rango1.Left;
+                    float seg = (float)rango2.Left + 28f;
+                    float ter = (float)rango3.Left;
+                    float cua = (float)rango4.Left + 37f;
+                    float qui = (float)rango5.Left + 8f;
+                    float sex = (float)rango6.Left;
+
+                    switch (ewo.causa_raiz_index)
+                    {
+                        case 1:
+                            ws2.Shapes.AddShape(Microsoft.Office.Core.MsoAutoShapeType.msoShapeOval,
+                                pri, 1700, 80, 200).Fill.Transparency = 0.89f;
+                            break;
+                        case 2:
+                            ws2.Shapes.AddShape(Microsoft.Office.Core.MsoAutoShapeType.msoShapeOval,
+                                seg, 1700, 80, 200).Fill.Transparency = 0.89f;
+                            break;
+                        case 3:
+                            ws2.Shapes.AddShape(Microsoft.Office.Core.MsoAutoShapeType.msoShapeOval,
+                                ter, 1700, 80, 200).Fill.Transparency = 0.89f;
+                            break;
+                        case 4:
+                            ws2.Shapes.AddShape(Microsoft.Office.Core.MsoAutoShapeType.msoShapeOval,
+                                cua, 1700, 80, 200).Fill.Transparency = 0.89f;
+                            break;
+                        case 5:
+                            ws2.Shapes.AddShape(Microsoft.Office.Core.MsoAutoShapeType.msoShapeOval,
+                                qui, 1700, 80, 200).Fill.Transparency = 0.89f;
+                            break;
+                        case 6:
+                            ws2.Shapes.AddShape(Microsoft.Office.Core.MsoAutoShapeType.msoShapeOval,
+                                sex, 1700, 80, 200).Fill.Transparency = 0.89f;
+                            break;
+                    }
+                    
+
+                    wb.Save();
+                    wb.Close();
+
+                    r = 1;
+                    message = "OK";
+                }
+                else
+                {
+                    r = 0;
+                    message = "FAIL";
+                }      
             }
             catch (Exception e)
             {
                 Debug.WriteLine(e.ToString());
-                //return -1;
+                r = -1;
+                message = e.ToString();
             }
-            
-            return 1;
+
+            GC.Collect();
+
+            return Json(new { response = r, message = message });
         }
-               
+
+        public ActionResult DownloadEwoFile()
+        {
+            return null;
+        }
+
+        public int Pixel2MTU(int pixels)
+        {
+            int mtus = pixels * 9525;
+            return mtus;
+        }
+
         public ActionResult About()
         {
             ViewBag.Message = "Your application description page.";

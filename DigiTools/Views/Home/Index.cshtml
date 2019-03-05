@@ -429,6 +429,7 @@
 
         $('#a').change(function () {
             $("#panReps").hide(1000);
+            repuestos = [];
         });
 
         //Datetimepicker plugin
@@ -802,7 +803,7 @@
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             @using (Html.BeginForm("CreateKpi", "Home", FormMethod.Post, new { @id = "wizard_validation" }))
             {
-                @Html.AntiForgeryToken()
+                @*@Html.AntiForgeryToken()*@
                 <h3>Ubicación & Tiempos de avería</h3>
                 <section class="clearfix">                    
                     <div class="row">
