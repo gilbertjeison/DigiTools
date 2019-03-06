@@ -91,7 +91,7 @@ namespace DigiTools.Models
         [Required]
         [EmailAddress]
         [Display(Name = "Email")]
-        //[DomainEmailValidator]
+        [DomainEmailValidator]
         public string Email { get; set; }
 
         [Required]

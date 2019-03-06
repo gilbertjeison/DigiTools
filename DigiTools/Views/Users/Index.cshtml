@@ -11,6 +11,8 @@
 <link href="~/Scripts/plugins/jquery-datatable/FixedHeader-3.1.4/css/fixedHeader.bootstrap.min.css" rel="stylesheet" />
 
 
+<!-- SweetAlert Plugin Js -->
+<script src="~/Scripts/plugins/sweetalert/sweetalert2.all.min.js"></script>
 <style>
     .confirmButton {
         margin-right: 10px;
@@ -65,9 +67,9 @@
 <div class="modal" tabindex="-1" role="dialog" id="customHtml">
     <div class="modal-dialog" role="none">
         <div class="modal-content">
-            <div class="modal-body">     
+            <div class="modal-body">
                 <p><h4>Seleccione rol para usuario registrado...</h4></p>
-                @Html.DropDownListFor(m => m.IdRole, Model.RoleList, new { @class = "form-control show-tick" })                
+                @Html.DropDownListFor(m => m.IdRole, Model.RoleList, new { @class = "form-control show-tick" })
             </div>
         </div>
     </div>
@@ -291,5 +293,3 @@
 <script src="~/Scripts/plugins/jquery-datatable/Responsive-2.2.2/js/responsive.bootstrap.min.js"></script>
 
 
-<!-- SweetAlert Plugin Js -->
-<script src="~/Scripts/plugins/sweetalert/sweetalert2.all.min.js"></script>

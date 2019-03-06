@@ -194,14 +194,14 @@ namespace DigiTools.Controllers
                     var descData = await daoEwo.GetEwoDesc(res);
 
                     //QUEBRAR PROCESO DE EXCEL
-                    foreach (Process clsProcess in Process.GetProcesses())
-                    {
-                        if (clsProcess.ProcessName.Equals("EXCEL"))
-                        {
-                            clsProcess.Kill();
-                            break;
-                        }
-                    }
+                    //foreach (Process clsProcess in Process.GetProcesses())
+                    //{
+                    //    if (clsProcess.ProcessName.Equals("EXCEL"))
+                    //    {
+                    //        clsProcess.Kill();
+                    //        break;
+                    //    }
+                    //}
 
                     string filename = Server.MapPath("~/Content/formats/FEU.XLSX");
                     string nfilename = Server.MapPath("~/Content/formats/FORMATO_EWO.XLSX");
