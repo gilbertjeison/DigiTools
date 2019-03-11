@@ -1,0 +1,66 @@
+﻿@model DigiTools.Database.kpis
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>kpis</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.year)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.year)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.mes)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.mes)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.tiempo_carga)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.tiempo_carga)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.mttr)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.mttr)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.mtbf)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.mtbf)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.lineas.nombre)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.lineas.nombre)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

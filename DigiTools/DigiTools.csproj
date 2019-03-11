@@ -225,6 +225,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\ErrorPageController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\KpisController.cs" />
     <Compile Include="Controllers\MachineLedgerController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\TiemposCargaController.cs" />
@@ -4426,6 +4427,11 @@
     <Content Include="Views\TiemposCarga\Edit.cshtml" />
     <Content Include="Views\TiemposCarga\Index.cshtml" />
     <Content Include="Views\Shared\InternalError.cshtml" />
+    <Content Include="Views\Kpis\Create.cshtml" />
+    <Content Include="Views\Kpis\Delete.cshtml" />
+    <Content Include="Views\Kpis\Details.cshtml" />
+    <Content Include="Views\Kpis\Edit.cshtml" />
+    <Content Include="Views\Kpis\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

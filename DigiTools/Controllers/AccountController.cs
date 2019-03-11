@@ -112,7 +112,6 @@ namespace DigiTools.Controllers
                         {
                             return View(model);
                         }
-                        
                     }
                     else
                     {

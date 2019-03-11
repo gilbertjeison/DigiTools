@@ -22,15 +22,18 @@
         return clase;
     }
 
-    public string IsActiveController(string controller1, string controller2)
+    public string IsActiveController(params string[] args)
     {
         string clase = "";
 
-        if (ViewContext.RouteData.Values["controller"].Equals(controller1)
-            || ViewContext.RouteData.Values["controller"].Equals(controller2))
+        foreach (var item in args)
         {
-            clase = "active";
+            if (ViewContext.RouteData.Values["controller"].Equals(item))
+            {
+                clase = "active";
+            }
         }
+        
 
         return clase;
     }
@@ -402,7 +405,7 @@
                     <div class="menu">
                         <ul class="list">
                             <li class="header">MENÚ PRINCIPAL (ADMINISTRADOR)</li>
-                            <li class="@IsActiveController("Users","TiemposCarga")">
+                            <li class="@IsActiveController("Users","TiemposCarga","Kpis")">
                                 <a href="#" class="menu-toggle">
                                     <i class="material-icons">assignment</i>
                                     <span>ADMINISTRACIÓN</span>
@@ -418,9 +421,29 @@
                                             </li>
                                         </ul>
                                     </li>
+                                    @*<li class="@IsActive("Index","Kpis")">
+                                        <a href="#" class="menu-toggle">
+                                            <span>KPIS</span>
+                                        </a>
+                                        <ul class="ml-menu">
+                                            <li class="@IsActive("Index","TiemposCarga")">
+                                                @Html.ActionLink("TIEMPOS DE CARGA", "Index", "TiemposCarga")
+                                            </li>
+                                            <li class="@IsActive("Index","Kpis")">
+                                                @Html.ActionLink("MTTR", "Index", "Kpis")
+                                            </li>
+                                            <li class="@IsActive("Create","Kpis")">
+                                                @Html.ActionLink("MTBF", "Create", "Kpis")
+                                            </li>
+                                        </ul>
+                                    </li>*@
                                     <li class="@IsActive("Index","TiemposCarga")">
                                         <span>@Html.ActionLink("TIEMPOS DE CARGA", "Index", "TiemposCarga")</span>
                                     </li>
+                                    <li class="@IsActive("Index","Kpis")">
+                                        <span>@Html.ActionLink("MTTR & MTBF", "Index", "Kpis")</span>
+                                    </li>
+
                                 </ul>
                             </li>
                             <li class="@IsActiveController("MachineLedger","")">

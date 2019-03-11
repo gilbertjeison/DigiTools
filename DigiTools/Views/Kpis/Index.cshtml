@@ -1,0 +1,63 @@
+﻿@model IEnumerable<DigiTools.Database.kpis>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.year)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.mes)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.tiempo_carga)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.mttr)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.mtbf)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.lineas.nombre)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.year)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.mes)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.tiempo_carga)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.mttr)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.mtbf)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.lineas.nombre)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.id }) |
+            @Html.ActionLink("Details", "Details", new { id=item.id }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.id })
+        </td>
+    </tr>
+}
+
+</table>
