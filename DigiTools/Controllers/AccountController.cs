@@ -95,16 +95,24 @@ namespace DigiTools.Controllers
                     var user = daoUser.GetUserByMail(model.Email);
                     if (user != null)
                     {
-                        if (user.EmailConfirmed)
+                        if (user.Id != null)
                         {
-                            return RedirectToLocal(returnUrl);
+                            if (user.EmailConfirmed)
+                            {
+                                return RedirectToLocal(returnUrl);
+                            }
+                            else
+                            {
+                                AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
+                                ModelState.AddModelError("", "Su usuario no ha sido aprobado para iniciar en el sistema, contacte con el administrador del sistema");
+                                return View(model);
+                            }
                         }
                         else
                         {
-                            AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
-                            ModelState.AddModelError("", "Su usuario no ha sido aprobado para iniciar en el sistema, contacte con el administrador del sistema");
                             return View(model);
                         }
+                        
                     }
                     else
                     {
