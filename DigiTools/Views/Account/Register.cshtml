@@ -25,8 +25,9 @@
 
     <!-- Custom Css -->
     <link href="~/Content/Adminbsb/style.css" rel="stylesheet">
+    <!-- Vegas Css -->
+    <link href="~/Content/vegas/vegas.min.css" rel="stylesheet" />
 
-    @Styles.Render("~/Content/vegas")
     @Scripts.Render("~/bundles/modernizr")
     <style>
         .logo {
@@ -69,7 +70,7 @@
                             <i class="material-icons">person</i>
                         </span>
                         <div class="form-line">
-                            @Html.TextBoxFor(m => m.Nombres, new { @class = "form-control", placeholder = "Nombres..." })                            
+                            @Html.TextBoxFor(m => m.Nombres, new { @class = "form-control", placeholder = "Nombres..." })
                         </div>
                     </div>
 
@@ -78,7 +79,7 @@
                             <i class="material-icons">person_outline</i>
                         </span>
                         <div class="form-line">
-                            @Html.TextBoxFor(m => m.Apellidos, new { @class = "form-control", placeholder = "Apellidos..." })                            
+                            @Html.TextBoxFor(m => m.Apellidos, new { @class = "form-control", placeholder = "Apellidos..." })
                         </div>
                     </div>
 
@@ -87,7 +88,7 @@
                             <i class="material-icons">email</i>
                         </span>
                         <div class="form-line">
-                            @Html.TextBoxFor(m => m.Email, new { @class = "form-control", placeholder = "Correo electrónico corporativo..." })                            
+                            @Html.TextBoxFor(m => m.Email, new { @class = "form-control", placeholder = "Correo electrónico corporativo..." })
                         </div>
                     </div>
 
@@ -96,7 +97,7 @@
                             <i class="material-icons">vpn_key</i>
                         </span>
                         <div class="form-line">
-                            @Html.PasswordFor(m => m.Password, new { @class = "form-control", placeholder = "Contraseña..." })                           
+                            @Html.PasswordFor(m => m.Password, new { @class = "form-control", placeholder = "Contraseña..." })
                         </div>
                     </div>
 
@@ -105,13 +106,13 @@
                             <i class="material-icons">vpn_key</i>
                         </span>
                         <div class="form-line">
-                            @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control", placeholder = "Confirmar contraseña..." })                            
+                            @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control", placeholder = "Confirmar contraseña..." })
                         </div>
                     </div>
 
 
                     <input type="submit" class="btn btn-block bg-blue" value="Registrarse" />
-                    
+
 
                 }
             </div>
@@ -121,8 +122,6 @@
     <!-- Jquery Core Js -->
     <script src="~/Scripts/plugins/jquery/jquery.min.js"></script>
 
-    @Scripts.Render("~/bundles/jqueryval")
-    @Scripts.Render("~/bundles/vegas")
 
     <!-- Bootstrap Core Js -->
     <script src="~/Scripts/plugins/bootstrap/js/bootstrap.js"></script>
@@ -131,7 +130,10 @@
     <script src="~/Scripts/plugins/node-waves/waves.js"></script>
 
     <!-- Validation Plugin Js -->
-    @*<script src="~/Scripts/plugins/jquery-validation/jquery.validate.js"></script>*@
+    <script src="~/Scripts/plugins/jquery-validation/jquery.validate.js"></script>
+
+    <!-- Vegas Plugin Js -->
+    <script src="~/Scripts/plugins/vegas/vegas.min.js"></script>
 
     <!-- Custom Js -->
     <script src="~/Scripts/js/admin.js"></script>
@@ -147,7 +149,7 @@
                 "aW9uIFRpbWUAMDQvMTMvMTGrW0T6AAAAHHRFWHRTb2Z0d2FyZQBBZG9iZSBGaXJld29ya3MgQ1M1cbXjNgAAAAxJREFUCJljaGBgAAABhACBrONIPgAAAABJRU5ErkJggg==",
             slides: [
                 { src: '@Url.Content("~/Content/images/slides/IMAGEN_PLANTA.png")' },
-                { src: '@Url.Content("~/Content/images/slides/planta_1.JPG")' },               
+                { src: '@Url.Content("~/Content/images/slides/planta_1.JPG")' },
                 { src: '@Url.Content("~/Content/images/slides/planta_4.JPG")' },
                 { src: '@Url.Content("~/Content/images/slides/planta_3.JPG")' },
                 { src: '@Url.Content("~/Content/images/slides/planta_2.JPG")'},

@@ -62,7 +62,7 @@
         <div id="loginForm" class="card">
             <div class="logo" id="logo"></div>
             <div class="body">
-                @using (Html.BeginForm("Login","Account", new { ReturnUrl = ViewBag.ReturnUrl },FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
                 {
                     @Html.AntiForgeryToken()
                     <h2><span class="label label-info">DIGITOOLS - UNILEVER</span></h2>
@@ -92,6 +92,10 @@
                     </div>
                     <div style="margin-top:5px;">
                         @Html.ActionLink("Registrarse", "Register", "Account", htmlAttributes: new { id = "registerLink", @class = "btn bg-blue btn-block" })
+                    </div>
+                    <hr />
+                    <div style="margin-top:5px;">
+                        @Html.ActionLink("Olvidé mi contraseña.", "ForgotPassword", "Account", htmlAttributes: new { @class = "btn bg-white btn-block" })
                     </div>
                 }
             </div>
