@@ -172,6 +172,7 @@
                 //APROBAR REGISTRO EN EL SERVIDOR
                 var url = '@Url.Content("~/")' + "Users/Approve";
 
+                var role = 
                 $.post(url, { ID: Id }, function (data)
                 {
                     if (data)
