@@ -40,7 +40,6 @@ namespace DigiTools.Database
         public virtual DbSet<plantas> plantas { get; set; }
         public virtual DbSet<porques> porques { get; set; }
         public virtual DbSet<programadores> programadores { get; set; }
-        public virtual DbSet<repuestos_utilizados> repuestos_utilizados { get; set; }
         public virtual DbSet<sistemas> sistemas { get; set; }
         public virtual DbSet<smp> smp { get; set; }
         public virtual DbSet<smp_pasos> smp_pasos { get; set; }
@@ -60,5 +59,6 @@ namespace DigiTools.Database
         public virtual DbSet<AspNetUsers> AspNetUsers { get; set; }
         public virtual DbSet<kpis> kpis { get; set; }
         public virtual DbSet<ewos> ewos { get; set; }
+        public virtual DbSet<repuestos_utilizados> repuestos_utilizados { get; set; }
     }
 }

@@ -77,7 +77,7 @@ namespace DigiTools.Dao
             return list;
         }
 
-        public async Task<int> ApproveUser(string id)
+        public async Task<int> ApproveUser(string id, string role)
         {
             AspNetUsers usere;
             Task<int> regs = Task<int>.Factory.StartNew(() => 0);
@@ -94,6 +94,7 @@ namespace DigiTools.Dao
                 if (usere != null)
                 {
                     usere.EmailConfirmed = true;
+                    usere.IdRol = role;
                 }
 
                 //save modified entity using new Context

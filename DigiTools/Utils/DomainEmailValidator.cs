@@ -14,35 +14,42 @@ namespace DigiTools.Utils
     {
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
-            //VALIDAR SI TIENE DOMINIO UNILEVER
-            MailAddress address = new MailAddress(value.ToString());
-            string host = address.Host;
-
-            var result = JsonConvert.DeserializeObject<MailBoxLayer>(SomeHelpers.VerifyEmail(value.ToString()));
-
-            if (result.smtp_check != null)
+            if (value != null)
             {
-                if (result.smtp_check.Value)
+                //VALIDAR SI TIENE DOMINIO UNILEVER
+                MailAddress address = new MailAddress(value.ToString());
+                string host = address.Host;
+
+                var result = JsonConvert.DeserializeObject<MailBoxLayer>(SomeHelpers.VerifyEmail(value.ToString()));
+
+                if (result.smtp_check != null)
                 {
-                    if (host.Trim().Equals("unilever.com"))
+                    if (result.smtp_check.Value)
                     {
-                        return ValidationResult.Success;
+                        if (host.Trim().Equals("unilever.com"))
+                        {
+                            return ValidationResult.Success;
+                        }
+                        else
+                        {
+                            return new ValidationResult("La dirección de correo electrónico debe ser corporativa [unilever.com]");
+                        }
                     }
                     else
                     {
-                        return new ValidationResult("La dirección de correo electrónico debe ser corporativa [unilever.com]");
+                        return new ValidationResult("La dirección de correo electrónico no existe...");
                     }
+
                 }
                 else
                 {
                     return new ValidationResult("La dirección de correo electrónico no existe...");
                 }
-                      
             }
             else
             {
-                return new ValidationResult("La dirección de correo electrónico no existe...");
-            }   
+                return new ValidationResult("La dirección de correo electrónico no fue ingresada...");
+            }
         }
     }
 

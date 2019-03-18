@@ -69,7 +69,8 @@
         <div class="modal-content">
             <div class="modal-body">
                 <p><h4>Seleccione rol para usuario registrado...</h4></p>
-                @Html.DropDownListFor(m => m.IdRole, Model.RoleList, new { @class = "form-control show-tick" })
+                @Html.DropDownListFor(m => m.IdRole, Model.RoleList, new { @class = "form-control show-tick", onchange = "onIdRoleChanged(this)" })
+                @Html.HiddenFor(m => m.SelectedRole)
             </div>
         </div>
     </div>
@@ -138,12 +139,13 @@
             }
         });
 
+        
         new $.fn.dataTable.FixedHeader(table);
     });
 
-    function Approve(UserId)
+    function onIdRoleChanged(role)
     {
-        var url = '@Url.Content("~/")' + "Users/Approve";
+        $("#SelectedRole").val(role.value);
     }
 
     function ApproveUserDialog(Id,Nombres,Apellidos) {
@@ -172,8 +174,8 @@
                 //APROBAR REGISTRO EN EL SERVIDOR
                 var url = '@Url.Content("~/")' + "Users/Approve";
 
-                var role = 
-                $.post(url, { ID: Id }, function (data)
+                var role = $("#SelectedRole").val();
+                $.post(url, { ID: Id, role:role }, function (data)
                 {
                     if (data)
                     {

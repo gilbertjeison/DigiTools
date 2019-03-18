@@ -13,5 +13,7 @@ namespace DigiTools.Models
         [Display(Name = "Seleccione rol")]
         public string IdRole { get; set; }
         public List<SelectListItem> RoleList { get; set; }
+
+        public string SelectedRole { get; set; }
     }
 }

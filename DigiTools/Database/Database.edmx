@@ -327,6 +327,7 @@
           <Property Name="id_ewo" Type="int" />
           <Property Name="image_path" Type="nvarchar(max)" />
           <Property Name="SSMA_TimeStamp" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
+          <Property Name="cantidad_ewo" Type="varchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="sistemas">
           <Key>
@@ -788,19 +789,6 @@
           <Property Name="Cedula" Type="Int32" />
           <Property Name="foto" Type="String" MaxLength="8000" FixedLength="false" Unicode="false" />
         </EntityType>
-        <EntityType Name="repuestos_utilizados">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="codigo_sap" Type="Int32" />
-          <Property Name="descripcion" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Name="cantidad" Type="Int32" />
-          <Property Name="costo" Type="Decimal" Precision="19" Scale="4" />
-          <Property Name="id_ewo" Type="Int32" />
-          <Property Name="image_path" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="SSMA_TimeStamp" Type="Binary" MaxLength="8" FixedLength="true" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
-        </EntityType>
         <EntityType Name="sistemas">
           <Key>
             <PropertyRef Name="Id" />
@@ -977,7 +965,6 @@
           <EntitySet Name="plantas" EntityType="Self.plantas" />
           <EntitySet Name="porques" EntityType="Self.porques" />
           <EntitySet Name="programadores" EntityType="Self.programadores" />
-          <EntitySet Name="repuestos_utilizados" EntityType="Self.repuestos_utilizados" />
           <EntitySet Name="sistemas" EntityType="Self.sistemas" />
           <EntitySet Name="smp" EntityType="Self.smp" />
           <EntitySet Name="smp_pasos" EntityType="Self.smp_pasos" />
@@ -1017,6 +1004,7 @@
             <End Role="kpis" EntitySet="kpis" />
           </AssociationSet>
           <EntitySet Name="ewos" EntityType="MttoAppModel.ewos" />
+          <EntitySet Name="repuestos_utilizados" EntityType="MttoAppModel.repuestos_utilizados" />
         </EntityContainer>
         <EntityType Name="C__MigrationHistory">
           <Key>
@@ -1204,6 +1192,20 @@
           <Property Name="user_id" Type="Int32" />
           <Property Name="kpi" Type="Boolean" />
         </EntityType>
+        <EntityType Name="repuestos_utilizados">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="codigo_sap" Type="Int32" />
+          <Property Name="descripcion" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="cantidad" Type="Int32" />
+          <Property Name="costo" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="id_ewo" Type="Int32" />
+          <Property Name="image_path" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="SSMA_TimeStamp" Type="Binary" Nullable="false" MaxLength="8" FixedLength="true" annotation:StoreGeneratedPattern="Computed" />
+          <Property Name="cantidad_ewo" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1389,20 +1391,6 @@
                 <ScalarProperty Name="Nombre" ColumnName="Nombre" />
                 <ScalarProperty Name="Cedula" ColumnName="Cedula" />
                 <ScalarProperty Name="foto" ColumnName="foto" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="repuestos_utilizados">
-            <EntityTypeMapping TypeName="MttoAppModel.repuestos_utilizados">
-              <MappingFragment StoreEntitySet="repuestos_utilizados">
-                <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="codigo_sap" ColumnName="codigo_sap" />
-                <ScalarProperty Name="descripcion" ColumnName="descripcion" />
-                <ScalarProperty Name="cantidad" ColumnName="cantidad" />
-                <ScalarProperty Name="costo" ColumnName="costo" />
-                <ScalarProperty Name="id_ewo" ColumnName="id_ewo" />
-                <ScalarProperty Name="image_path" ColumnName="image_path" />
-                <ScalarProperty Name="SSMA_TimeStamp" ColumnName="SSMA_TimeStamp" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -1707,6 +1695,21 @@
                 <ScalarProperty Name="id_equipo" ColumnName="id_equipo" />
                 <ScalarProperty Name="id_area_linea" ColumnName="id_area_linea" />
                 <ScalarProperty Name="consecutivo" ColumnName="consecutivo" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="repuestos_utilizados">
+            <EntityTypeMapping TypeName="MttoAppModel.repuestos_utilizados">
+              <MappingFragment StoreEntitySet="repuestos_utilizados">
+                <ScalarProperty Name="cantidad_ewo" ColumnName="cantidad_ewo" />
+                <ScalarProperty Name="SSMA_TimeStamp" ColumnName="SSMA_TimeStamp" />
+                <ScalarProperty Name="image_path" ColumnName="image_path" />
+                <ScalarProperty Name="id_ewo" ColumnName="id_ewo" />
+                <ScalarProperty Name="costo" ColumnName="costo" />
+                <ScalarProperty Name="cantidad" ColumnName="cantidad" />
+                <ScalarProperty Name="descripcion" ColumnName="descripcion" />
+                <ScalarProperty Name="codigo_sap" ColumnName="codigo_sap" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>

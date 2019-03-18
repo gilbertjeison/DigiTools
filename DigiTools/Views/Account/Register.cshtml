@@ -58,7 +58,7 @@
         <div id="loginForm" class="card">
             <div class="logo" id="logo"></div>
             <div class="body">
-                @using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                @using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form",id="regForm" }))
                 {
                     @Html.AntiForgeryToken()
                     <h4>Crear una nueva cuenta</h4>
@@ -111,7 +111,7 @@
                     </div>
 
 
-                    <input type="submit" class="btn btn-block bg-blue" value="Registrarse" />
+                    <input type="button" id="sbmtBtn" class="btn btn-block bg-blue" value="Registrarse" />
 
 
                 }
@@ -156,6 +156,10 @@
                 { src: '@Url.Content("~/Content/images/slides/jpeg.jpg")'}
             ],
             transition: ['fade', 'swirlLeft', 'zoomOut', 'flash']
+        });
+
+        $("#sbmtBtn").one("click", function (event) {
+            $('#regForm').submit();
         });
     });
     </script>

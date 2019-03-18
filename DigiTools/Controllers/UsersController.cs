@@ -94,7 +94,7 @@ namespace DigiTools.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> Approve(string id)
+        public async Task<ActionResult> Approve(string id, string role)
         {
             try
             {
@@ -102,8 +102,9 @@ namespace DigiTools.Controllers
                 {
                     return RedirectToAction("Users", "Index");
                 }
+                
 
-                int result = await daoUser.ApproveUser(id);
+                int result = await daoUser.ApproveUser(id,role);
 
                 if (result > 0)
                 {

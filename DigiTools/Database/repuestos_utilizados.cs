@@ -22,5 +22,6 @@ namespace DigiTools.Database
         public Nullable<int> id_ewo { get; set; }
         public string image_path { get; set; }
         public byte[] SSMA_TimeStamp { get; set; }
+        public string cantidad_ewo { get; set; }
     }
 }
