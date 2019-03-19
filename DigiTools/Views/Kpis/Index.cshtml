@@ -1,63 +1,238 @@
 ﻿@model IEnumerable<DigiTools.Database.kpis>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Kpis";
 }
+<!--ANIMATE CSS-->
+<link href="~/Scripts/plugins/animate-css/animate.min.css" rel="stylesheet" />
+<!-- Bootstrap Select Css -->
+<link href="~/Scripts/plugins/bootstrap-select/css/bootstrap-select.min.css" rel="stylesheet" />
 
-<h2>Index</h2>
+<style>
+    .input-group .form-line {
+        border-bottom: none;
+    }
+</style>
+<div class="card">
+    <div class="header bg-blue">
+        <h2>KPI'S</h2>
+        <small>Indicadores de mantenimiento</small>
+    </div>
+    <div class="body">
+        <!-- Nav tabs -->
+        <ul class="nav nav-tabs" role="tablist">
+            <li role="presentation" class="active">
+                <a href="#mttr" data-toggle="tab">
+                    <i class="material-icons">timeline</i><strong> MTTR</strong>
+                </a>
+            </li>
+            <li role="presentation">
+                <a href="#mtbf" data-toggle="tab">
+                    <i class="material-icons">graphic_eq</i><strong> MTBF</strong>
+                </a>
+            </li>
+        </ul>
+        <!-- Tab panes -->
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane fade animated in bounceInLeft active" id="mttr">
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        Tiempo medio de reparación
+                    </div>
+                    <div class="panel-body ">
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <label for="TipoLinea">Planta</label>
+                                <div class="input-group">
+                                    <div class="form-line">
+                                        <select name="IdPlanta" id="IdPlanta" class="selectpicker show-tick IdPlanta" required>
+                                            @foreach (var item in ViewBag.PlantasList)
+                                            {
+                                                <option value="@item.Value">@item.Text</option>
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <label for="IdLinea">Línea</label>
+                                <div class="input-group">
+                                    <div class="form-line">
+                                        <select name="IdLinea"
+                                                class="selectpicker show-tick IdLinea"
+                                                data-dropup-auto="false"
+                                                data-size="5"                                                
+                                                data-live-search="true" required></select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <label for="IdAno">Año</label>
+                                <div class="input-group">
+                                    <div class="form-line">
+                                        <select name="IdAno"
+                                                class="selectpicker show-tick IdAno"
+                                                data-size="5"     
+                                                data-dropup-auto="false"
+                                                data-live-search="true" required></select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <button id="btnFiltrar" class="btn btn-default waves-effect align-center" style="margin-top:6%;">
+                                    <i class="material-icons">filter_list</i>
+                                    <span>Aplicar filtro</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div role="tabpanel" class="tab-pane fade animated bounceInLeft" id="mtbf">
+                <b>MTBF</b>
+                <b>Profile Content</b>
+                <p>
+                    Lorem ipsum dolor sit amet, ut duo atqui exerci dicunt, ius impedit mediocritatem an. Pri ut tation electram moderatius.
+                    Per te suavitate democritum. Duis nemore probatus ne quo, ad liber essent
+                    aliquid pro. Et eos nusquam accumsan, vide mentitum fabellas ne est, eu munere
+                    gubergren sadipscing mel.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.year)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.mes)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.tiempo_carga)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.mttr)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.mtbf)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.lineas.nombre)
-        </th>
-        <th></th>
-    </tr>
+<!-- Select Plugin Js -->
+<script src="~/Scripts/plugins/bootstrap-select/js/bootstrap-select.min.js"></script>
+<script src="~/Scripts/plugins/bootstrap-select/js/i18n/defaults-es_CL.js"></script>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.year)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.mes)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.tiempo_carga)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.mttr)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.mtbf)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.lineas.nombre)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.id }) |
-            @Html.ActionLink("Details", "Details", new { id=item.id }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.id })
-        </td>
-    </tr>
-}
+<script>
+    $(function () {
+       
+        //AL MOMENTO DE SELECCIONAR UNA PLANTA, SE DISPARA EL EVENTO
+        $('.IdPlanta').change(function ()
+        {
+            //OBTENER ID SELECCIONADO
+            var idPlanta = $(this).find("option:selected").val();
+            //URL PARA OBTENER LOS DATOS
+            var url = '@Url.Content("~/")' + "Kpis/GetLineAsync";
+            //RECREAR EL OBJETO SELECTPICKER
+            $('.IdLinea').selectpicker('destroy');
+            $('.IdLinea').empty();
+            //INICIALIZAR OBJETO AJAX PARA TRAER DATOS DEL SERVIDOR
+            $.ajax({
+                //PARAMETRIZAR SERVICIO AJAX
+                url: url,
+                type: 'post',
+                data: { id: idPlanta },
+                //MOSTRAR LOADER ANTES DE INICIAR LA SOLICITUD
+                beforeSend: function () {
+                    $('.page-loader-wrapper').fadeIn();
+                },
+                success: function (response) {
+                    //ITERAR CON LA LISTA DE RESULTADOS
+                    $.each(response, function (i, linea) {
+                        //CREAR ITEM CON CADA ITERACIÓN
+                        $('.IdLinea').append($('<option>', {
+                            value: linea.Value,
+                            text: linea.Text
+                        }));
+                    });
+                    //REFRESCAR Y RECARGAR EL OBJETO
+                    $('.IdLinea').selectpicker('refresh');
+                    //OCULTAR LOADER UNA VEZ CARAGADA LA INFORMACIÓN
+                    $('.page-loader-wrapper').fadeOut();
+                },
+                //EN CASO DE ERROR, IMPRIMIRLO
+                error: function (error) {
+                    alert(error);
+                }
+            });
+        });
 
-</table>
+
+        //AL MOMENTO DE SELECCIONAR UNA LINEA, SE DISPARA EL EVENTO
+        $('.IdLinea').change(function ()
+        {
+            //OBTENER ID SELECCIONADO
+            var idLinea = $(this).find("option:selected").val();
+            //URL PARA OBTENER LOS DATOS
+            var url = '@Url.Content("~/")' + "Kpis/GetDistinctYearAsync";
+            //RECREAR EL OBJETO SELECTPICKER
+            $('.IdAno').selectpicker('destroy');
+            $('.IdAno').empty();
+            //INICIALIZAR OBJETO AJAX PARA TRAER DATOS DEL SERVIDOR
+            $.ajax({
+                //PARAMETRIZAR SERVICIO AJAX
+                url: url,
+                type: 'post',
+                data: { id_linea: idLinea },
+                //MOSTRAR LOADER ANTES DE INICIAR LA SOLICITUD
+                beforeSend: function () {
+                    $('.page-loader-wrapper').fadeIn();
+                },
+                success: function (response) {
+
+                    //ITERAR CON LA LISTA DE RESULTADOS
+                    $.each(response, function (i, linea) {
+                        //CREAR ITEM CON CADA ITERACIÓN
+                        $('.IdAno').append($('<option>', {
+                            value: linea,
+                            text: linea
+                        }));
+                    });
+                    //REFRESCAR Y RECARGAR EL OBJETO
+                    $('.IdAno').selectpicker('refresh');
+                    //OCULTAR LOADER UNA VEZ CARAGADA LA INFORMACIÓN
+                    $('.page-loader-wrapper').fadeOut();
+                },
+                //EN CASO DE ERROR, IMPRIMIRLO
+                error: function (error) {
+                    alert(error);
+                }
+            });
+        });
+
+
+        $('#btnFiltrar').click(function () {
+
+            var id_line = $('.IdLinea').find("option:selected").val();
+            var year = $('.IdAno').find("option:selected").val();
+
+            //VALIDAR LOS FILTROS
+            if (id_line > 0 && $.isNumeric(year)) {
+                //window.location = '@Url.Action("FilterTCAsync", "Kpis")?id_line=' + id_line + '&year=' + year;
+                var url_filter = '@Url.Content("~/")' + "Kpis/FilterTCAsync";
+
+                //INICIALIZAR OBJETO AJAX PARA TRAER DATOS DEL SERVIDOR
+                $.ajax({
+                    //PARAMETRIZAR SERVICIO AJAX
+                    url: url_filter,
+                    type: 'post',
+                    data: { id_line: id_line, year: year },
+                    //MOSTRAR LOADER ANTES DE INICIAR LA SOLICITUD
+                    beforeSend: function () {
+                        $('.page-loader-wrapper').fadeIn();
+                    },
+                    success: function (response) {
+
+                        //data = response;
+                        //initGrid();
+
+                        //OCULTAR LOADER UNA VEZ CARAGADA LA INFORMACIÓN
+                        $('.page-loader-wrapper').fadeOut();
+                    },
+                    //EN CASO DE ERROR, IMPRIMIRLO
+                    error: function (request, status, error) {
+                        alert('Error al aplicar filtros a tiempos de carga: ' + request.responseText);
+
+                    }
+                });
+            }
+            else {
+                swal("Tiempos de carga", "Debe seleccionar Línea y Año", "warning");
+            }
+        });
+
+    });
+</script>
