@@ -9,6 +9,8 @@ using System.Web;
 using System.Web.Mvc;
 using DigiTools.Database;
 using DigiTools.Dao;
+using DigiTools.Models;
+using System.Globalization;
 
 namespace DigiTools.Controllers
 {
@@ -19,6 +21,7 @@ namespace DigiTools.Controllers
         DaoPlantas daoPla = new DaoPlantas();
         DaoLineas daoLin = new DaoLineas();
         DaoKpis daoTc = new DaoKpis();
+        DaoEwo daoE = new DaoEwo();
 
         // GET: Kpis
         public async Task<ActionResult> Index()
@@ -60,6 +63,31 @@ namespace DigiTools.Controllers
 
             return Json(await tiempos_carga);
         }
+
+        [HttpPost]
+        public async Task<JsonResult> CalculateMttrAsync(int id_line, string year)
+        {         
+            List<MttrViewModel> mVM = new List<MttrViewModel>();
+
+            for (int i = 1; i < 13; i++)
+            {
+                mVM.Add(new MttrViewModel()
+                {
+                    Line = id_line,
+                    LineName = daoLin.GetLinesById(id_line).First().nombre,
+                    Mes = i,
+                    MesName = new DateTime(int.Parse(year), i, 1).ToString("MMMM", CultureInfo.CreateSpecificCulture("es")).ToUpperInvariant(),
+                    Year = int.Parse(year),
+                    Mttr = daoE.GetMttrByLineMonth(id_line, i, int.Parse(year))
+                });
+            }
+
+            await Task.Delay(1000);
+
+            return Json(mVM);
+        }
+
+
 
         // GET: Kpis/Details/5
         public async Task<ActionResult> Details(int? id)

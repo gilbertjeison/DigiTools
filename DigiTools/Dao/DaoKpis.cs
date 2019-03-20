@@ -14,6 +14,7 @@ namespace DigiTools.Dao
 {
     public class DaoKpis
     {
+        DaoEwo daoE = new DaoEwo();
         public async Task<List<TiemposCargaViewModel>> GetTiemposCargaAsync(Nullable<int> line)
         {
             List<TiemposCargaViewModel> listTC = new List<TiemposCargaViewModel>();
@@ -95,7 +96,7 @@ namespace DigiTools.Dao
 
             return listTC.OrderBy(x => x.Mes).ToList();
         }
-
+              
         public async Task<decimal> GetTiempoCargaAsync(int line)
         {
             decimal TC = 0;

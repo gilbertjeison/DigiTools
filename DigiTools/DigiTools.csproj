@@ -380,6 +380,7 @@
     <Compile Include="Models\KpiViewModel.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\MLModel.cs" />
+    <Compile Include="Models\MttrViewModel.cs" />
     <Compile Include="Models\RoleViewModel.cs" />
     <Compile Include="Models\TiempoCargaViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
