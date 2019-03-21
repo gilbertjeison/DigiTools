@@ -41,9 +41,9 @@ namespace DigiTools.Dao
             return max;
         }
 
-        public float GetMttrByLineMonth(int line, int month, int year)
+        public decimal GetMttrByLineMonth(int line, int month, int year)
         {
-            float mttr = 0;
+            decimal mttr = 0;
 
             try
             {
@@ -71,7 +71,7 @@ namespace DigiTools.Dao
                         var avrs = query.ToList().Count;
                         if (avrs>0)
                         {
-                            mttr = (float)minT / avrs;
+                            mttr = (decimal)minT / avrs;
                         }
                         
                     }

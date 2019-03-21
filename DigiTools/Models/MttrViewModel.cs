@@ -12,6 +12,6 @@ namespace DigiTools.Models
         public int Mes { get; set; }
         public string MesName { get; set; }
         public int Year { get; set; }
-        public float Mttr { get; set; }
+        public decimal Mttr { get; set; }
     }
 }

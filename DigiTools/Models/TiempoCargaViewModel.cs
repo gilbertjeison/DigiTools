@@ -14,6 +14,6 @@ namespace DigiTools.Models
         public decimal TiempoCarga { get; set; }
         public string MesName { get; set; }
         public string LineName { get; set; }
-        public float Mttr { get; set; }
+        
     }
 }

@@ -289,7 +289,7 @@ namespace DigiTools.Controllers
                                     }
                                     if (cols == 8)
                                     {
-                                        ws.SetValue(row, cols + 1, rep_Utils[row - 15].cantidad);
+                                        ws.SetValue(row, cols + 1, rep_Utils[row - 15].cantidad_ewo);
                                     }
                                     if (cols == 9)
                                     {
