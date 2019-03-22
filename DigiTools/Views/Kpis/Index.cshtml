@@ -114,7 +114,11 @@
                                 <div id="gridMttr" class="gridMttr"></div>
                             </div>
                             <div class="col-md-6">
-                                <canvas id="chart"></canvas>
+                                <div class="card hdd" style="border-radius:10px;">
+                                    <div class="body initC">
+                                        <canvas id="chart" class="animated fadeIn"></canvas>
+                                    </div>
+                                </div>                                
                             </div>
                         </div>
                     </div>
@@ -228,7 +232,7 @@
         });        
 
         $('#gridMttr').show("slow");
-        $('#chart').show("slow");
+        $('.hdd').show("slow");
     }
 
     //ORDENAR POR MES
@@ -238,7 +242,7 @@
     $(function () {
         //OCULTAR GRID
         $('#gridMttr').hide(1000);
-        $('#chart').hide(1000);
+        $('.hdd').hide(1000);
 
         //AL MOMENTO DE SELECCIONAR UNA PLANTA, SE DISPARA EL EVENTO
         $('.IdPlanta').change(function ()
@@ -290,6 +294,7 @@
             //VALIDAR LOS FILTROS
             if (id_line > 0 && $.isNumeric(year)) {
                 var url_filter = '@Url.Content("~/")' + "Kpis/CalculateMttrAsync";
+                var url_filterChart = '@Url.Content("~/")' + "Kpis/CalculateCharDataAsync";
 
                 //INICIALIZAR OBJETO AJAX PARA TRAER DATOS DEL SERVIDOR
                 $.ajax({
@@ -306,15 +311,38 @@
                         data = response;
                         initGrid();
 
+
+                        //INICIALIZAR OBJETO AJAX PARA TRAER DATOS DEL SERVIDOR
+                        $.ajax({
+                            //PARAMETRIZAR SERVICIO AJAX
+                            url: url_filterChart,
+                            type: 'post',
+                            data: { id_line: id_line, year: year },
+                            //MOSTRAR LOADER ANTES DE INICIAR LA SOLICITUD
+                            beforeSend: function () {
+                                $('.page-loader-wrapper').fadeIn();
+                            },
+                            success: function (response_chart) {
+
+                                InitChar(response_chart,data);
+
+                                //OCULTAR LOADER UNA VEZ CARAGADA LA INFORMACIÓN
+                                $('.page-loader-wrapper').fadeOut();
+                            },
+                            //EN CASO DE ERROR, IMPRIMIRLO
+                            error: function (request, status, error) {
+                                alert('Error al aplicar filtros a tiempos de carga: ' + error + request.responseText);
+
+                            }
+                        });
                         //OCULTAR LOADER UNA VEZ CARAGADA LA INFORMACIÓN
                         $('.page-loader-wrapper').fadeOut();
                     },
                     //EN CASO DE ERROR, IMPRIMIRLO
                     error: function (request, status, error) {
                         alert('Error al aplicar filtros a tiempos de carga: ' + error + request.responseText);
-
                     }
-                });
+                });                
             }
             else {
                 swal("Tiempos de carga", "Debe seleccionar Línea y Año", "warning");
@@ -324,83 +352,118 @@
     });
 </script>
 <script>    
-    // set default to straight lines - no curves
-    // Chart.defaults.global.elements.line.tension = 0;
-    // set default no fill beneath the line
-    Chart.defaults.global.elements.line.fill = false;
+    function InitChar(response_chart, d) {
+
+        $("canvas#chart").remove();
+        $("div.initC").append('<canvas id="chart" class="animated fadeIn"></canvas>');
+        // set default to straight lines - no curves
+        // Chart.defaults.global.elements.line.tension = 0;
+        // set default no fill beneath the line
+        
+        Chart.defaults.global.elements.line.fill = false;
+
+        var dataEspTec = response_chart.map(e => e.EsperaTecnico);
+        var dataTiemDiag = response_chart.map(e => e.TiempoDiagnostico);
+        var dataEsperaRep = response_chart.map(e => e.EsperaRepuestos);
+        var dataTiempoRep = response_chart.map(e => e.TiempoReparacion);
+        var dataTiempoPru = response_chart.map(e => e.TiempoPruebas);
+        var Meses = response_chart.map(e => e.MesName);
+        var Mttr = d.map(e => e.Mttr);
+        var max_mttr = Math.max.apply(Math, Mttr);
+        // stacked bar with 2 unstacked lines - nope
+        var barChartData = {
+
+            labels: Meses,
+            datasets: [
+                {
+                    type: 'line',
+                    label: 'MTTR',
+                    yAxisID: "y-axis-1",
+                    backgroundColor: "rgba(151,187,205,0.15)",
+                    data: Mttr
+                },
+                {
+                    type: 'bar',
+                    label: 'Tiempo de espera inicial del técnico (min)',
+                    yAxisID: "y-axis-0",
+                    backgroundColor: "rgb(255, 99, 132)",
+                    data: dataEspTec
+                },
+                {
+                    type: 'bar',
+                    label: 'Tiempo de Diagnóstico (min)',
+                    yAxisID: "y-axis-0",
+                    backgroundColor: "rgb(255, 159, 64)",
+                    data: dataTiemDiag
+                }, 
+                {
+                    type: 'bar',
+                    label: 'Tiempo de espera por repuestos (min)',
+                    yAxisID: "y-axis-0",
+                    backgroundColor: "rgb(255, 205, 86)",
+                    data: dataEsperaRep
+                },
+                {
+                    type: 'bar',
+                    label: 'Tiempo de Reparación o cambio de piezas (min)',
+                    yAxisID: "y-axis-0",
+                    backgroundColor: "rgb(75, 192, 192)",
+                    data: dataTiempoRep
+                },
+                {
+                    type: 'bar',
+                    label: 'Pruebas y Tiempo de arranque (min)',
+                    yAxisID: "y-axis-0",
+                    backgroundColor: "rgb(54, 162, 235)",
+                    data: dataTiempoPru
+                }
+            ]
+        };
 
 
-    // stacked bar with 2 unstacked lines - nope
-    var barChartData = {
-        labels: ['2016', '2017', '2018', '2019'],
-        datasets: [{
+        var ctx = document.getElementById("chart").getContext("2d");
+        // allocate and initialize a chart
+        var ch = new Chart(ctx, {
             type: 'bar',
-            label: 'a',
-            yAxisID: "y-axis-0",
-            backgroundColor: "rgba(217,83,79,0.75)",
-            data: [1000, 2000, 4000, 5000]
-        }, {
-            type: 'bar',
-            label: 'b',
-            yAxisID: "y-axis-0",
-            backgroundColor: "rgba(92,184,92,0.75)",
-            data: [500, 600, 700, 800]
-        },
-        /*{
-			    type: 'line',
-			    label: 'c',
-			    yAxisID: "y-axis-0",
-			    backgroundColor: "rgba(51,51,51,0.5)",
-			    data: [1500, 2600, 4700, 5800]
-			  }, */
-        {
-            type: 'line',
-            label: 'd',
-            yAxisID: "y-axis-1",
-            backgroundColor: "rgba(151,187,205,0.5)",
-            data: [5000, 3000, 1000, 0]
-        }]
-    };
-
-
-    var ctx = document.getElementById("chart").getContext("2d");
-    // allocate and initialize a chart
-    var ch = new Chart(ctx, {
-        type: 'bar',
-        data: barChartData,
-        options: {
-            title: {
-                display: true,
-                text: "MTTR - Min - Stacked (Combinado)"
-            },
-            tooltips: {
-                mode: 'label'
-            },
-            responsive: true,
-            scales: {
-                xAxes: [{
-                    stacked: true
-                }],
-                yAxes: [{
-                    stacked: true,
-                    position: "left",
-                    id: "y-axis-0",
-                    ticks: {
-                        beginAtZero: true,
-                        suggestedMax: 5800
-                    }
-                }, {
-                    display: false,
-                    stacked: false,
-                    position: "right",
-                    id: "y-axis-1",
-                    ticks: {
-                        beginAtZero: true,
-                        suggestedMax: 5800
-                    }
-                }]
+            data: barChartData,
+            options: {
+                title: {
+                    display: true,
+                    text: "MTTR - Min - Stacked (Combinado)"
+                },
+                tooltips: {
+                    mode: 'label'
+                },
+                responsive: true,
+                scales: {
+                    xAxes: [{
+                        stacked: true
+                    }],
+                    yAxes: [{
+                        stacked: true,
+                        position: "left",
+                        id: "y-axis-0",
+                        ticks: {
+                            beginAtZero: true,
+                            suggestedMax: max_mttr
+                        },
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Tiempo de Averías'
+                        }
+                    }, {
+                        display: false,
+                        stacked: false,
+                        position: "right",
+                        id: "y-axis-1",
+                        ticks: {
+                            beginAtZero: true,
+                            suggestedMax: max_mttr
+                        }
+                    }]
+                }
             }
-        }
-    });
+        });
+    } 
 
 </script>

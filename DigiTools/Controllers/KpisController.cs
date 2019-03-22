@@ -11,6 +11,7 @@ using DigiTools.Database;
 using DigiTools.Dao;
 using DigiTools.Models;
 using System.Globalization;
+using System.Diagnostics;
 
 namespace DigiTools.Controllers
 {
@@ -23,6 +24,15 @@ namespace DigiTools.Controllers
         DaoKpis daoTc = new DaoKpis();
         DaoEwo daoE = new DaoEwo();
 
+        public enum EwoTimeOpt
+        {
+            EsperaTec,
+            TiempoDiag,
+            TiempoRepu,
+            TiempoRepa,
+            TiempoPru
+        }
+        
         // GET: Kpis
         public async Task<ActionResult> Index()
         {
@@ -87,6 +97,62 @@ namespace DigiTools.Controllers
             return Json(mVM);
         }
 
+        [HttpPost]
+        public async Task<JsonResult> CalculateCharDataAsync(int id_line, string year)
+        {
+            List<EwoTimesViewModel> mVM = new List<EwoTimesViewModel>();
+
+            try
+            {                
+                var valuesFromDB = daoE.GetEwoTime(id_line, int.Parse(year));
+
+                for (int i = 1; i < 13; i++)
+                {
+                    var reg = valuesFromDB.Where(x => x.Mes == i).ToList();
+                    if (reg.Count == 0)
+                    {
+                        mVM.Add(new EwoTimesViewModel()
+                        {
+                            Line = id_line,
+                            LineName = daoLin.GetLinesById(id_line).First().nombre,
+                            Year = int.Parse(year),
+                            EsperaTecnico = 0,
+                            Mes = i,
+                            MesName = new DateTime(int.Parse(year), i, 1).ToString("MMMM", CultureInfo.CreateSpecificCulture("es")).ToUpperInvariant()
+                        });
+                    }
+                    else if (reg.Count > 0)
+                    {
+                        EwoTimesViewModel et = reg.ToList().First();
+                        et.Line = id_line;
+                        et.LineName = daoLin.GetLinesById(id_line).First().nombre;
+                        mVM.Add(et);
+                    }
+                }
+
+                await Task.Delay(1000);
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine("Error al calcular CalculateCharDataAsync() " + e.ToString());                
+            }
+            
+            return Json(mVM);
+        }
+
+        
+
+        public List<int> GetEwoTimes(EwoTimeOpt opt, int line, string year)
+        {
+            List<int> values = new List<int>();
+
+            for (int i = 1; i < 13; i++)
+            {
+                
+            }
+
+                return null;
+        }
 
 
         // GET: Kpis/Details/5
