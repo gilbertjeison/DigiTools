@@ -5,7 +5,6 @@ using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Net;
-using System.Web;
 using System.Web.Mvc;
 using DigiTools.Database;
 using DigiTools.Dao;
@@ -76,23 +75,49 @@ namespace DigiTools.Controllers
 
         [HttpPost]
         public async Task<JsonResult> CalculateMttrAsync(int id_line, string year)
-        {         
+        {
+            int yr = int.Parse(year);
+            var lnobj = daoLin.GetLinesById(id_line).First();
+            string lineName = lnobj.nombre;
+            int plant = lnobj.id_planta.Value;
             List<MttrViewModel> mVM = new List<MttrViewModel>();
 
-            for (int i = 1; i < 13; i++)
-            {
+            await Task.Run(() => 
+            { 
+                for (int i = 1; i < 13; i++)
+                {
+                    mVM.Add(new MttrViewModel()
+                    {
+                        Line = id_line,
+                        LineName = lineName,
+                        Mes = i,
+                        MesName = new DateTime(yr, i, 1).ToString("MMMM", CultureInfo.CreateSpecificCulture("es")),
+                        Year = yr,
+                        Mttr = daoE.GetMttrByLineMonth(id_line, i, yr)
+                    });
+                }
+
+                //MTTR DEL SITIO COMPLETO Y DE LA PLANTA
+                Response.Headers["MttrSite"] = daoE.GetMttrBySite(yr).ToString("0.##");
+                Response.Headers["MttrPlant"] = daoE.GetMttrByPlant(plant,yr).ToString("0.##");
+            });
+
+            return Json(mVM);
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> CalculateMttrSiteAsync(string year)
+        {
+            List<MttrViewModel> mVM = new List<MttrViewModel>();
+
+            await Task.Run(() =>
+            {                
                 mVM.Add(new MttrViewModel()
                 {
-                    Line = id_line,
-                    LineName = daoLin.GetLinesById(id_line).First().nombre,
-                    Mes = i,
-                    MesName = new DateTime(int.Parse(year), i, 1).ToString("MMMM", CultureInfo.CreateSpecificCulture("es")).ToUpperInvariant(),
                     Year = int.Parse(year),
-                    Mttr = daoE.GetMttrByLineMonth(id_line, i, int.Parse(year))
-                });
-            }
-
-            await Task.Delay(1000);
+                    Mttr = daoE.GetMttrBySite(int.Parse(year))
+                });                
+            });
 
             return Json(mVM);
         }
@@ -101,36 +126,37 @@ namespace DigiTools.Controllers
         public async Task<JsonResult> CalculateCharDataAsync(int id_line, string year)
         {
             List<EwoTimesViewModel> mVM = new List<EwoTimesViewModel>();
-
+                        
             try
-            {                
-                var valuesFromDB = daoE.GetEwoTime(id_line, int.Parse(year));
-
-                for (int i = 1; i < 13; i++)
+            {
+                await Task.Run(() => 
                 {
-                    var reg = valuesFromDB.Where(x => x.Mes == i).ToList();
-                    if (reg.Count == 0)
-                    {
-                        mVM.Add(new EwoTimesViewModel()
-                        {
-                            Line = id_line,
-                            LineName = daoLin.GetLinesById(id_line).First().nombre,
-                            Year = int.Parse(year),
-                            EsperaTecnico = 0,
-                            Mes = i,
-                            MesName = new DateTime(int.Parse(year), i, 1).ToString("MMMM", CultureInfo.CreateSpecificCulture("es")).ToUpperInvariant()
-                        });
-                    }
-                    else if (reg.Count > 0)
-                    {
-                        EwoTimesViewModel et = reg.ToList().First();
-                        et.Line = id_line;
-                        et.LineName = daoLin.GetLinesById(id_line).First().nombre;
-                        mVM.Add(et);
-                    }
-                }
+                    var valuesFromDB = daoE.GetEwoTime(id_line, int.Parse(year));
 
-                await Task.Delay(1000);
+                    for (int i = 1; i < 13; i++)
+                    {
+                        var reg = valuesFromDB.Where(x => x.Mes == i).ToList();
+                        if (reg.Count == 0)
+                        {
+                            mVM.Add(new EwoTimesViewModel()
+                            {
+                                Line = id_line,
+                                LineName = daoLin.GetLinesById(id_line).First().nombre,
+                                Year = int.Parse(year),
+                                EsperaTecnico = 0,
+                                Mes = i,
+                                MesName = new DateTime(int.Parse(year), i, 1).ToString("MMMM", CultureInfo.CreateSpecificCulture("es")).ToUpperInvariant()
+                            });
+                        }
+                        else if (reg.Count > 0)
+                        {
+                            EwoTimesViewModel et = reg.ToList().First();
+                            et.Line = id_line;
+                            et.LineName = daoLin.GetLinesById(id_line).First().nombre;
+                            mVM.Add(et);
+                        }
+                    }
+                });                
             }
             catch (Exception e)
             {

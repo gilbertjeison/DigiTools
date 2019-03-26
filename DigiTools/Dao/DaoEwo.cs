@@ -30,7 +30,6 @@ namespace DigiTools.Dao
                     {
                         max = 1;
                     }
-
                 }
             }
             catch (Exception e)
@@ -47,11 +46,9 @@ namespace DigiTools.Dao
             decimal mttr = 0;
 
             try
-            {
-               
+            {               
                 using (var context = new MttoAppEntities())
                 {
-
                     var query = from e in context.ewos
                                 join ln in context.lineas
                                 on e.id_area_linea equals ln.id
@@ -61,28 +58,88 @@ namespace DigiTools.Dao
                                 select new { e, ln };
 
                     if (query!= null)
-                    {
-                        //int sum = 0;
-                        //foreach (var item in query.ToList())
-                        //{
-                        //    sum += int.Parse(item.e.tiempo_total.ToString());
-                        //}
-
+                    {                        
                         var minT = query.ToList().Sum(x=>x.e.tiempo_total);
                         var avrs = query.ToList().Count;
                         if (avrs>0)
                         {
                             mttr = (decimal)minT / avrs;
-                        }
-                        
-                    }
-                    
-                }                               
-                
+                        }                        
+                    }                    
+                }  
             }
             catch (Exception e)
             {
                 Debug.WriteLine("Error al consultar averias por líneas y mes: " + e.ToString());                
+            }
+
+            return mttr;
+        }
+
+        public decimal GetMttrByPlant(int plant, int year)
+        {
+            decimal mttr = 0;
+
+            try
+            {
+                using (var context = new MttoAppEntities())
+                {
+                    var query = from e in context.ewos
+                                join ln in context.lineas
+                                on e.id_area_linea equals ln.id
+                                join p in context.plantas
+                                on ln.id_planta equals p.Id
+                                where ln.id_planta == plant
+                                && e.notificacion_averia.Value.Year == (year)
+                                select new { e, ln };
+
+                    if (query != null)
+                    {
+                        var minT = query.ToList().Sum(x => x.e.tiempo_total);
+                        var avrs = query.ToList().Count;
+                        if (avrs > 0)
+                        {
+                            mttr = (decimal)minT / avrs;
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine("Error al consultar averias por planta: " + e.ToString());
+            }
+
+            return mttr;
+        }
+
+        public decimal GetMttrBySite(int year)
+        {
+            decimal mttr = 0;
+
+            try
+            {
+                using (var context = new MttoAppEntities())
+                {
+                    var query = from e in context.ewos
+                                join ln in context.lineas
+                                on e.id_area_linea equals ln.id
+                                where e.notificacion_averia.Value.Year == (year)
+                                select new { e, ln };
+
+                    if (query != null)
+                    {
+                        var minT = query.ToList().Sum(x => x.e.tiempo_total);
+                        var avrs = query.ToList().Count;
+                        if (avrs > 0)
+                        {
+                            mttr = (decimal)minT / avrs;
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine("Error al consultar averias por site: " + e.ToString());
             }
 
             return mttr;
