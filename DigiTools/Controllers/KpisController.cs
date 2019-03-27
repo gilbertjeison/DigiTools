@@ -93,13 +93,13 @@ namespace DigiTools.Controllers
                         Mes = i,
                         MesName = new DateTime(yr, i, 1).ToString("MMMM", CultureInfo.CreateSpecificCulture("es")),
                         Year = yr,
-                        Mttr = daoE.GetMttrByLineMonth(id_line, i, yr)
+                        Mttr = daoTc.GetMttrByLineMonth(id_line, i, yr)
                     });
                 }
 
                 //MTTR DEL SITIO COMPLETO Y DE LA PLANTA
-                Response.Headers["MttrSite"] = daoE.GetMttrBySite(yr).ToString("0.##");
-                Response.Headers["MttrPlant"] = daoE.GetMttrByPlant(plant,yr).ToString("0.##");
+                Response.Headers["MttrSite"] = daoTc.GetMttrBySite(yr).ToString("0.##");
+                Response.Headers["MttrPlant"] = daoTc.GetMttrByPlant(plant,yr).ToString("0.##");
             });
 
             return Json(mVM);
@@ -115,7 +115,7 @@ namespace DigiTools.Controllers
                 mVM.Add(new MttrViewModel()
                 {
                     Year = int.Parse(year),
-                    Mttr = daoE.GetMttrBySite(int.Parse(year))
+                    Mttr = daoTc.GetMttrBySite(int.Parse(year))
                 });                
             });
 
@@ -178,6 +178,39 @@ namespace DigiTools.Controllers
             }
 
                 return null;
+        }
+
+        //MTBF
+        [HttpPost]
+        public async Task<JsonResult> CalculateMtbfAsync(int id_line, string year)
+        {
+            int yr = int.Parse(year);
+            var lnobj = daoLin.GetLinesById(id_line).First();
+            string lineName = lnobj.nombre;
+            int plant = lnobj.id_planta.Value;
+            List<MtbfViewModel> mVM = new List<MtbfViewModel>();
+
+            await Task.Run(() =>
+            {
+                for (int i = 1; i < 13; i++)
+                {
+                    mVM.Add(new MtbfViewModel()
+                    {
+                        Line = id_line,
+                        LineName = lineName,
+                        Mes = i,
+                        MesName = new DateTime(yr, i, 1).ToString("MMMM", CultureInfo.CreateSpecificCulture("es")),
+                        Year = yr,
+                        Mtbf = daoTc.GetMtbfByLineMonth(id_line, i, yr)
+                    });
+                }
+
+                //MTTR DEL SITIO COMPLETO Y DE LA PLANTA
+                Response.Headers["MtbfSite"] = daoTc.GetMtbfBySite(yr).ToString("0.##");
+                Response.Headers["MtbfPlant"] = daoTc.GetMtbfByPlant(plant, yr).ToString("0.##");
+            });
+
+            return Json(mVM);
         }
 
 

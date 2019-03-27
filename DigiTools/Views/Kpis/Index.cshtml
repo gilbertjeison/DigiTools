@@ -31,7 +31,7 @@
         padding: 0;
     }
 
-    .gridMttr {
+    .gridMttr, .gridMtbf {
         width: 100%;
         height: 370px;
         //margin: 0 auto;
@@ -229,6 +229,99 @@
 <script src="~/Scripts/plugins/slickgrid/slick.grid.js"></script>
 <!--CHART JS-->
 <script src="~/Scripts/plugins/chartjs/Chart.bundle.min.js"></script>
+
+<script>
+    //FILL GRID
+    //SLICKGRID
+    var dataM = [];
+    var gridM;
+
+    var options = {
+        enableCellNavigation: true,
+        enableColumnReorder: false,
+        forceFitColumns: true,
+        multiColumnSort: true
+    }
+
+    var columnsM = [
+        { id: "line", name: "Línea", field: "LineName", width: 150 },
+        { id: "year", name: "Año", field: "Year", width: 50 },
+        { id: "mes", name: "Mes", field: "MesName", sortable: true },
+        { id: "mtbf", name: "MTBF", field: "Mtbf" }
+    ];
+
+    function TotalsDataProviderM(data, columns) {
+        
+        var totals = {};
+        var totalsMetadata = {
+            // Style the totals row differently.
+            cssClasses: "totals",
+            columns: {}
+        };
+        // Make the totals not editable.
+        for (var i = 0; i < columns.length; i++) {
+            totalsMetadata.columns[i] = { editor: null };
+        }
+        this.getLength = function () {
+            return data.length + 1;
+        };
+        this.getItem = function (index) {
+            return (index < data.length) ? data[index] : totals;
+        };
+        this.updateTotals = function () {
+            var columnIdx = 3;
+            var columnId = columns[columnIdx].id;
+            var total = 0;
+            var i = data.length;
+            while (i--) {
+                total += (parseFloat(data[i]['Mtbf'], 10) || 0);
+            }
+            totals['Mtbf'] = "Sum:  " + total;
+        };
+        this.getItemMetadata = function (index) {
+            return (index != data.length) ? null : totalsMetadata;
+        };
+        this.updateTotals();
+    }
+
+    function initGridM() {
+
+        var dataProviderM = new TotalsDataProviderM(dataM, columnsM);
+        console.log(options);
+        gridM = new Slick.Grid("#gridMtbf", dataProviderM, columnsM, options);
+
+        //HABILITAR ORDENACIÓN
+        gridM.onSort.subscribe(function (e, args) {
+            var cols = args.sortCols;
+
+            dataM.sort(function (dataRow1, dataRow2) {
+                for (var i = 0, l = cols.length; i < l; i++) {
+                    var field = cols[i].sortCol.field;
+                    var sign = cols[i].sortAsc ? 1 : -1;
+                    var value1 = dataRow1[field], value2 = dataRow2[field];
+                    var result = (value1 == value2 ? 0 : (value1 > value2 ? 1 : -1)) * sign;
+                    if (result != 0) {
+                        return result;
+                    }
+                }
+                return 0;
+
+            });
+            gridM.invalidate();
+            gridM.render();
+
+        });
+
+        $('#gridMtbf').show("slow");
+        $('.hddM').show("slow");
+    }
+
+
+    $(function () {
+
+
+    });
+</script>
 <script>
     //FILL GRID
     //SLICKGRID
@@ -242,12 +335,7 @@
         { id: "mttr", name: "MTTR", field: "Mttr" }
     ];
 
-    var options = {
-        enableCellNavigation: true,
-        enableColumnReorder: false,
-        forceFitColumns: true,
-        multiColumnSort: true
-    }
+    
 
     function TotalsDataProvider(data, columns) {
         var totals = {};
@@ -272,10 +360,9 @@
             var total = 0;
             var i = data.length;
             while (i--) {
-                total += (parseInt(data[i]['Mttr'], 10) || 0);
+                total += (parseFloat(data[i]['Mttr'], 10) || 0);
             }
             totals['Mttr'] = "Sum:  " + total;
-            console.log(total);
         };
         this.getItemMetadata = function (index) {
             return (index != data.length) ? null : totalsMetadata;
@@ -398,16 +485,9 @@
                             url: url_filterChart,
                             type: 'post',
                             data: { id_line: id_line, year: year },
-                            //MOSTRAR LOADER ANTES DE INICIAR LA SOLICITUD
-                            beforeSend: function () {
-                                $('.page-loader-wrapper').fadeIn();
-                            },
                             success: function (response_chart) {
 
                                 InitChar(response_chart,data);
-
-                                //OCULTAR LOADER UNA VEZ CARAGADA LA INFORMACIÓN
-                                $('.page-loader-wrapper').fadeOut();
                             },
                             //EN CASO DE ERROR, IMPRIMIRLO
                             error: function (request, status, error) {
@@ -451,7 +531,7 @@
             //INICIALIZAR OBJETO AJAX PARA TRAER DATOS DEL SERVIDOR
             $.ajax({
                 //PARAMETRIZAR SERVICIO AJAX
-                url: url,
+                url: urlM,
                 type: 'post',
                 data: { id: idPlantaM },
                 //MOSTRAR LOADER ANTES DE INICIAR LA SOLICITUD
@@ -508,28 +588,22 @@
                         initGridM();
 
                         //INICIALIZAR OBJETO AJAX PARA TRAER DATOS DEL SERVIDOR
-                        $.ajax({
-                            //PARAMETRIZAR SERVICIO AJAX
-                            url: url_filterChartM,
-                            type: 'post',
-                            data: { id_line: id_lineM, year: yearM },
-                            //MOSTRAR LOADER ANTES DE INICIAR LA SOLICITUD
-                            beforeSend: function () {
-                                $('.page-loader-wrapper').fadeIn();
-                            },
-                            success: function (response_chart) {
+                        //$.ajax({
+                        //    //PARAMETRIZAR SERVICIO AJAX
+                        //    url: url_filterChartM,
+                        //    type: 'post',
+                        //    data: { id_line: id_lineM, year: yearM },
+                        //    //MOSTRAR LOADER ANTES DE INICIAR LA SOLICITUD    
+                        //    success: function (response_chart) {
 
-                                InitCharM(response_chart,dataM);
+                        //        InitCharM(response_chart,dataM);
+                        //    },
+                        //    //EN CASO DE ERROR, IMPRIMIRLO
+                        //    error: function (request, status, error) {
+                        //        alert('Error al generar información MTBF: ' + error + request.responseText);
 
-                                //OCULTAR LOADER UNA VEZ CARAGADA LA INFORMACIÓN
-                                $('.page-loader-wrapper').fadeOut();
-                            },
-                            //EN CASO DE ERROR, IMPRIMIRLO
-                            error: function (request, status, error) {
-                                alert('Error al generar información MTBF: ' + error + request.responseText);
-
-                            }
-                        });
+                        //    }
+                        //});
                         //OCULTAR LOADER UNA VEZ CARAGADA LA INFORMACIÓN
                         $('.page-loader-wrapper').fadeOut();
                     },
@@ -567,6 +641,7 @@
         var Meses = response_chart.map(e => e.MesName);
         var Mttr = d.map(e => e.Mttr);
         var max_mttr = Math.max.apply(Math, Mttr);
+        var max_tm = Math.max.apply(Math, dataEspTec, dataTiemDiag, dataEsperaRep, dataTiempoRep, dataTiempoPru);
         // stacked bar with 2 unstacked lines - nope
         var barChartData = {
 
@@ -625,7 +700,7 @@
             options: {
                 title: {
                     display: true,
-                    text: "MTTR (minutos) - Stacked (combinado)"
+                    text: "Stacked (combinado)"
                 },
                 tooltips: {
                     mode: 'label'
@@ -641,20 +716,24 @@
                         id: "y-axis-0",
                         ticks: {
                             beginAtZero: true,
-                            suggestedMax: max_mttr
+                            suggestedMax: max_tm
                         },
                         scaleLabel: {
                             display: true,
                             labelString: 'Tiempo de Averías'
                         }
                     }, {
-                        display: false,
+                        display: true,
                         stacked: false,
                         position: "right",
                         id: "y-axis-1",
                         ticks: {
                             beginAtZero: true,
                             suggestedMax: max_mttr
+                        },
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'MTTR - MIN'
                         }
                     }]
                 }
@@ -662,90 +741,7 @@
         });
     }
 </script>
-<script>
-    //FILL GRID
-    //SLICKGRID
-    var dataM = [];
-    var gridM;
 
-    var columnsM = [
-        { id: "line", name: "Línea", field: "LineName",width:150 },
-        { id: "year", name: "Año", field: "Year", width: 50 },
-        { id: "mes", name: "Mes", field: "MesName", sortable:true },
-        { id: "mtbf", name: "MTBF", field: "Mtbf" }
-    ];
-       
-    function TotalsDataProviderM(data, columns) {
-        var totals = {};
-        var totalsMetadata = {
-            // Style the totals row differently.
-            cssClasses: "totals",
-            columns: {}
-        };
-        // Make the totals not editable.
-        for (var i = 0; i < columns.length; i++) {
-            totalsMetadata.columns[i] = { editor: null };
-        }
-        this.getLength = function () {
-            return data.length + 1;
-        };
-        this.getItem = function (index) {
-            return (index < data.length) ? data[index] : totals;
-        };
-        this.updateTotals = function () {
-            var columnIdx = 3;
-            var columnId = columns[columnIdx].id;
-            var total = 0;
-            var i = data.length;
-            while (i--) {
-                total += (parseInt(data[i]['Mtbf'], 10) || 0);
-            }
-            totals['Mtbf'] = "Sum:  " + total;
-            console.log(total);
-        };
-        this.getItemMetadata = function (index) {
-            return (index != data.length) ? null : totalsMetadata;
-        };
-        this.updateTotals();
-    }
-
-    function initGridM() {
-        var dataProviderM = new TotalsDataProviderM(dataM, columnsM);
-
-        gridM = new Slick.Grid("#gridMtbf", dataProviderM, columnsM, options);
-
-        //HABILITAR ORDENACIÓN
-        gridM.onSort.subscribe(function (e, args) {
-            var cols = args.sortCols;
-
-            dataM.sort(function (dataRow1, dataRow2) {
-                for (var i = 0, l = cols.length; i < l; i++) {
-                    var field = cols[i].sortCol.field;
-                    var sign = cols[i].sortAsc ? 1 : -1;
-                    var value1 = dataRow1[field], value2 = dataRow2[field];
-                    var result = (value1 == value2 ? 0 : (value1 > value2 ? 1 : -1)) * sign;
-                    if (result != 0) {
-                        return result;
-                    }
-                }
-                return 0;
-
-            });
-            gridM.invalidate();
-            gridM.render();
-
-        });
-
-        $('#gridMtbf').show("slow");
-        $('.hddM').show("slow");
-    }
-    
-
-    $(function () {
-        
-
-    });
-</script>
 <script>
     function InitCharM(response_chart, d) {
 

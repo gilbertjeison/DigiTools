@@ -131,6 +131,102 @@ namespace DigiTools.Dao
             return TC;
         }
 
+        public decimal GetTiempoCarga(int line, int month, int year)
+        {
+            decimal TC = 0;
+
+            try
+            {
+                using (var context = new MttoAppEntities())
+                {
+                    var query = from td in context.kpis
+                                join ln in context.lineas
+                                on td.id_linea equals ln.id
+                                where td.id_linea == line
+                                && td.year == year
+                                && td.mes == month
+                                select new { td, ln };
+
+                    var res = query.ToList();
+
+                    if (res.Count > 0)
+                    {
+                        var first = res.First();
+                        TC = (decimal)first.td.tiempo_carga;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e.ToString());
+            }
+
+            return TC;
+        }
+
+        public decimal GetTiempoCarga(int plant, int year)
+        {
+            decimal TC = 0;
+
+            try
+            {
+                using (var context = new MttoAppEntities())
+                {
+                    var query = from td in context.kpis
+                                join ln in context.lineas
+                                on td.id_linea equals ln.id
+                                where ln.id_planta == plant
+                                && td.year == year                              
+                                select new { td, ln };
+
+                    var res = query.ToList();
+
+                    if (res.Count > 0)
+                    {
+                        var first = res.Sum(x=>x.td.tiempo_carga);
+                        TC = (decimal)first;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e.ToString());
+            }
+
+            return TC;
+        }
+
+        public decimal GetTiempoCarga(int year)
+        {
+            decimal TC = 0;
+
+            try
+            {
+                using (var context = new MttoAppEntities())
+                {
+                    var query = from td in context.kpis
+                                join ln in context.lineas
+                                on td.id_linea equals ln.id
+                                where td.year == year
+                                select new { td, ln };
+
+                    var res = query.ToList();
+
+                    if (res.Count > 0)
+                    {
+                        var first = res.Sum(x => x.td.tiempo_carga);
+                        TC = (decimal)first;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e.ToString());
+            }
+
+            return TC;
+        }
+
         public async Task<List<string>> GetDistinctYearAsync(Nullable<int> line)
         {
             List<string> listTC = new List<string>();
@@ -226,6 +322,220 @@ namespace DigiTools.Dao
                 Debug.WriteLine("Excepción al agregar línea: " + e.ToString());
             }
             return regs;
+        }
+
+        public decimal GetMttrByLineMonth(int line, int month, int year)
+        {
+            decimal mttr = 0;
+
+            try
+            {
+                using (var context = new MttoAppEntities())
+                {
+                    var query = from e in context.ewos
+                                join ln in context.lineas
+                                on e.id_area_linea equals ln.id
+                                where e.id_area_linea == line
+                                && e.notificacion_averia.Value.Month == (month)
+                                && e.notificacion_averia.Value.Year == (year)
+                                select new { e, ln };
+
+                    if (query != null)
+                    {
+                        var minT = query.ToList().Sum(x => x.e.tiempo_total);
+                        var avrs = query.ToList().Count;
+                        if (avrs > 0)
+                        {
+                            mttr = (decimal)minT / avrs;
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine("Error al consultar averias por líneas y mes: " + e.ToString());
+            }
+
+            return mttr;
+        }
+
+        public decimal GetMttrByPlant(int plant, int year)
+        {
+            decimal mttr = 0;
+
+            try
+            {
+                using (var context = new MttoAppEntities())
+                {
+                    var query = from e in context.ewos
+                                join ln in context.lineas
+                                on e.id_area_linea equals ln.id
+                                join p in context.plantas
+                                on ln.id_planta equals p.Id
+                                where ln.id_planta == plant
+                                && e.notificacion_averia.Value.Year == (year)
+                                select new { e, ln };
+
+                    if (query != null)
+                    {
+                        var minT = query.ToList().Sum(x => x.e.tiempo_total);
+                        var avrs = query.ToList().Count;
+                        if (avrs > 0)
+                        {
+                            mttr = (decimal)minT / avrs;
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine("Error al consultar averias por planta: " + e.ToString());
+            }
+
+            return mttr;
+        }
+
+        public decimal GetMttrBySite(int year)
+        {
+            decimal mttr = 0;
+
+            try
+            {
+                using (var context = new MttoAppEntities())
+                {
+                    var query = from e in context.ewos
+                                join ln in context.lineas
+                                on e.id_area_linea equals ln.id
+                                where e.notificacion_averia.Value.Year == (year)
+                                select new { e, ln };
+
+                    if (query != null)
+                    {
+                        var minT = query.ToList().Sum(x => x.e.tiempo_total);
+                        var avrs = query.ToList().Count;
+                        if (avrs > 0)
+                        {
+                            mttr = (decimal)minT / avrs;
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine("Error al consultar averias por site: " + e.ToString());
+            }
+
+            return mttr;
+        }
+
+        public decimal GetMtbfByLineMonth(int line, int month, int year)
+        {
+            decimal mtbf = 0;
+
+            try
+            {
+                using (var context = new MttoAppEntities())
+                {
+                    var query = from e in context.ewos
+                                join ln in context.lineas
+                                on e.id_area_linea equals ln.id
+                                where e.id_area_linea == line
+                                && e.notificacion_averia.Value.Month == (month)
+                                && e.notificacion_averia.Value.Year == (year)
+                                select new { e, ln };
+
+                    if (query != null)
+                    {
+                        var minT = query.ToList().Sum(x => x.e.tiempo_total);
+                        var avrs = query.ToList().Count;
+                        var tc = GetTiempoCarga(line, month, year);
+
+                        if (avrs > 0)
+                        {
+                            mtbf = (tc - ((decimal)minT / 60)) / avrs;
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine("Error al consultar averias por líneas y mes (MTBF): " + e.ToString());
+            }
+
+            return mtbf;
+        }
+
+        public decimal GetMtbfByPlant(int plant, int year)
+        {
+            decimal mtbf = 0;
+
+            try
+            {
+                using (var context = new MttoAppEntities())
+                {
+                    var query = from e in context.ewos
+                                join ln in context.lineas
+                                on e.id_area_linea equals ln.id
+                                join p in context.plantas
+                                on ln.id_planta equals p.Id
+                                where ln.id_planta == plant
+                                && e.notificacion_averia.Value.Year == (year)
+                                select new { e, ln };
+
+                    if (query != null)
+                    {
+                        var minT = query.ToList().Sum(x => x.e.tiempo_total);
+                        var avrs = query.ToList().Count;
+                        var tc = GetTiempoCarga(plant, year);
+
+                        if (avrs > 0)
+                        {
+                            mtbf = (tc - ((decimal)minT / 60)) / avrs;
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine("Error al consultar averias por planta (MTBF): " + e.ToString());
+            }
+
+            return mtbf;
+        }
+
+        public decimal GetMtbfBySite(int year)
+        {
+            decimal mtbf = 0;
+
+            try
+            {
+                using (var context = new MttoAppEntities())
+                {
+                    var query = from e in context.ewos
+                                join ln in context.lineas
+                                on e.id_area_linea equals ln.id
+                                where e.notificacion_averia.Value.Year == (year)
+                                select new { e, ln };
+
+                    if (query != null)
+                    {
+                        var minT = query.ToList().Sum(x => x.e.tiempo_total);
+                        var avrs = query.ToList().Count;
+                        var tc = GetTiempoCarga(year);
+
+                        if (avrs > 0)
+                        {
+                            mtbf = (tc - ((decimal)minT / 60)) / avrs;
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine("Error al consultar averias por site (MTBF): " + e.ToString());
+            }
+
+            return mtbf;
         }
     }
 }

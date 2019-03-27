@@ -13,6 +13,7 @@ namespace DigiTools.Dao
 {
     public class DaoEwo
     {
+
         public async Task<int> GetLastConsecutive()
         {
             int max = 0;
@@ -40,111 +41,7 @@ namespace DigiTools.Dao
 
             return max;
         }
-
-        public decimal GetMttrByLineMonth(int line, int month, int year)
-        {
-            decimal mttr = 0;
-
-            try
-            {               
-                using (var context = new MttoAppEntities())
-                {
-                    var query = from e in context.ewos
-                                join ln in context.lineas
-                                on e.id_area_linea equals ln.id
-                                where e.id_area_linea == line
-                                && e.notificacion_averia.Value.Month == (month)
-                                && e.notificacion_averia.Value.Year == (year)
-                                select new { e, ln };
-
-                    if (query!= null)
-                    {                        
-                        var minT = query.ToList().Sum(x=>x.e.tiempo_total);
-                        var avrs = query.ToList().Count;
-                        if (avrs>0)
-                        {
-                            mttr = (decimal)minT / avrs;
-                        }                        
-                    }                    
-                }  
-            }
-            catch (Exception e)
-            {
-                Debug.WriteLine("Error al consultar averias por líneas y mes: " + e.ToString());                
-            }
-
-            return mttr;
-        }
-
-        public decimal GetMttrByPlant(int plant, int year)
-        {
-            decimal mttr = 0;
-
-            try
-            {
-                using (var context = new MttoAppEntities())
-                {
-                    var query = from e in context.ewos
-                                join ln in context.lineas
-                                on e.id_area_linea equals ln.id
-                                join p in context.plantas
-                                on ln.id_planta equals p.Id
-                                where ln.id_planta == plant
-                                && e.notificacion_averia.Value.Year == (year)
-                                select new { e, ln };
-
-                    if (query != null)
-                    {
-                        var minT = query.ToList().Sum(x => x.e.tiempo_total);
-                        var avrs = query.ToList().Count;
-                        if (avrs > 0)
-                        {
-                            mttr = (decimal)minT / avrs;
-                        }
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                Debug.WriteLine("Error al consultar averias por planta: " + e.ToString());
-            }
-
-            return mttr;
-        }
-
-        public decimal GetMttrBySite(int year)
-        {
-            decimal mttr = 0;
-
-            try
-            {
-                using (var context = new MttoAppEntities())
-                {
-                    var query = from e in context.ewos
-                                join ln in context.lineas
-                                on e.id_area_linea equals ln.id
-                                where e.notificacion_averia.Value.Year == (year)
-                                select new { e, ln };
-
-                    if (query != null)
-                    {
-                        var minT = query.ToList().Sum(x => x.e.tiempo_total);
-                        var avrs = query.ToList().Count;
-                        if (avrs > 0)
-                        {
-                            mttr = (decimal)minT / avrs;
-                        }
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                Debug.WriteLine("Error al consultar averias por site: " + e.ToString());
-            }
-
-            return mttr;
-        }
-
+        
         public List<EwoTimesViewModel> GetEwoTime(int line, int year)
         {
             List<EwoTimesViewModel> list = new List<EwoTimesViewModel>();
