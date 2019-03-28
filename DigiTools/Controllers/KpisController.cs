@@ -143,7 +143,6 @@ namespace DigiTools.Controllers
                                 Line = id_line,
                                 LineName = daoLin.GetLinesById(id_line).First().nombre,
                                 Year = int.Parse(year),
-                                EsperaTecnico = 0,
                                 Mes = i,
                                 MesName = new DateTime(int.Parse(year), i, 1).ToString("MMMM", CultureInfo.CreateSpecificCulture("es")).ToUpperInvariant()
                             });
@@ -166,19 +165,49 @@ namespace DigiTools.Controllers
             return Json(mVM);
         }
 
-        
-
-        public List<int> GetEwoTimes(EwoTimeOpt opt, int line, string year)
+        [HttpPost]
+        public async Task<JsonResult> CalculateCharDataMAsync(int id_line, string year)
         {
-            List<int> values = new List<int>();
+            List<EwoTimesViewModelM> mVM = new List<EwoTimesViewModelM>();
 
-            for (int i = 1; i < 13; i++)
+            try
             {
-                
+                await Task.Run(() =>
+                {
+                    var valuesFromDB = daoE.GetEwoCCR(id_line, int.Parse(year));
+
+                    for (int i = 1; i < 13; i++)
+                    {
+                        var reg = valuesFromDB.Where(x => x.Mes == i).ToList();
+                        if (reg.Count == 0)
+                        {
+                            mVM.Add(new EwoTimesViewModelM()
+                            {
+                                Line = id_line,
+                                LineName = daoLin.GetLinesById(id_line).First().nombre,
+                                Year = int.Parse(year),                              
+                                Mes = i,
+                                MesName = new DateTime(int.Parse(year), i, 1).ToString("MMMM", CultureInfo.CreateSpecificCulture("es")).ToUpperInvariant()
+                            });
+                        }
+                        else if (reg.Count > 0)
+                        {
+                            EwoTimesViewModelM et = reg.ToList().First();
+                            et.Line = id_line;
+                            et.LineName = daoLin.GetLinesById(id_line).First().nombre;
+                            mVM.Add(et);
+                        }
+                    }
+                });
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine("Error al calcular CalculateCharDataMAsync() " + e.ToString());
             }
 
-                return null;
+            return Json(mVM);
         }
+
 
         //MTBF
         [HttpPost]

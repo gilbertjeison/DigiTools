@@ -9,6 +9,8 @@
 <link href="~/Scripts/plugins/slickgrid/examples.css" rel="stylesheet" />
 <!--YEARPICKER CSS-->
 <link href="~/Scripts/plugins/yearpicker/yearpicker.css" rel="stylesheet" />
+<!-- SWEETALERT Css -->
+<link href="~/Scripts/plugins/sweetalert/sweetalert.css" rel="stylesheet">
 
 <style>
     .input-group .form-line {
@@ -129,9 +131,9 @@
                             <label for="IdPlantaMod">Planta</label>
                             <div class="input-group">
                                 <div class="form-line">
-                                    <select name="IdPlantaMod" 
-                                            id="IdPlantaMod" 
-                                            class="selectpicker show-tick IdPlantaMod" 
+                                    <select name="IdPlantaMod"
+                                            id="IdPlantaMod"
+                                            class="selectpicker show-tick IdPlantaMod"
                                             data-width="auto" required>
                                         @foreach (var item in ViewBag.PlantasList)
                                         {
@@ -161,7 +163,7 @@
                             <label for="yearMod">Seleccione año</label>
                             <div class="input-group">
                                 <div class="form-line">
-                                    <input type="text" name="YearMod" value="" class="yearpicker form-control" required/>
+                                    <input type="text" name="YearMod" value="" class="yearpicker form-control" required />
                                 </div>
                             </div>
                         </div>
@@ -201,7 +203,8 @@
 <script src="~/Scripts/plugins/slickgrid/slick.grid.js"></script>
 <!--YEARPICKER JS-->
 <script src="~/Scripts/plugins/yearpicker/yearpicker.js"></script>
-
+<!-- SweetAlert Plugin Js -->
+<script src="~/Scripts/plugins/sweetalert/sweetalert.min.js"></script>
 
 <script>
 
@@ -486,7 +489,7 @@
 
         var form = $('#formNewTc')[0];
         var dataString = new FormData(form);
-        
+
 
         //VERIFICAR QUE LOS TIEMPOS DE CARGA DE LOS PARÁMETROS SELECCIONADOS NO EXISTAN EN LA BASE DE DATOS
         $.ajax({
@@ -495,13 +498,9 @@
             data: dataString,
             success: function (response) {
 
-                if (response == 12) {
-
-                }
-                console.log(response);
-                //MENSAJE DE CONFIRMACIÓN O ERROR
-                //if (response == "OK") {
-                swal("Tiempos de carga", "Tiempos: " + response, "success");
+                
+                swal("Tiempos de carga", "Transacción realizada correctamente ", "success");
+                location.reload();
                 //    $('#AddModal').modal('hide');
                 //    GotoLines();
                 //}
@@ -513,7 +512,7 @@
             },
             error: function (error) {
                 alert(error);
-            },            
+            },
             cache: false,
             contentType: false,
             processData:false

@@ -102,6 +102,71 @@ namespace DigiTools.Dao
             return list;
         }
 
+
+        public List<EwoTimesViewModelM> GetEwoCCR(int line, int year)
+        {
+            List<EwoTimesViewModelM> list = new List<EwoTimesViewModelM>();
+
+            try
+            {
+                using (var context = new MttoAppEntities())
+                {
+
+                    var query = (from e in context.ewos
+                                 join ln in context.lineas
+                                 on e.id_area_linea equals ln.id
+                                 where e.id_area_linea == line
+                                 && e.notificacion_averia.Value.Year == (year)
+                                 group e by new { e.notificacion_averia.Value.Month } into g
+                                 select new
+                                 {
+                                     g.Key.Month,
+                                     FactoresExt = g.Where(x => x.causa_raiz_index == 0).Count(),
+                                     FaltaCono = g.Where(x => x.causa_raiz_index == 1).Count(),
+                                     FaltaDis = g.Where(x => x.causa_raiz_index == 2).Count(),
+                                     FaltaMtto = g.Where(x => x.causa_raiz_index == 3).Count(),
+                                     CondSubEstOpe = g.Where(x => x.causa_raiz_index == 4).Count(),
+                                     FaltaConBas = g.Where(x => x.causa_raiz_index == 5).Count()
+
+                                 }).AsEnumerable()
+                                .Select(g => new
+                                {
+                                    g.Month,
+                                    g.FactoresExt,
+                                    g.FaltaCono,
+                                    g.FaltaDis,
+                                    g.FaltaMtto,
+                                    g.CondSubEstOpe,
+                                    g.FaltaConBas
+                                });
+
+                    if (query != null)
+                    {
+                        foreach (var item in query)
+                        {
+                            list.Add(new EwoTimesViewModelM()
+                            {
+                                Mes = item.Month,
+                                MesName = new DateTime(year, item.Month, 1).ToString("MMMM", CultureInfo.CreateSpecificCulture("es")).ToUpperInvariant(),
+                                FactoresExt = item.FactoresExt,
+                                FaltaCono = item.FaltaCono,
+                                FaltaDis = item.FaltaDis,
+                                FaltaMtto = item.FaltaMtto,
+                                CondSubEstOpe = item.CondSubEstOpe,
+                                FaltaConBas = item.FaltaConBas
+                            });
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine("Error al consultar causa ciclo raiz por líneas y mes MTBF: " + e.ToString());
+            }
+
+            return list;
+        }
+
         public async Task<KpiViewModel> GetEwoDesc(int id)
         {
             KpiViewModel lDecs = null;

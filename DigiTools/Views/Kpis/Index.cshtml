@@ -316,11 +316,6 @@
         $('.hddM').show("slow");
     }
 
-
-    $(function () {
-
-
-    });
 </script>
 <script>
     //FILL GRID
@@ -588,22 +583,21 @@
                         initGridM();
 
                         //INICIALIZAR OBJETO AJAX PARA TRAER DATOS DEL SERVIDOR
-                        //$.ajax({
-                        //    //PARAMETRIZAR SERVICIO AJAX
-                        //    url: url_filterChartM,
-                        //    type: 'post',
-                        //    data: { id_line: id_lineM, year: yearM },
-                        //    //MOSTRAR LOADER ANTES DE INICIAR LA SOLICITUD    
-                        //    success: function (response_chart) {
+                        $.ajax({
+                            //PARAMETRIZAR SERVICIO AJAX
+                            url: url_filterChartM,
+                            type: 'post',
+                            data: { id_line: id_lineM, year: yearM },
+                            //MOSTRAR LOADER ANTES DE INICIAR LA SOLICITUD    
+                            success: function (response_chart) {
 
-                        //        InitCharM(response_chart,dataM);
-                        //    },
-                        //    //EN CASO DE ERROR, IMPRIMIRLO
-                        //    error: function (request, status, error) {
-                        //        alert('Error al generar información MTBF: ' + error + request.responseText);
-
-                        //    }
-                        //});
+                                InitCharM(response_chart,dataM);
+                            },
+                            //EN CASO DE ERROR, IMPRIMIRLO
+                            error: function (request, status, error) {
+                                alert('Error al generar información MTBF: ' + error + request.responseText);
+                            }
+                        });
                         //OCULTAR LOADER UNA VEZ CARAGADA LA INFORMACIÓN
                         $('.page-loader-wrapper').fadeOut();
                     },
@@ -740,9 +734,7 @@
             }
         });
     }
-</script>
 
-<script>
     function InitCharM(response_chart, d) {
 
         $("canvas#chartM").remove();
@@ -752,15 +744,18 @@
         // set default no fill beneath the line
 
         Chart.defaults.global.elements.line.fill = false;
-
-        var dataEspTec = response_chart.map(e => e.EsperaTecnico);
-        var dataTiemDiag = response_chart.map(e => e.TiempoDiagnostico);
-        var dataEsperaRep = response_chart.map(e => e.EsperaRepuestos);
-        var dataTiempoRep = response_chart.map(e => e.TiempoReparacion);
-        var dataTiempoPru = response_chart.map(e => e.TiempoPruebas);
+        
+        var dataFactoresExt = response_chart.map(e => e.FactoresExt);
+        var dataFaltaCono = response_chart.map(e => e.FaltaCono);
+        var dataFaltaDis = response_chart.map(e => e.FaltaDis);
+        var dataFaltaMtto = response_chart.map(e => e.FaltaMtto);
+        var dataCondSubEstOpe = response_chart.map(e => e.CondSubEstOpe);
+        var dataFaltaConBas = response_chart.map(e => e.FaltaConBas);
+       
         var Meses = response_chart.map(e => e.MesName);
-        var Mttr = d.map(e => e.Mttr);
-        var max_mttr = Math.max.apply(Math, Mttr);
+        var Mtbf = d.map(e => e.Mtbf);
+        var max_mtbf = Math.max.apply(Math, Mtbf);
+        var max_ccr = Math.max.apply(Math, dataFactoresExt, dataFaltaCono, dataFaltaDis, dataFaltaMtto, dataCondSubEstOpe, dataFaltaConBas);
         // stacked bar with 2 unstacked lines - nope
         var barChartData = {
 
@@ -768,50 +763,57 @@
             datasets: [
                 {
                     type: 'line',
-                    label: 'MTTR',
+                    label: 'MTBF',
                     yAxisID: "y-axis-1",
                     backgroundColor: "rgba(151,187,205,0.15)",
-                    data: Mttr
+                    data: Mtbf
                 },
                 {
                     type: 'bar',
-                    label: 'T. de espera inicial del técnico',
+                    label: 'Factores externos [FI]',
                     yAxisID: "y-axis-0",
                     backgroundColor: "rgb(255, 99, 132)",
-                    data: dataEspTec
+                    data: dataFactoresExt
                 },
                 {
                     type: 'bar',
-                    label: 'T. de diagnóstico',
+                    label: 'Falta de Conocimiento [PD]',
                     yAxisID: "y-axis-0",
                     backgroundColor: "rgb(255, 159, 64)",
-                    data: dataTiemDiag
+                    data: dataFaltaCono
                 },
                 {
                     type: 'bar',
-                    label: 'T. espera por repuestos',
+                    label: 'Falta de Diseño [FI]',
                     yAxisID: "y-axis-0",
                     backgroundColor: "rgb(255, 205, 86)",
-                    data: dataEsperaRep
+                    data: dataFaltaDis
                 },
                 {
                     type: 'bar',
-                    label: 'T. de reparación o cambio de piezas',
+                    label: 'Falta de Mantenimiento [PM]',
                     yAxisID: "y-axis-0",
                     backgroundColor: "rgb(75, 192, 192)",
-                    data: dataTiempoRep
+                    data: dataFaltaMtto
                 },
                 {
                     type: 'bar',
-                    label: 'Pruebas y tiempo de arranque',
+                    label: 'Condiciones Sub estandar de operación [PD]',
                     yAxisID: "y-axis-0",
                     backgroundColor: "rgb(54, 162, 235)",
-                    data: dataTiempoPru
+                    data: dataCondSubEstOpe
+                },
+                {
+                    type: 'bar',
+                    label: 'Falta de Condiciones básicas [AA]',
+                    yAxisID: "y-axis-0",
+                    backgroundColor: "rgb(250, 52, 36)",
+                    data: dataFaltaConBas
                 }
             ]
         };
 
-        var ctx = document.getElementById("chart").getContext("2d");
+        var ctx = document.getElementById("chartM").getContext("2d");
         // allocate and initialize a chart
         var ch = new Chart(ctx, {
             type: 'bar',
@@ -819,7 +821,7 @@
             options: {
                 title: {
                     display: true,
-                    text: "MTTR (minutos) - Stacked (combinado)"
+                    text: "Stacked (combinado)"
                 },
                 tooltips: {
                     mode: 'label'
@@ -835,20 +837,24 @@
                         id: "y-axis-0",
                         ticks: {
                             beginAtZero: true,
-                            suggestedMax: max_mttr
+                            suggestedMax: max_ccr
                         },
                         scaleLabel: {
                             display: true,
-                            labelString: 'Tiempo de Averías'
+                            labelString: 'Número de averías'
                         }
                     }, {
-                        display: false,
+                        display: true,
                         stacked: false,
                         position: "right",
                         id: "y-axis-1",
                         ticks: {
                             beginAtZero: true,
-                            suggestedMax: max_mttr
+                            suggestedMax: max_mtbf
+                        },
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'MTBF - HORAS'
                         }
                     }]
                 }
