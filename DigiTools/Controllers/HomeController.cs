@@ -35,8 +35,7 @@ namespace DigiTools.Controllers
         DaoAcciones daoAcc = new DaoAcciones();
         DaoEwo daoEwo = new DaoEwo();
         DaoTecnicos daoTec = new DaoTecnicos();
-        int Consecutivo = 0;
-        AspNetUsers aspNetUsers;
+        int Consecutivo = 0;         
         static string ewo_images = "~/Content/images/ewo_images/";
         
         private static readonly int LINES = 21;
@@ -44,7 +43,7 @@ namespace DigiTools.Controllers
 
         public async Task<ActionResult> Index()
         {
-            aspNetUsers = daoUser.GetUser(User.Identity.GetUserId());
+            AspNetUsers aspNetUsers = daoUser.GetUser(User.Identity.GetUserId());
 
             var req = Request;
             if (aspNetUsers.IdRol.Equals("65b01f2a-0b46-4d0c-a227-304dc22e2f9d"))
