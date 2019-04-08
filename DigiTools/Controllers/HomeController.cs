@@ -37,44 +37,53 @@ namespace DigiTools.Controllers
         DaoTecnicos daoTec = new DaoTecnicos();
         int Consecutivo = 0;         
         static string ewo_images = "~/Content/images/ewo_images/";
-        
+        AspNetUsers aspNetUsers;
+
+
         private static readonly int LINES = 21;
         private static readonly int BREAKDOWNSTYPES = 13;
 
-        public async Task<ActionResult> Index()
+        public ActionResult IndexMec()
         {
-            AspNetUsers aspNetUsers = daoUser.GetUser(User.Identity.GetUserId());
+            aspNetUsers = daoUser.GetUser(User.Identity.GetUserId());
 
             var req = Request;
             if (aspNetUsers.IdRol.Equals("65b01f2a-0b46-4d0c-a227-304dc22e2f9d"))
-            {
-                var kpiWiewModel = new KpiViewModel();
+            {                          
 
-                //LISTA DE PLANTAS
-                var list = await daoPlantas.GetPlants();
-                list.Insert(0, new plantas() { Id = 0, nombre = "Seleccione planta..." });
-                kpiWiewModel.PlantaList = new SelectList(list, "Id", "nombre");
-
-                //LISTA DE TIPOS DE LÍNEA
-                var listTL = await daoTD.GetTypesAsync(LINES);
-                listTL.Insert(0, new tipos_data() { Id = 0, descripcion = "Seleccione tipo de línea..." });
-                kpiWiewModel.TipoLineaList = new SelectList(listTL, "Id", "descripcion");
-
-                //LISTA DE TIPOS DE AVERÍAS
-                var listA = await daoTD.GetTypesAsync(BREAKDOWNSTYPES);
-                listA.Insert(0, new tipos_data() { Id = 0, descripcion = "Seleccione tipo de avería..." });
-                kpiWiewModel.TipoAveriaList = new SelectList(listA, "Id", "descripcion");
-
-                kpiWiewModel.IdDiligenciado = aspNetUsers.Nombres +" " + aspNetUsers.Apellidos;
-                Consecutivo = await daoEwo.GetLastConsecutive();
-                ViewBag.Cons = "00" + Consecutivo;                
-
-                return View(kpiWiewModel);
+                return View();
             }
             else
             {
                 return View("IndexAdmin");
             }            
+        }
+
+        public async Task<ActionResult> Index()
+        {
+            aspNetUsers = daoUser.GetUser(User.Identity.GetUserId());
+            var kpiWiewModel = new KpiViewModel();
+
+            //LISTA DE PLANTAS
+            var list = await daoPlantas.GetPlants();
+            list.Insert(0, new plantas() { Id = 0, nombre = "Seleccione planta..." });
+            kpiWiewModel.PlantaList = new SelectList(list, "Id", "nombre");
+
+            //LISTA DE TIPOS DE LÍNEA
+            var listTL = await daoTD.GetTypesAsync(LINES);
+            listTL.Insert(0, new tipos_data() { Id = 0, descripcion = "Seleccione tipo de línea..." });
+            kpiWiewModel.TipoLineaList = new SelectList(listTL, "Id", "descripcion");
+
+            //LISTA DE TIPOS DE AVERÍAS
+            var listA = await daoTD.GetTypesAsync(BREAKDOWNSTYPES);
+            listA.Insert(0, new tipos_data() { Id = 0, descripcion = "Seleccione tipo de avería..." });
+            kpiWiewModel.TipoAveriaList = new SelectList(listA, "Id", "descripcion");
+
+            kpiWiewModel.IdDiligenciado = aspNetUsers.Nombres + " " + aspNetUsers.Apellidos;
+            Consecutivo = await daoEwo.GetLastConsecutive();
+            ViewBag.Cons = "00" + Consecutivo;
+
+            return View(kpiWiewModel);
         }
 
         [HttpPost]

@@ -4434,6 +4434,7 @@
     <Content Include="Views\Kpis\Details.cshtml" />
     <Content Include="Views\Kpis\Edit.cshtml" />
     <Content Include="Views\Kpis\Index.cshtml" />
+    <Content Include="Views\Home\IndexMec.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
