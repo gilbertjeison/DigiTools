@@ -1,0 +1,496 @@
+﻿@model DigiTools.Database.ewos
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>ewos</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.consecutivo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.consecutivo)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.id_area_linea)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.id_area_linea)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.id_equipo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.id_equipo)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.fecha_ewo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.fecha_ewo)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.aviso_numero)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.aviso_numero)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.id_tecnico)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.id_tecnico)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.id_tipo_averia)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.id_tipo_averia)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.id_turno)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.id_turno)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.notificacion_averia)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.notificacion_averia)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.inicio_reparacion)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.inicio_reparacion)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.tiempo_espera_tecnico)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.tiempo_espera_tecnico)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.tiempo_diagnostico)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.tiempo_diagnostico)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.tiempo_espera_repuestos)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.tiempo_espera_repuestos)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.tiempo_reparacion)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.tiempo_reparacion)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.tiempo_pruebas)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.tiempo_pruebas)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.fin_reparacion)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.fin_reparacion)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.tiempo_total)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.tiempo_total)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.imagen_1)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.imagen_1)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.imagen_2)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.imagen_2)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.desc_imagen_1)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.desc_imagen_1)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.desc_imagen_2)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.desc_imagen_2)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.desc_averia)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.desc_averia)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.cambio_componente)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.cambio_componente)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ajuste)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ajuste)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.what)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.what)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.where)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.where)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.when)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.when)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.who)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.who)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.wich)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.wich)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.how)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.how)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.fenomeno)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.fenomeno)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.gemba)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.gemba)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.gemba_ok)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.gemba_ok)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.gembutsu)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.gembutsu)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.gembutsu_ok)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.gembutsu_ok)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.genjitsu)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.genjitsu)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.genjitsu_ok)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.genjitsu_ok)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.genri)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.genri)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.genri_ok)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.genri_ok)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.gensoku)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.gensoku)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.gensoku_ok)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.gensoku_ok)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.imagen_3)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.imagen_3)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.imagen_4)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.imagen_4)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.desc_imagen_3)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.desc_imagen_3)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.desc_imagen_4)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.desc_imagen_4)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.fecha_ultimo_mtto)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.fecha_ultimo_mtto)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.fecha_proximo_mtto)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.fecha_proximo_mtto)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.falla_index)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.falla_index)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.causa_raiz_index)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.causa_raiz_index)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.tecnicos_man_involucrados)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.tecnicos_man_involucrados)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.operarios_involucrados)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.operarios_involucrados)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.elaborador_analisis)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.elaborador_analisis)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.fecha_analisis)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.fecha_analisis)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.definidor_contramedidas)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.definidor_contramedidas)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.fecha_contramedida)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.fecha_contramedida)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.validador_ejecucion)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.validador_ejecucion)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.fecha_validacion)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.fecha_validacion)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.user_id)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.user_id)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.kpi)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.kpi)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-default" /> |
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    }
+</div>

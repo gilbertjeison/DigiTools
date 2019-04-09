@@ -79,6 +79,9 @@
     <link href="~/Content/Adminbsb/themes/all-themes.min.css" rel="stylesheet" />
 
     <style>
+        .card {
+            border-radius: 10px;
+        }
         /*#loader {
             position: fixed;
             margin: 50%;
@@ -418,22 +421,6 @@
                                             </li>
                                         </ul>
                                     </li>
-                                    @*<li class="@IsActive("Index","Kpis")">
-                                            <a href="#" class="menu-toggle">
-                                                <span>KPIS</span>
-                                            </a>
-                                            <ul class="ml-menu">
-                                                <li class="@IsActive("Index","TiemposCarga")">
-                                                    @Html.ActionLink("TIEMPOS DE CARGA", "Index", "TiemposCarga")
-                                                </li>
-                                                <li class="@IsActive("Index","Kpis")">
-                                                    @Html.ActionLink("MTTR", "Index", "Kpis")
-                                                </li>
-                                                <li class="@IsActive("Create","Kpis")">
-                                                    @Html.ActionLink("MTBF", "Create", "Kpis")
-                                                </li>
-                                            </ul>
-                                        </li>*@
                                     <li class="@IsActive("Index","TiemposCarga")">
                                         <span>@Html.ActionLink("TIEMPOS DE CARGA", "Index", "TiemposCarga")</span>
                                     </li>
@@ -442,6 +429,12 @@
                                     </li>
 
                                 </ul>
+                            </li>
+                            <li class="@IsActiveController("Ewos","")">
+                                <a href="@Url.Action("Index", "Ewos")">
+                                    <i class="material-icons">settings_applications</i>
+                                    <span>CONTROL DE AVERÍAS</span>
+                                </a>
                             </li>
                             <li class="@IsActiveController("MachineLedger","")">
                                 <a href="@Url.Action("Index", "MachineLedger")">

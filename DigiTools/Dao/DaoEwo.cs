@@ -102,7 +102,6 @@ namespace DigiTools.Dao
             return list;
         }
 
-
         public List<EwoTimesViewModelM> GetEwoCCR(int line, int year)
         {
             List<EwoTimesViewModelM> list = new List<EwoTimesViewModelM>();
@@ -207,6 +206,84 @@ namespace DigiTools.Dao
             }
 
             return lDecs;
+        }
+
+        public async Task<List<KpiViewModel>> GetEwoList()
+        {
+            List<KpiViewModel> list = new List<KpiViewModel>();
+
+            try
+            {
+                using (var context = new MttoAppEntities())
+                {
+                    var query = from e in context.ewos
+                                join l in context.lineas
+                                on e.id_area_linea equals l.id
+                                join m in context.maquinas
+                                on e.id_equipo equals m.Id
+                                join t in context.AspNetUsers
+                                on e.id_tecnico equals t.Id
+                                join ta in context.tipos_data
+                                on e.id_tipo_averia equals ta.Id                               
+                                select new { e, m, l, t, ta };
+
+                    var data = await query.ToListAsync();
+
+                    foreach (var item in data.ToList())
+                    {
+                        list.Add(new KpiViewModel()
+                        {
+                            AreaLinea = item.l.nombre,
+                            Equipo = item.m.nombre,
+                            DiligenciadoPor = item.t.Nombres + " " + item.t.Apellidos,
+                            TipoAveria = item.ta.descripcion,
+                            IdTipoAveria = (int)item.e.id_tipo_averia,
+                            TiempoTotal = (int)item.e.tiempo_total,
+                            Fecha = (DateTime)item.e.fecha_ewo,
+                            CicloRaiz = (int)item.e.causa_raiz_index,
+                            DescCicloRaiz = DesCausaRaiz(item.e.causa_raiz_index)
+                        });
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine("Excepción al momento de consultar consolodado de Ewos: "+e.ToString());
+            }
+
+            return list;
+        }
+
+        private string DesCausaRaiz(int? index)
+        {
+            string r = "";
+
+            switch (index)
+            {
+                case 0:
+                    r = "Factores externos [FI]";
+                    break;
+                case 1:
+                    r = "Falta de Conocimiento [PD]";
+                    break;
+                case 2:
+                    r = "Falta de Diseño [FI]";
+                    break;
+                case 3:
+                    r = "Falta de Mantenimiento [PM]";
+                    break;
+                case 4:
+                    r = "Condiciones Sub estandar de operación [PD]";
+                    break;
+                case 5:
+                    r = "Falta de Condiciones básicas [AA]";
+                    break;
+                default:
+                    r = "None!";
+                    break;
+            }
+
+            return r;
         }
 
         public async Task<int> AddEwo(ewos ewo)

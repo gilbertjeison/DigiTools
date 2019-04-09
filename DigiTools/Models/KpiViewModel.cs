@@ -104,6 +104,7 @@ namespace DigiTools.Models
 
         public int CausaRaiz { get; set; }
         public int CicloRaiz { get; set; }
+        public string DescCicloRaiz { get; set; }
         public string FchUltimoMtto { get; set; }
         public string FchProxMtto { get; set; }
         
@@ -145,8 +146,8 @@ namespace DigiTools.Models
         public int IdTipoLinea { get; set; }
         public SelectList TipoLineaList { get; set; }
 
-        
-        
+
+        public string FormattedDate => Fecha.ToShortDateString();
 
 
         [Display(Name = "Descripción de la avería")]

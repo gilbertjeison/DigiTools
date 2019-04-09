@@ -224,6 +224,7 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\ErrorPageController.cs" />
+    <Compile Include="Controllers\EwosController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\KpisController.cs" />
     <Compile Include="Controllers\MachineLedgerController.cs" />
@@ -4435,6 +4436,11 @@
     <Content Include="Views\Kpis\Edit.cshtml" />
     <Content Include="Views\Kpis\Index.cshtml" />
     <Content Include="Views\Home\IndexMec.cshtml" />
+    <Content Include="Views\Ewos\Create.cshtml" />
+    <Content Include="Views\Ewos\Delete.cshtml" />
+    <Content Include="Views\Ewos\Details.cshtml" />
+    <Content Include="Views\Ewos\Edit.cshtml" />
+    <Content Include="Views\Ewos\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
