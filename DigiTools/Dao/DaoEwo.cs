@@ -188,26 +188,78 @@ namespace DigiTools.Dao
 
                     var data = await query.ToListAsync();
 
-                    foreach (var item in data.ToList())
+                    foreach (var i in data.ToList())
                     {
                         lDecs= new KpiViewModel()
                         {
-                            AreaLinea = item.l.nombre,
-                            Equipo = item.m.nombre,
-                            DiligenciadoPor = item.t.Nombres +" "+ item.t.Apellidos,
-                            TipoAveria = item.ta.descripcion
+                            AreaLinea = i.l.nombre,
+                            Equipo = i.m.nombre,
+                            DiligenciadoPor = i.t.Nombres +" "+ i.t.Apellidos,
+                            TipoAveria = i.ta.descripcion,
+                            Consecutivo = i.e.consecutivo.Value,
+                            Fecha = i.e.fecha_ewo.Value,
+                            NumAviso = i.e.aviso_numero,
+                            Turno = i.e.id_turno.Value,
+                            HrNotAveD = i.e.notificacion_averia.Value,
+                            HrIniRepD = i.e.inicio_reparacion.Value,
+                            TEspIniTec = i.e.tiempo_espera_tecnico.Value,
+                            TDiagn = i.e.tiempo_diagnostico.Value,
+                            TEspRep = i.e.tiempo_espera_repuestos.Value,
+                            TRepCamP = i.e.tiempo_reparacion.Value,
+                            PruTieArr = i.e.tiempo_pruebas.Value,
+                            HrFinRepEntD = i.e.fin_reparacion.Value,
+                            TiempoTotal = i.e.tiempo_total.Value,
+                            PathImage1 = i.e.imagen_1,
+                            PathImage2 = i.e.imagen_2,
+                            PathImagePQ1 = i.e.imagen_3,
+                            PathImagePQ2 = i.e.imagen_4,
+                            DescImg1 = i.e.desc_imagen_1,
+                            DescImg2 = i.e.desc_imagen_2,
+                            DescImgPQ1 = i.e.desc_imagen_3,
+                            DescImgPQ2 = i.e.desc_imagen_4,
+                            DescripcionAveria = i.e.desc_averia,
+                            Accion = i.e.ajuste == true ? 0:1,
+                            GembaOkB = i.e.gemba_ok.Value,
+                            GembutsuOkB = i.e.gembutsu_ok.Value,
+                            GensokuOkB = i.e.gensoku_ok.Value,
+                            GenriOkB = i.e.genri_ok.Value,
+                            GenjitsuOkB = i.e.genjitsu_ok.Value,
+                            GembaDesc = i.e.gemba,
+                            GembutsuDesc = i.e.gembutsu,
+                            GenjitsuDesc = i.e.genjitsu,
+                            GenriDesc = i.e.genri,
+                            GensokuDesc = i.e.gensoku,
+                            QueDesc = i.e.what,
+                            DondeDesc = i.e.where,
+                            CuandoDesc = i.e.when,
+                            QuienDesc = i.e.who,
+                            CualDesc = i.e.wich,
+                            ComoDesc = i.e.how,
+                            FenomenoDesc = i.e.fenomeno,
+                            FchUltimoMttoD = i.e.fecha_ultimo_mtto.Value,
+                            FchProxMttoD = i.e.fecha_proximo_mtto.Value,
+                            IdTecMattInv = i.e.tecnicos_man_involucrados,
+                            IdOpersInv = i.e.operarios_involucrados,
+                            IdAnaElab = i.e.elaborador_analisis,
+                            FchAnaElab = i.e.fecha_analisis.Value.ToShortDateString(),
+                            IdContMedDef = i.e.definidor_contramedidas,
+                            FchDefConMed = i.e.fecha_contramedida.Value.ToShortDateString(),
+                            FchEjeVal = i.e.fecha_validacion.Value.ToShortDateString(),
+                            IdEjeValPor = i.e.validador_ejecucion,
+                            CausaRaiz = i.e.falla_index.Value,
+                            CicloRaiz = i.e.causa_raiz_index.Value
                         };
                     }
                 }
             }
             catch (Exception e)
             {
-                Debug.WriteLine(e.ToString());
+                Debug.WriteLine("Error al generar formato ewo (SOMEHELPERS): "+e.ToString());
             }
 
             return lDecs;
         }
-
+              
         public async Task<List<KpiViewModel>> GetEwoList()
         {
             List<KpiViewModel> list = new List<KpiViewModel>();
@@ -233,6 +285,7 @@ namespace DigiTools.Dao
                     {
                         list.Add(new KpiViewModel()
                         {
+                            Id = item.e.Id,
                             AreaLinea = item.l.nombre,
                             Equipo = item.m.nombre,
                             DiligenciadoPor = item.t.Nombres + " " + item.t.Apellidos,
@@ -249,6 +302,54 @@ namespace DigiTools.Dao
             catch (Exception e)
             {
                 Debug.WriteLine("Excepción al momento de consultar consolodado de Ewos: "+e.ToString());
+            }
+
+            return list;
+        }
+
+        public async Task<List<KpiViewModel>> GetEwoList(string id)
+        {
+            List<KpiViewModel> list = new List<KpiViewModel>();
+
+            try
+            {
+                using (var context = new MttoAppEntities())
+                {
+                    var query = from e in context.ewos
+                                join l in context.lineas
+                                on e.id_area_linea equals l.id
+                                join m in context.maquinas
+                                on e.id_equipo equals m.Id
+                                join t in context.AspNetUsers
+                                on e.id_tecnico equals t.Id
+                                join ta in context.tipos_data
+                                on e.id_tipo_averia equals ta.Id
+                                where e.id_tecnico == id
+                                select new { e, m, l, t, ta };
+
+                    var data = await query.ToListAsync();
+
+                    foreach (var item in data.ToList())
+                    {
+                        list.Add(new KpiViewModel()
+                        {
+                            Id = item.e.Id,
+                            AreaLinea = item.l.nombre,
+                            Equipo = item.m.nombre,
+                            DiligenciadoPor = item.t.Nombres + " " + item.t.Apellidos,
+                            TipoAveria = item.ta.descripcion,
+                            IdTipoAveria = (int)item.e.id_tipo_averia,
+                            TiempoTotal = (int)item.e.tiempo_total,
+                            Fecha = (DateTime)item.e.fecha_ewo,
+                            CicloRaiz = (int)item.e.causa_raiz_index,
+                            DescCicloRaiz = DesCausaRaiz(item.e.causa_raiz_index)
+                        });
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine("Excepción al momento de consultar consolodado de Ewos: " + e.ToString());
             }
 
             return list;

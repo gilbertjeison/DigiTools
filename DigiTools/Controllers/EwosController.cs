@@ -5,17 +5,20 @@ using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Net;
-using System.Web;
 using System.Web.Mvc;
 using DigiTools.Database;
 using DigiTools.Dao;
 using System.Linq.Dynamic;
+using Microsoft.AspNet.Identity;
+using DigiTools.Models;
+using DigiTools.Utils;
 
 namespace DigiTools.Controllers
 {
     [Authorize]
     public class EwosController : Controller
     {
+        DaoUsuarios daoUser = new DaoUsuarios();
         DaoEwo daoE = new DaoEwo();
         private MttoAppEntities db = new MttoAppEntities();
 
@@ -28,8 +31,12 @@ namespace DigiTools.Controllers
         [HttpPost]
         public async Task<ActionResult> LoadDataAsync()
         {
+            Task<List<KpiViewModel>> kvm;
+
             try
             {
+                AspNetUsers aspNetUsers = daoUser.GetUser(User.Identity.GetUserId());
+
                 var draw = Request.Form["draw"];
                 var start = Request.Form["start"];
                 var length = Request.Form["length"];
@@ -42,10 +49,16 @@ namespace DigiTools.Controllers
                 int skip = start.ToString() != null ? Convert.ToInt32(start) : 0;
                 int recordsTotal = 0;
 
-                // Getting all user data
-                var userData = daoE.GetEwoList();
+                if (aspNetUsers.IdRol.Equals(Utils.SomeHelpers.ROL_MEC))
+                {
+                    kvm = daoE.GetEwoList(aspNetUsers.Id);
+                }
+                else
+                {
+                    kvm = daoE.GetEwoList();
+                }                               
 
-                var data1 = await userData;
+                var data1 = await kvm;
 
                 //Sorting
                 if (!(string.IsNullOrEmpty(sortColumn) && string.IsNullOrEmpty(sortColumnDirection)))
@@ -71,19 +84,31 @@ namespace DigiTools.Controllers
                 throw;
             }            
         }
+
+        [HttpPost]
+        public async Task<ActionResult> GenerateEwoFile(int id)
+        {
+            string nfilename = await SomeHelpers.GenerateEwoFile(id);
+            
+            if (!nfilename.Equals("-1")) 
+            {
+                return Json(new { message = "1" });                
+            }
+            else
+            {
+                return Json(new { message = "-1" });
+            }            
+        }
+
+        public ActionResult DownloadEwoFile()
+        {
+            string nfilename = Server.MapPath("~/Content/formats/FORMATO_EWO.XLSX");
+
+            return File(nfilename, "application/vnd.ms-excel", "Ewo Web Format.xlsx");
+        }
         // GET: Ewos/Details/5
         public ActionResult Details()
-        {
-            //int? id = 0;
-            //if (id == null)
-            //{
-            //    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            //}
-            //ewos ewos = await db.ewos.FindAsync(id);
-            //if (ewos == null)
-            //{
-            //    return HttpNotFound();
-            //}
+        {            
             return View();
         }
 

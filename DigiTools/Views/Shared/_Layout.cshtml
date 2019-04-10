@@ -477,16 +477,17 @@
                     <div class="menu">
                         <ul class="list">
                             <li class="header">MENÚ PRINCIPAL (MECÁNICO)</li>
-                            <li class="@IsActive("Index","Home")">
-                                <a href="#" class="menu-toggle">
+                            <li class="@IsActiveController("Ewos","")">
+                                <a href="@Url.Action("Index", "Ewos")">
                                     <i class="material-icons">settings_applications</i>
                                     <span>CONTROL DE AVERÍAS</span>
                                 </a>
-                                <ul class="ml-menu">
-                                    <li class="@IsActive("Index","Home")">
-                                        @Html.ActionLink("FORMATO EWO", "Index", "Home")
-                                    </li>
-                                </ul>
+                            </li>
+                            <li class="@IsActiveController("MachineLedger","")">
+                                <a href="@Url.Action("Index", "MachineLedger")">
+                                    <i class="material-icons">line_style</i>
+                                    <span>MACHINE LEDGER</span>
+                                </a>
                             </li>
                         </ul>
                     </div>

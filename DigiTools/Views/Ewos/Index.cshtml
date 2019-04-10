@@ -4,7 +4,8 @@
 <link href="~/Scripts/plugins/jquery-datatable/skin/bootstrap/css/dataTables.bootstrap.min.css" rel="stylesheet">
 <link href="~/Scripts/plugins/jquery-datatable/Responsive-2.2.2/css/responsive.dataTables.min.css" rel="stylesheet">
 <link href="~/Scripts/plugins/jquery-datatable/FixedHeader-3.1.4/css/fixedHeader.bootstrap.min.css" rel="stylesheet" />
-
+<!-- SWEETALERT Css -->
+<link href="~/Scripts/plugins/sweetalert/sweetalert.css" rel="stylesheet">
 <style>
     .confirmButton {
         margin-right: 10px;
@@ -12,7 +13,7 @@
 
     .modal-content {
         box-shadow: none;
-    }    
+    }
 </style>
 
 <div class="card">
@@ -20,7 +21,7 @@
         <h2>OPCIONES</h2>
     </div>
     <div class="body">
-        @Html.ActionLink("Diligenciar nuevo EWO","Index", "Home", null, new { @class = "btn btn-primary waves-effect" })
+        @Html.ActionLink("Diligenciar nuevo EWO", "Index", "Home", null, new { @class = "btn btn-primary waves-effect" })
     </div>
 </div>
 
@@ -69,7 +70,7 @@
             }],
             "columns": [
                 { "data": "AreaLinea", "name": "AreaLinea", "autoWidth": true },
-                { "data": "Equipo", "name": "Equipo", "autoWidth": true },                
+                { "data": "Equipo", "name": "Equipo", "autoWidth": true },
                 {
                     "data": "TipoAveria", "name": "TipoAveria", "autoWidth": true,
                     render: function (data, type, value) {
@@ -93,17 +94,17 @@
                 { "data": "DiligenciadoPor", "name": "DiligenciadoPor", "autoWidth": true },
                 {
                     data: null, "autoWidth": true, render: function (data, type, row) {
-                        return "<a href='#' class='btn btn-success waves-effect' >Generar excel</a>";
+                        return "<a class='btn btn-success waves-effect'  onClick=DownloadEwoFile('" +row.Id+"'); >Generar excel</a>";
                     }
                 },
                 {
                     data: null, "autoWidth": true, render: function (data, type, row) {
-                        return "<a href='#' class='btn btn-info waves-effect'>Editar</a>";
+                        return "<a class='btn btn-info waves-effect'>Editar</a>";
                     }
                 },
                 {
                     data: null, "autoWidth": true, render: function (data, type, row) {
-                        return "<a href='#' class='btn btn-danger waves-effect'>Eliminar</a>";
+                        return "<a class='btn btn-danger waves-effect'>Eliminar</a>";
                     }
                 }
             ],
@@ -112,6 +113,37 @@
             }
         });
     });
+
+    function DownloadEwoFile(id) {
+        $.ajax({
+            //PARAMETRIZAR SERVICIO AJAX
+            url: '@Url.Action("GenerateEwoFile", "Ewos")',
+            type: 'post',
+            data: { id: id },
+            //MOSTRAR LOADER ANTES DE INICIAR LA SOLICITUD
+            beforeSend: function () {
+                $('.page-loader-wrapper').fadeIn();
+            },
+            success: function (response) {
+                if (response == "1") {
+                    window.location = '/Ewos/DownloadEwoFile';
+                }
+                else {
+                    showSweetAlert('FORMATO EWO ', 'Error al generar formato ewo, inténtelo de nuevo!', 'error');
+                }
+                $('.page-loader-wrapper').fadeOut();
+            },
+            //EN CASO DE ERROR, IMPRIMIRLO
+            error: function (request, status, error) {
+                alert('Error al generar formato ewo: ' + request.responseText);
+            }
+        });
+    }
+
+    function showSweetAlert(titulo, mensaje, tipo) {
+        swal(titulo, mensaje, tipo);
+        //$('.showSweetAlert h2').addClass('tit');
+    }
 </script>
 
 <!-- Jquery DataTable Plugin Js -->
@@ -122,6 +154,9 @@
 <script src="~/Scripts/plugins/jquery-datatable/Responsive-2.2.2/js/dataTables.responsive.min.js"></script>
 <script src="~/Scripts/plugins/jquery-datatable/Responsive-2.2.2/js/responsive.bootstrap.min.js"></script>
 <script src="~/Scripts/plugins/jquery-datatable/Responsive-2.2.2/js/responsive.bootstrap.min.js"></script>
+
+@*SWEETALERT*@
+<script src="~/Scripts/plugins/sweetalert/sweetalert.min.js"></script>
 
 
 

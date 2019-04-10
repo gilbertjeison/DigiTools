@@ -1,6 +1,7 @@
 ﻿using DigiTools.Database;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
@@ -29,6 +30,29 @@ namespace DigiTools.Dao
             }
 
             return regs;
+        }
+
+        public async Task<List<porques>> GetPorques(int id_ewo)
+        {
+            List<porques> list = new List<porques>();
+
+            try
+            {
+                using (var context = new MttoAppEntities())
+                {
+                    var query = from ru in context.porques
+                                where ru.id_ewo == id_ewo
+                                select ru;
+
+                    list = await query.ToListAsync();
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine("Excepción al momento de consultar porques: " + e.ToString());
+            }
+
+            return list;
         }
     }
 }

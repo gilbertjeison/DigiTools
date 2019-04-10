@@ -8,6 +8,7 @@ namespace DigiTools.Models
 {
     public class KpiViewModel
     {
+        public int Id { get; set; }
         public int Consecutivo { get; set; }
 
         [Display(Name = "Línea")]
@@ -33,9 +34,11 @@ namespace DigiTools.Models
 
         [DisplayName("Notificación Avería (Hora)")]
         public string HrNotAve { get; set; }
+        public DateTime HrNotAveD { get; set; }
 
         [DisplayName("Inicio de Reparación (Hora)")]
         public string HrIniRep { get; set; }
+        public DateTime HrIniRepD { get; set; }
 
         [DisplayName("Tiempo de espera inicial del técnico (min)")]
         public int TEspIniTec { get; set; }
@@ -54,6 +57,7 @@ namespace DigiTools.Models
 
         [DisplayName("Fin reparación y entrega a AM (Hora)")]
         public string HrFinRepEnt { get; set; }
+        public DateTime HrFinRepEntD { get; set; }
 
         [DisplayName("Tiempo Total (min)")]
         public int TiempoTotal { get; set; }
@@ -91,6 +95,12 @@ namespace DigiTools.Models
         public string GenjitsuOk { get; set; }
         public string GenriOk { get; set; }
         public string GensokuOk { get; set; }
+
+        public bool GembaOkB { get; set; }
+        public bool GembutsuOkB { get; set; }
+        public bool GenjitsuOkB { get; set; }
+        public bool GenriOkB { get; set; }
+        public bool GensokuOkB { get; set; }
 
         public string QueDesc { get; set; }
         public string DondeDesc { get; set; }
@@ -159,6 +169,8 @@ namespace DigiTools.Models
         public string Equipo { get; set; }
         public string DiligenciadoPor { get; set; }
         public string TipoAveria { get; set; }
+        public DateTime FchUltimoMttoD { get;  set; }
+        public DateTime FchProxMttoD { get;  set; }
 
         #endregion
     }
