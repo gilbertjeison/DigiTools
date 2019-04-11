@@ -8,6 +8,8 @@ namespace DigiTools.Models
 {
     public class KpiViewModel
     {
+        public int Edit { get; set; }
+
         public int Id { get; set; }
         public int Consecutivo { get; set; }
 

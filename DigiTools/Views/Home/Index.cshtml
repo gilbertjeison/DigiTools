@@ -1,6 +1,9 @@
 ﻿﻿@model DigiTools.Models.KpiViewModel
 @{
     ViewBag.Title = "Menú principal";
+
+    var tedit = Model.Edit;
+    <input type="hidden" id="txtEdit" value="@tedit.ToString()" />
 }
 
 <!-- Bootstrap Select Css -->
@@ -292,7 +295,7 @@
             return false;
         });
 
-        $('.IdTipoLinea').change(function () {
+        $('.IdTipoLinea',).change(function () {
             var id1 = $('.IdPlanta').find("option:selected").val();
             var id2 = $(this).find("option:selected").val();
 
@@ -571,6 +574,43 @@
 
             return false;
         });
+
+        //VERIFICAR SI ES UNA EDICIÓN        
+        var edit = $('#txtEdit').val();
+        if (edit >0)
+        {
+            //CARGAR LOS CAMPOS PARA SU EDICIÓN
+            $.ajax({
+                //PARAMETRIZAR SERVICIO AJAX
+                url: '@Url.Action("GetEwoAsync", "Home")',
+                type: 'post',
+                data: { id: edit },
+                //MOSTRAR LOADER ANTES DE INICIAR LA SOLICITUD
+                beforeSend: function () {
+                    $('.page-loader-wrapper').fadeIn();
+                },
+                success: function (r)
+                {
+                    console.log(r);
+                    //DILIGENCIAR CAMPOS
+                    //$('#IdPlanta').val(r.IdPlanta);     
+                    $('.IdPlanta').val(r.IdPlanta);
+                    $('.IdTipoLinea').val(r.IdTipoLinea);
+                   
+                    $('.IdLinea').val(r.IdLinea);
+                    $('.IdTipoLinea').trigger("change",);
+                    $('select').selectpicker('refresh');
+                    
+
+
+                    $('.page-loader-wrapper').fadeOut();
+                },
+                //EN CASO DE ERROR, IMPRIMIRLO
+                error: function (request, status, error) {
+                    alert('Error al generar consultar ewo para edición: ' + request.responseText);
+                }
+            });            
+        }        
     });
 
     function showSweetAlert(titulo,mensaje,tipo) {

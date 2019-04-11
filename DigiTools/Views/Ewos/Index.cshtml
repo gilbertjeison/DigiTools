@@ -21,7 +21,7 @@
         <h2>OPCIONES</h2>
     </div>
     <div class="body">
-        @Html.ActionLink("Diligenciar nuevo EWO", "Index", "Home", null, new { @class = "btn btn-primary waves-effect" })
+        @Html.ActionLink("Diligenciar nuevo EWO", "Index", "Home", new { edit = 0 }, new { @class = "btn btn-primary waves-effect" })
     </div>
 </div>
 
@@ -99,7 +99,7 @@
                 },
                 {
                     data: null, "autoWidth": true, render: function (data, type, row) {
-                        return "<a class='btn btn-info waves-effect'>Editar</a>";
+                        return "<a class='btn btn-info waves-effect' onClick=editEwo('" + row.Id +"');>Editar</a>";
                     }
                 },
                 {
@@ -125,8 +125,11 @@
                 $('.page-loader-wrapper').fadeIn();
             },
             success: function (response) {
-                if (response == "1") {
+                if (response.message == "1") {
                     window.location = '/Ewos/DownloadEwoFile';
+                }
+                else if (response.message == "-2") {
+                    showSweetAlert('FORMATO EWO ', 'Cierre los procesos relacionados con EXCEL e inténtelo de nuevo!', 'error');
                 }
                 else {
                     showSweetAlert('FORMATO EWO ', 'Error al generar formato ewo, inténtelo de nuevo!', 'error');
@@ -143,6 +146,11 @@
     function showSweetAlert(titulo, mensaje, tipo) {
         swal(titulo, mensaje, tipo);
         //$('.showSweetAlert h2').addClass('tit');
+    }
+
+    function editEwo(edit) {
+        window.location.href = "/Home/Index/?edit=" + edit;
+        
     }
 </script>
 

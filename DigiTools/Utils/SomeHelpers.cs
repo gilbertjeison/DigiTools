@@ -144,11 +144,19 @@ namespace DigiTools.Utils
                 //ESCRIBIR EN ARCHIVO ECXEL
                 FileInfo file = new FileInfo(filename);
                 FileInfo fileN = new FileInfo(nfilename);
-
+                
                 if (fileN.Exists)
                 {
-                    fileN.Delete();
+                    if (!IsFileLocked(fileN))
+                    {
+                        fileN.Delete();
+                    }
+                    else
+                    {
+                        return "-2";
+                    }
                 }
+               
 
                 file.CopyTo(nfilename);
 
@@ -175,7 +183,7 @@ namespace DigiTools.Utils
                     ws.Cells["H6"].Value = km.HrFinRepEntD;
                     ws.Cells["I6"].Value = km.TiempoTotal;
 
-                    using (FileStream fileStream = new FileStream(ewo_images + km.PathImage1, FileMode.Open))
+                    using (FileStream fileStream = new FileStream(HttpContext.Current.Server.MapPath(ewo_images + km.PathImage1) , FileMode.Open))
                     {
                         //IMAGEN 1
                         var eImg = ws.Drawings.AddPicture("image1", Image.FromStream(fileStream, true, true));
@@ -189,9 +197,9 @@ namespace DigiTools.Utils
                     }
 
                     //IMAGEN 2
-                    if (km.PathImage2 != null || !km.PathImage2.Equals(""))
+                    if (km.PathImage2 != null && km.PathImage2.Length > 0)
                     {
-                        using (FileStream fileStream = new FileStream(ewo_images + km.PathImage2, FileMode.Open))
+                        using (FileStream fileStream = new FileStream(HttpContext.Current.Server.MapPath(ewo_images + km.PathImage2), FileMode.Open))
                         {
                             var eImg2 = ws.Drawings.AddPicture("image2", Image.FromStream(fileStream, true, true));
                             eImg2.From.Column = 2;
@@ -334,7 +342,7 @@ namespace DigiTools.Utils
                         }
                     }
 
-                    using (FileStream fileStream = new FileStream(ewo_images + km.PathImagePQ1, FileMode.Open))
+                    using (FileStream fileStream = new FileStream(HttpContext.Current.Server.MapPath(ewo_images + km.PathImagePQ1), FileMode.Open))
                     {
                         //IMAGEN 3
                         var eImg3 = ws.Drawings.AddPicture("image3", Image.FromStream(fileStream, true, true));
@@ -349,9 +357,9 @@ namespace DigiTools.Utils
 
 
                     //IMAGEN 4
-                    if (km.PathImagePQ2 != null || !km.PathImagePQ2.Equals(""))
+                    if (km.PathImagePQ2 != null && km.PathImagePQ2.Length > 0)
                     {
-                        using (FileStream fileStream = new FileStream(ewo_images + km.PathImagePQ2, FileMode.Open))
+                        using (FileStream fileStream = new FileStream(HttpContext.Current.Server.MapPath(ewo_images + km.PathImagePQ2), FileMode.Open))
                         {
                             var eImg4 = ws.Drawings.AddPicture("image4", Image.FromStream(fileStream, true, true));
                             eImg4.From.Column = 5;
@@ -420,8 +428,7 @@ namespace DigiTools.Utils
                 Workbook wb = xlApp.Workbooks.Open(nfilename);
                 Worksheet ws2 = (Worksheet)wb.Worksheets[1];
 
-                OptionButton opt =
-                       (OptionButton)ws2.OptionButtons(km.CausaRaiz);
+                OptionButton opt = (OptionButton)ws2.OptionButtons(km.CausaRaiz);
                 opt.Value = true;
 
                 //CAUSA RAIZ
@@ -477,6 +484,29 @@ namespace DigiTools.Utils
                 Debug.WriteLine("Error al generar formato ewo (SOMEHELPERS): " + ex.ToString());
                 return "-1";
             }            
+        }
+
+        protected static bool IsFileLocked(FileInfo file)
+        {
+            FileStream stream = null;
+
+            try
+            {
+                stream = file.Open(FileMode.Open, FileAccess.Read, FileShare.None);
+            }
+            catch (IOException ex)
+            {
+                Console.WriteLine(ex.ToString());
+                return true;
+            }
+            finally
+            {
+                if (stream != null)
+                    stream.Close();
+            }
+
+            //file is not locked
+            return false;
         }
 
         public static int Pixel2MTU(int pixels)

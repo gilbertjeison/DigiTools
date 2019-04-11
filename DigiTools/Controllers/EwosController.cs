@@ -90,13 +90,14 @@ namespace DigiTools.Controllers
         {
             string nfilename = await SomeHelpers.GenerateEwoFile(id);
             
-            if (!nfilename.Equals("-1")) 
+            
+            if (!nfilename.Equals("-1") && !nfilename.Equals("-2")) 
             {
                 return Json(new { message = "1" });                
             }
             else
             {
-                return Json(new { message = "-1" });
+                return Json(new { message = nfilename});
             }            
         }
 

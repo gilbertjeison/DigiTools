@@ -247,7 +247,11 @@ namespace DigiTools.Dao
                             FchEjeVal = i.e.fecha_validacion.Value.ToShortDateString(),
                             IdEjeValPor = i.e.validador_ejecucion,
                             CausaRaiz = i.e.falla_index.Value,
-                            CicloRaiz = i.e.causa_raiz_index.Value
+                            CicloRaiz = i.e.causa_raiz_index.Value,
+                            IdPlanta = i.l.id_planta.Value,
+                            IdTipoLinea = i.l.id_tipo_linea.Value,
+                            IdLinea = i.e.id_area_linea.Value,
+                            IdMaquina = i.e.id_equipo.Value
                         };
                     }
                 }

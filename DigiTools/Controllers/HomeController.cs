@@ -59,7 +59,7 @@ namespace DigiTools.Controllers
             }            
         }
 
-        public async Task<ActionResult> Index()
+        public async Task<ActionResult> Index(int? edit)
         {
             aspNetUsers = daoUser.GetUser(User.Identity.GetUserId());
             var kpiWiewModel = new KpiViewModel();
@@ -82,6 +82,10 @@ namespace DigiTools.Controllers
             kpiWiewModel.IdDiligenciado = aspNetUsers.Nombres + " " + aspNetUsers.Apellidos;
             Consecutivo = await daoEwo.GetLastConsecutive();
             ViewBag.Cons = "00" + Consecutivo;
+
+            
+            kpiWiewModel.Edit = edit.HasValue ? edit.Value: 0;           
+            
 
             return View(kpiWiewModel);
         }
@@ -668,6 +672,13 @@ namespace DigiTools.Controllers
         {
             var users = await daoPer.GetAllPersonalAsync();
             return Json(users);
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> GetEwoAsync(int id)
+        {
+            var ewo = await daoEwo.GetEwoDesc(id);
+            return Json(ewo);
         }
         #endregion
     }
