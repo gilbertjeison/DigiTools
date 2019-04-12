@@ -274,7 +274,8 @@
           removeFileEvent = (function(_this) {
             return function(e) {
               e.preventDefault();
-              e.stopPropagation();
+                e.stopPropagation();
+                alert('entra aqui');
               if (file.status === Dropzone.UPLOADING) {
                 return Dropzone.confirm(_this.options.dictCancelUploadConfirmation, function() {
                   return _this.removeFile(file);
@@ -592,7 +593,7 @@
         };
       })(this));
       this.on("removedfile", (function(_this) {
-        return function() {
+          return function () {             
           return _this.updateTotalUploadProgress();
         };
       })(this));

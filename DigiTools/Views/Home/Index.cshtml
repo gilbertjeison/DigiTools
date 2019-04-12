@@ -140,8 +140,8 @@
 
                 form.validate().settings.ignore = ':disabled,:hidden';
 
-                //return form.valid();
-                return true;
+                return form.valid();
+                //return true;
             },
             onStepChanged: function (event, currentIndex, priorIndex) {
 
@@ -295,10 +295,11 @@
             return false;
         });
 
-        $('.IdTipoLinea',).change(function () {
+        $('.IdTipoLinea',).change(function (e,selected) {
             var id1 = $('.IdPlanta').find("option:selected").val();
             var id2 = $(this).find("option:selected").val();
 
+            
             var url = '@Url.Content("~/")' + "Home/GetDropDownListAsync";
 
             $('.IdLinea').selectpicker('destroy');
@@ -318,19 +319,25 @@
                         }));
                     });
 
+                    if (selected) {
+                        var spl = selected.split("-");                       
+                        $(".IdLinea").selectpicker('val', spl[0]);
+                        $('.IdLinea').trigger("change", spl[1]);
+                    }
+
                     $('.IdLinea').selectpicker('refresh');
                 },
                 error: function (error) {
-                    alert(error);
+                    alert(error.responseText);
                 }
             });
             return false;
         });
 
 
-        $('.IdLinea').change(function () {
-            var id1 = $(this).find("option:selected").val();
+        $('.IdLinea').change(function (e, selected) {
 
+            var id1 = $(this).find("option:selected").val();
             var url = '@Url.Content("~/")' + "Home/GetDropDownListAsync";
 
             $('.IdMaquina').selectpicker('destroy');
@@ -349,6 +356,11 @@
                             text: maquina.Text
                         }));
                     });
+
+                    if (selected) {
+                        
+                        $('.IdMaquina').val(selected);
+                    }
 
                     $('.IdMaquina').selectpicker('refresh');
                 },
@@ -592,14 +604,59 @@
                 success: function (r)
                 {
                     console.log(r);
-                    //DILIGENCIAR CAMPOS
-                    //$('#IdPlanta').val(r.IdPlanta);     
+                    //DILIGENCIAR CAMPOS               
                     $('.IdPlanta').val(r.IdPlanta);
-                    $('.IdTipoLinea').val(r.IdTipoLinea);
-                   
-                    $('.IdLinea').val(r.IdLinea);
-                    $('.IdTipoLinea').trigger("change",);
+                    $('.IdTipoLinea').val(r.IdTipoLinea);    
+                    $('.IdTipoLinea').trigger("change", r.IdLinea + '-' + r.IdMaquina);
+                    
+                    $('#txtHrNotAve').bootstrapMaterialDatePicker('setDate', r.HrNotAve);
+                    $('#txtHrIni').bootstrapMaterialDatePicker('setDate', r.HrIniRep);
+                    $('#TEspIniTec').val(r.TEspIniTec);
+                    $('#TDiagn').val(r.TDiagn);
+                    $('#TEspRep').val(r.TEspRep);
+                    $('#TRepCamP').val(r.TRepCamP);
+                    $('#PruTieArr').val(r.PruTieArr);
+                    $('#TiempoTotal').val(r.TiempoTotal);
+                    $('#txtHrFin').bootstrapMaterialDatePicker('setDate', r.HrFinRepEnt);
                     $('select').selectpicker('refresh');
+                    $('#NumAviso').val(r.NumAviso);
+                    $(".IdTipoAveria").selectpicker('val', r.IdTipoAveria);
+                    $(".IdTurno").selectpicker('val', r.Turno);
+
+                    //PONER IMAGENES GUARDADAS
+
+                    //var imgLoader = new Image(); // create a new image object
+
+                    ////imgLoader.onload = function () { // assign onload handler
+                    ////    var height = imgLoader.height;
+                    ////    var width = imgLoader.width;
+                    ////    alert('Image size: ' + width + 'x' + height);
+                    ////}
+                    //imgLoader.src = img;
+
+                    //imgLoader.k
+
+                    var imageUrl = '@Url.Content("../../Content/images/ewo_images/")'+r.PathImage1;
+                    var blob = null;
+                    var xhr = new XMLHttpRequest();
+                    xhr.open('GET', imageUrl, true);
+                    xhr.responseType = 'blob';
+                    xhr.onload = function () {
+                        blob = xhr.response;
+                        console.log(blob, blob.size);
+
+                        // Create the mock file:
+                        var pi1File = { name: r.PathImage1, size: blob.size };
+                        // Call the default addedfile event handler
+                        myDropzone1.emit("addedfile", pi1File);
+
+                        // And optionally show the thumbnail of the file:
+                        myDropzone1.emit("thumbnail", pi1File, imageUrl);
+                        // Make sure that there is no progress bar, etc...
+                        myDropzone1.emit("complete", pi1File);
+                    }
+                    xhr.send();
+
                     
 
 
@@ -1803,17 +1860,7 @@
 
 <script>
     function downloadFile() {
-
         window.location = '/Home/DownloadEwoFile';
-        @*$.post('@Url.Action("DownloadEwoFile", "Home")', function (data) {
-            if (data) {
-
-
-            }
-            else {
-
-            }
-        });*@
     }
 </script>
 <script>

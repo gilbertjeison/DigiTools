@@ -80,12 +80,22 @@ namespace DigiTools.Controllers
             kpiWiewModel.TipoAveriaList = new SelectList(listA, "Id", "descripcion");
 
             kpiWiewModel.IdDiligenciado = aspNetUsers.Nombres + " " + aspNetUsers.Apellidos;
-            Consecutivo = await daoEwo.GetLastConsecutive();
-            ViewBag.Cons = "00" + Consecutivo;
+           
 
             
-            kpiWiewModel.Edit = edit.HasValue ? edit.Value: 0;           
-            
+            if (edit.HasValue)
+            {
+                kpiWiewModel.Edit = edit.Value;
+                Consecutivo = daoEwo.GetConsecutive(edit.Value);
+            }
+            else
+            {
+                kpiWiewModel.Edit = 0;
+                Consecutivo = await daoEwo.GetLastConsecutive();
+            }
+
+            ViewBag.Cons = Consecutivo;
+
 
             return View(kpiWiewModel);
         }

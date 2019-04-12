@@ -41,7 +41,36 @@ namespace DigiTools.Dao
 
             return max;
         }
-        
+
+        public int GetConsecutive(int id_ewo)
+        {
+            int max = 0;
+
+            try
+            {
+                using (var context = new MttoAppEntities())
+                {
+                    var maxv = context.ewos.Where(x=>x.Id == id_ewo)
+                        .FirstOrDefault().consecutivo;
+                    if (maxv != null)
+                    {
+                        max = maxv.Value;
+                    }
+                    else
+                    {
+                        max = 0;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine("Error al consultar consecutivo de ewo: " + e.ToString());
+                max = -1;
+            }
+
+            return max;
+        }
+
         public List<EwoTimesViewModel> GetEwoTime(int line, int year)
         {
             List<EwoTimesViewModel> list = new List<EwoTimesViewModel>();
@@ -190,24 +219,27 @@ namespace DigiTools.Dao
 
                     foreach (var i in data.ToList())
                     {
-                        lDecs= new KpiViewModel()
+                        lDecs = new KpiViewModel()
                         {
                             AreaLinea = i.l.nombre,
                             Equipo = i.m.nombre,
-                            DiligenciadoPor = i.t.Nombres +" "+ i.t.Apellidos,
+                            DiligenciadoPor = i.t.Nombres + " " + i.t.Apellidos,
                             TipoAveria = i.ta.descripcion,
                             Consecutivo = i.e.consecutivo.Value,
                             Fecha = i.e.fecha_ewo.Value,
                             NumAviso = i.e.aviso_numero,
                             Turno = i.e.id_turno.Value,
                             HrNotAveD = i.e.notificacion_averia.Value,
+                            HrNotAve = i.e.notificacion_averia.Value.ToString("dd-MM-yyyy HH:mm"),
                             HrIniRepD = i.e.inicio_reparacion.Value,
+                            HrIniRep = i.e.inicio_reparacion.Value.ToString("dd-MM-yyyy HH:mm"),
                             TEspIniTec = i.e.tiempo_espera_tecnico.Value,
                             TDiagn = i.e.tiempo_diagnostico.Value,
                             TEspRep = i.e.tiempo_espera_repuestos.Value,
                             TRepCamP = i.e.tiempo_reparacion.Value,
                             PruTieArr = i.e.tiempo_pruebas.Value,
                             HrFinRepEntD = i.e.fin_reparacion.Value,
+                            HrFinRepEnt = i.e.fin_reparacion.Value.ToString("dd-MM-yyyy HH:mm"),
                             TiempoTotal = i.e.tiempo_total.Value,
                             PathImage1 = i.e.imagen_1,
                             PathImage2 = i.e.imagen_2,
@@ -251,7 +283,8 @@ namespace DigiTools.Dao
                             IdPlanta = i.l.id_planta.Value,
                             IdTipoLinea = i.l.id_tipo_linea.Value,
                             IdLinea = i.e.id_area_linea.Value,
-                            IdMaquina = i.e.id_equipo.Value
+                            IdMaquina = i.e.id_equipo.Value,
+                            IdTipoAveria = i.e.id_tipo_averia.Value
                         };
                     }
                 }
