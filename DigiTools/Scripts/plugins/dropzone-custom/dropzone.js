@@ -795,7 +795,7 @@ require.register("dropzone/lib/dropzone.js", function(exports, require, module){
         this.element.setAttribute("enctype", "multipart/form-data");
       }
       if (this.element.classList.contains("dropzone") && !this.element.querySelector(".dz-message")) {
-        this.element.appendChild(Dropzone.createElement("<div class=\"dz-default dz-message\"><span>" + this.options.dictDefaultMessage + "</span></div>"));
+        this.element.appendChild(Dropzone.createElement("<div class=\"dz-default dz-message\"><span>" + this.options.dictDefaultMessage + "</span></div>"));          
       }
       if (this.clickableElements.length) {
         setupHiddenFileInput = function() {
@@ -841,7 +841,7 @@ require.register("dropzone/lib/dropzone.js", function(exports, require, module){
         return _this.updateTotalUploadProgress();
       });
       this.on("removedfile", function() {
-        return _this.updateTotalUploadProgress();
+          return _this.updateTotalUploadProgress();
       });
       this.on("canceled", function(file) {
         return _this.emit("complete", file);

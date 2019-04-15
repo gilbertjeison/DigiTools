@@ -61,41 +61,46 @@ namespace DigiTools.Controllers
 
         public async Task<ActionResult> Index(int? edit)
         {
-            aspNetUsers = daoUser.GetUser(User.Identity.GetUserId());
             var kpiWiewModel = new KpiViewModel();
 
-            //LISTA DE PLANTAS
-            var list = await daoPlantas.GetPlants();
-            list.Insert(0, new plantas() { Id = 0, nombre = "Seleccione planta..." });
-            kpiWiewModel.PlantaList = new SelectList(list, "Id", "nombre");
-
-            //LISTA DE TIPOS DE LÍNEA
-            var listTL = await daoTD.GetTypesAsync(LINES);
-            listTL.Insert(0, new tipos_data() { Id = 0, descripcion = "Seleccione tipo de línea..." });
-            kpiWiewModel.TipoLineaList = new SelectList(listTL, "Id", "descripcion");
-
-            //LISTA DE TIPOS DE AVERÍAS
-            var listA = await daoTD.GetTypesAsync(BREAKDOWNSTYPES);
-            listA.Insert(0, new tipos_data() { Id = 0, descripcion = "Seleccione tipo de avería..." });
-            kpiWiewModel.TipoAveriaList = new SelectList(listA, "Id", "descripcion");
-
-            kpiWiewModel.IdDiligenciado = aspNetUsers.Nombres + " " + aspNetUsers.Apellidos;
-           
-
-            
-            if (edit.HasValue)
+            try
             {
-                kpiWiewModel.Edit = edit.Value;
-                Consecutivo = daoEwo.GetConsecutive(edit.Value);
+                aspNetUsers = daoUser.GetUser(User.Identity.GetUserId());
+                
+                //LISTA DE PLANTAS
+                var list = await daoPlantas.GetPlants();
+                list.Insert(0, new plantas() { Id = 0, nombre = "Seleccione planta..." });
+                kpiWiewModel.PlantaList = new SelectList(list, "Id", "nombre");
+
+                //LISTA DE TIPOS DE LÍNEA
+                var listTL = await daoTD.GetTypesAsync(LINES);
+                listTL.Insert(0, new tipos_data() { Id = 0, descripcion = "Seleccione tipo de línea..." });
+                kpiWiewModel.TipoLineaList = new SelectList(listTL, "Id", "descripcion");
+
+                //LISTA DE TIPOS DE AVERÍAS
+                var listA = await daoTD.GetTypesAsync(BREAKDOWNSTYPES);
+                listA.Insert(0, new tipos_data() { Id = 0, descripcion = "Seleccione tipo de avería..." });
+                kpiWiewModel.TipoAveriaList = new SelectList(listA, "Id", "descripcion");
+
+                kpiWiewModel.IdDiligenciado = aspNetUsers.Nombres + " " + aspNetUsers.Apellidos;
+
+                if (edit.HasValue && edit.Value > 0)
+                {
+                    kpiWiewModel.Edit = edit.Value;
+                    Consecutivo = daoEwo.GetConsecutive(edit.Value);
+                }
+                else
+                {
+                    kpiWiewModel.Edit = 0;
+                    Consecutivo = await daoEwo.GetLastConsecutive();
+                }
+
+                ViewBag.Cons = Consecutivo;
             }
-            else
+            catch (Exception ex)
             {
-                kpiWiewModel.Edit = 0;
-                Consecutivo = await daoEwo.GetLastConsecutive();
+                Debug.WriteLine("Error iniciando formato ewo: "+ex.ToString());
             }
-
-            ViewBag.Cons = Consecutivo;
-
 
             return View(kpiWiewModel);
         }

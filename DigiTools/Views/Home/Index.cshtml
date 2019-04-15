@@ -35,6 +35,8 @@
 
 <!-- Select Plugin Js -->
 <script src="~/Scripts/plugins/bootstrap-select/js/bootstrap-select.js"></script>
+<!--CUSTOM DROPZONE-->
+<script src="~/Scripts/plugins/dropzone-custom/dropzone.js"></script>
 
 <script>
     //PARA CARGAR EL GRID LA PRIMERA VEZ LA QUE
@@ -43,6 +45,9 @@
     var repuestos = new Array();
     var porques = new Array();
     var cmd = new Array();
+    Dropzone.autoDiscover = false;
+    var myDropzone1;
+    var myDropzone2;
 
     $(function () {
 
@@ -299,7 +304,7 @@
             var id1 = $('.IdPlanta').find("option:selected").val();
             var id2 = $(this).find("option:selected").val();
 
-            
+
             var url = '@Url.Content("~/")' + "Home/GetDropDownListAsync";
 
             $('.IdLinea').selectpicker('destroy');
@@ -320,7 +325,7 @@
                     });
 
                     if (selected) {
-                        var spl = selected.split("-");                       
+                        var spl = selected.split("-");
                         $(".IdLinea").selectpicker('val', spl[0]);
                         $('.IdLinea').trigger("change", spl[1]);
                     }
@@ -358,7 +363,7 @@
                     });
 
                     if (selected) {
-                        
+
                         $('.IdMaquina').val(selected);
                     }
 
@@ -441,7 +446,6 @@
             clearText: 'Limipiar',
             cancelText: 'Cancelar'
         });
-
 
         //BOTÓN PARA CULCULAR LOS TIEMPOS TTR
         $('#btnCalTtr').click(function () {
@@ -587,7 +591,27 @@
             return false;
         });
 
-        //VERIFICAR SI ES UNA EDICIÓN        
+        //INICIALIZAR DROPZONE PARA LAS IMAGENES
+        myDropzone1 = new Dropzone("div#dropzoneJsForm", {
+            autoProcessQueue: false,
+            acceptedFiles: 'image/*',
+            addRemoveLinks: true,
+            dictRemoveFile: 'Remover archivo',
+            maxFiles:2,
+            url: '@Url.Content("~/")' + "Home/CreateKpi"
+        });
+
+        myDropzone2 = new Dropzone("#dropzoneJsFormCr",
+            {
+                autoProcessQueue: false,
+                acceptedFiles: 'image/*',
+                addRemoveLinks: true,
+                dictRemoveFile: 'Remover archivo',
+                maxFiles:2,
+                url: '@Url.Content("~/")' + "Home/CreateKpi"
+            });
+
+        //VERIFICAR SI ES UNA EDICIÓN
         var edit = $('#txtEdit').val();
         if (edit >0)
         {
@@ -604,11 +628,11 @@
                 success: function (r)
                 {
                     console.log(r);
-                    //DILIGENCIAR CAMPOS               
+                    //DILIGENCIAR CAMPOS
                     $('.IdPlanta').val(r.IdPlanta);
-                    $('.IdTipoLinea').val(r.IdTipoLinea);    
+                    $('.IdTipoLinea').val(r.IdTipoLinea);
                     $('.IdTipoLinea').trigger("change", r.IdLinea + '-' + r.IdMaquina);
-                    
+
                     $('#txtHrNotAve').bootstrapMaterialDatePicker('setDate', r.HrNotAve);
                     $('#txtHrIni').bootstrapMaterialDatePicker('setDate', r.HrIniRep);
                     $('#TEspIniTec').val(r.TEspIniTec);
@@ -623,41 +647,59 @@
                     $(".IdTipoAveria").selectpicker('val', r.IdTipoAveria);
                     $(".IdTurno").selectpicker('val', r.Turno);
 
-                    //PONER IMAGENES GUARDADAS
+                    //PONER IMAGENES GUARDADAS #1
 
-                    //var imgLoader = new Image(); // create a new image object
+                    var urls = [];
+                    urls.push(r.PathImage1);
+                    urls.push(r.PathImage2);
+                    urls.push(r.PathImagePQ1);
+                    urls.push(r.PathImagePQ2);
 
-                    ////imgLoader.onload = function () { // assign onload handler
-                    ////    var height = imgLoader.height;
-                    ////    var width = imgLoader.width;
-                    ////    alert('Image size: ' + width + 'x' + height);
-                    ////}
-                    //imgLoader.src = img;
+                    var request = new Array(urls.length);
+                    var blobs = new Array(urls.length);
 
-                    //imgLoader.k
+                    for (let i = 0; i < urls.length; i++) {
 
-                    var imageUrl = '@Url.Content("../../Content/images/ewo_images/")'+r.PathImage1;
-                    var blob = null;
-                    var xhr = new XMLHttpRequest();
-                    xhr.open('GET', imageUrl, true);
-                    xhr.responseType = 'blob';
-                    xhr.onload = function () {
-                        blob = xhr.response;
-                        console.log(blob, blob.size);
+                        if (urls[i])
+                        {
+                            var imageUrl = '@Url.Content("../../Content/images/ewo_images/")' + urls[i];
+                            
+                            request[i] = new XMLHttpRequest();
+                            request[i].open('GET', imageUrl, true);
+                            request[i].responseType = 'blob';
+                            request[i].onload = function () {
+                                blobs[i] = request[i].response;
+                                
+                                if (i == 0 || i == 1) {
+                                    // Create the file:
+                                    var file = { name: urls[i], size: blobs[i].size };
+                                    // Call the default addedfile event handler
+                                    myDropzone1.emit("addedfile", file);
+                                    myDropzone1.files.push(file);
+                                   
+                                    // And optionally show the thumbnail of the file:
+                                    myDropzone1.emit("thumbnail", file, imageUrl);
 
-                        // Create the mock file:
-                        var pi1File = { name: r.PathImage1, size: blob.size };
-                        // Call the default addedfile event handler
-                        myDropzone1.emit("addedfile", pi1File);
+                                    // Make sure that there is no progress bar, etc...
+                                    myDropzone1.emit("complete", file);
+                                }
+                                if (i == 2 || i == 3) {
+                                    // Create the file:
+                                    var file = { name: urls[i], size: blobs[i].size };
+                                    // Call the default addedfile event handler
+                                    myDropzone2.emit("addedfile", file);
+                                    myDropzone2.files.push(file);
 
-                        // And optionally show the thumbnail of the file:
-                        myDropzone1.emit("thumbnail", pi1File, imageUrl);
-                        // Make sure that there is no progress bar, etc...
-                        myDropzone1.emit("complete", pi1File);
+                                    // And optionally show the thumbnail of the file:
+                                    myDropzone2.emit("thumbnail", file, imageUrl);
+
+                                    // Make sure that there is no progress bar, etc...
+                                    myDropzone2.emit("complete", file);
+                                }                                
+                            }
+                            request[i].send();
+                        }
                     }
-                    xhr.send();
-
-                    
 
 
                     $('.page-loader-wrapper').fadeOut();
@@ -666,8 +708,8 @@
                 error: function (request, status, error) {
                     alert('Error al generar consultar ewo para edición: ' + request.responseText);
                 }
-            });            
-        }        
+            });
+        }
     });
 
     function showSweetAlert(titulo,mensaje,tipo) {
@@ -1836,8 +1878,7 @@
 <!-- KATEX Plugin Js -->
 @*<script src="~/Scripts/plugins/katex/katex.js"></script>*@
 @*<script src="~/Scripts/plugins/katex/auto-render.min.js"></script>*@
-<!--CUSTOM DROPZONE-->
-<script src="~/Scripts/plugins/dropzone-custom/dropzone.js"></script>
+
 <!--SLICKGRID JS-->
 <script src="~/Scripts/plugins/slickgrid/lib/jquery.event.drag-2.3.0.js"></script>
 
@@ -1862,34 +1903,6 @@
     function downloadFile() {
         window.location = '/Home/DownloadEwoFile';
     }
-</script>
-<script>
-    Dropzone.autoDiscover = false;
-    var myDropzone1;
-    var myDropzone2;
-
-    $(function() {
-
-        myDropzone1 = new Dropzone("div#dropzoneJsForm", {
-            autoProcessQueue: false,
-            acceptedFiles: 'image/*',
-            addRemoveLinks: true,
-            dictRemoveFile: 'Remover archivo',
-            maxFiles:2,
-            url: '@Url.Content("~/")' + "Home/CreateKpi"
-        });
-
-        myDropzone2 = new Dropzone("#dropzoneJsFormCr",
-            {
-                autoProcessQueue: false,
-                acceptedFiles: 'image/*',
-                addRemoveLinks: true,
-                dictRemoveFile: 'Remover archivo',
-                maxFiles:2,
-                url: '@Url.Content("~/")' + "Home/CreateKpi"
-            });
-    });
-
 </script>
 
 <script>
