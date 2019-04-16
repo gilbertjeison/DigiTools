@@ -48,6 +48,7 @@
     Dropzone.autoDiscover = false;
     var myDropzone1;
     var myDropzone2;
+    var grid;
 
     $(function () {
 
@@ -610,106 +611,6 @@
                 maxFiles:2,
                 url: '@Url.Content("~/")' + "Home/CreateKpi"
             });
-
-        //VERIFICAR SI ES UNA EDICIÓN
-        var edit = $('#txtEdit').val();
-        if (edit >0)
-        {
-            //CARGAR LOS CAMPOS PARA SU EDICIÓN
-            $.ajax({
-                //PARAMETRIZAR SERVICIO AJAX
-                url: '@Url.Action("GetEwoAsync", "Home")',
-                type: 'post',
-                data: { id: edit },
-                //MOSTRAR LOADER ANTES DE INICIAR LA SOLICITUD
-                beforeSend: function () {
-                    $('.page-loader-wrapper').fadeIn();
-                },
-                success: function (r)
-                {
-                    console.log(r);
-                    //DILIGENCIAR CAMPOS
-                    $('.IdPlanta').val(r.IdPlanta);
-                    $('.IdTipoLinea').val(r.IdTipoLinea);
-                    $('.IdTipoLinea').trigger("change", r.IdLinea + '-' + r.IdMaquina);
-
-                    $('#txtHrNotAve').bootstrapMaterialDatePicker('setDate', r.HrNotAve);
-                    $('#txtHrIni').bootstrapMaterialDatePicker('setDate', r.HrIniRep);
-                    $('#TEspIniTec').val(r.TEspIniTec);
-                    $('#TDiagn').val(r.TDiagn);
-                    $('#TEspRep').val(r.TEspRep);
-                    $('#TRepCamP').val(r.TRepCamP);
-                    $('#PruTieArr').val(r.PruTieArr);
-                    $('#TiempoTotal').val(r.TiempoTotal);
-                    $('#txtHrFin').bootstrapMaterialDatePicker('setDate', r.HrFinRepEnt);
-                    $('select').selectpicker('refresh');
-                    $('#NumAviso').val(r.NumAviso);
-                    $(".IdTipoAveria").selectpicker('val', r.IdTipoAveria);
-                    $(".IdTurno").selectpicker('val', r.Turno);
-
-                    //PONER IMAGENES GUARDADAS #1
-
-                    var urls = [];
-                    urls.push(r.PathImage1);
-                    urls.push(r.PathImage2);
-                    urls.push(r.PathImagePQ1);
-                    urls.push(r.PathImagePQ2);
-
-                    var request = new Array(urls.length);
-                    var blobs = new Array(urls.length);
-
-                    for (let i = 0; i < urls.length; i++) {
-
-                        if (urls[i])
-                        {
-                            var imageUrl = '@Url.Content("../../Content/images/ewo_images/")' + urls[i];
-                            
-                            request[i] = new XMLHttpRequest();
-                            request[i].open('GET', imageUrl, true);
-                            request[i].responseType = 'blob';
-                            request[i].onload = function () {
-                                blobs[i] = request[i].response;
-                                
-                                if (i == 0 || i == 1) {
-                                    // Create the file:
-                                    var file = { name: urls[i], size: blobs[i].size };
-                                    // Call the default addedfile event handler
-                                    myDropzone1.emit("addedfile", file);
-                                    myDropzone1.files.push(file);
-                                   
-                                    // And optionally show the thumbnail of the file:
-                                    myDropzone1.emit("thumbnail", file, imageUrl);
-
-                                    // Make sure that there is no progress bar, etc...
-                                    myDropzone1.emit("complete", file);
-                                }
-                                if (i == 2 || i == 3) {
-                                    // Create the file:
-                                    var file = { name: urls[i], size: blobs[i].size };
-                                    // Call the default addedfile event handler
-                                    myDropzone2.emit("addedfile", file);
-                                    myDropzone2.files.push(file);
-
-                                    // And optionally show the thumbnail of the file:
-                                    myDropzone2.emit("thumbnail", file, imageUrl);
-
-                                    // Make sure that there is no progress bar, etc...
-                                    myDropzone2.emit("complete", file);
-                                }                                
-                            }
-                            request[i].send();
-                        }
-                    }
-
-
-                    $('.page-loader-wrapper').fadeOut();
-                },
-                //EN CASO DE ERROR, IMPRIMIRLO
-                error: function (request, status, error) {
-                    alert('Error al generar consultar ewo para edición: ' + request.responseText);
-                }
-            });
-        }
     });
 
     function showSweetAlert(titulo,mensaje,tipo) {
@@ -1609,7 +1510,7 @@
                                         <p>
                                             <b>Seleccione la causa raiz</b>
                                         </p>
-                                        <select name="CausaRaiz" class="form-control show-tick">
+                                        <select name="CausaRaiz" id="CausaRaiz" class="form-control show-tick">
                                             <optgroup label="Falla inicial">
                                                 <option value="1">Error humano</option>
                                                 <option value="2">Falla de diseño</option>
@@ -1906,8 +1807,6 @@
 </script>
 
 <script>
-    //SLICKGRID
-    var grid;
     var tiposAcciones = {
         AP: 'Acción preventiva',
         CM: 'Contramedidas o acciones inmediatas',
@@ -2088,14 +1987,32 @@
         };
 
         var data = [];
-        //for (var i = 0; i < 5; i++) {
-        //    var d = (data[i] = {});
-        //    d["accion"] = "Elemento " + i + 9;
-        //    d["TipoAccion"] = 'RH';
-        //    d["Nombre"] = 2;
-        //    d["fecha"] = getCurrentDate();
-        //}
 
+        var edit = $('#txtEdit').val();
+        
+        if (edit > 0) {
+            //SI SE ESTÁ EDITANDO, CARGAR LOS DATOS
+            //LISTA DE ACCIONES
+            $.ajax({
+                //PARAMETRIZAR SERVICIO AJAX
+                url: '@Url.Action("GetAcionsList", "Home")',
+                type: 'post',
+                data: { id_ewo: edit },
+                success: function (r)
+                {
+                    console.log(r);
+                    data = r;
+                },
+                //EN CASO DE ERROR, IMPRIMIRLO
+                error: function (request, status, error) {
+                    alert('Error al consultar porques en la edición de ewo: ' + request.responseText);
+                }
+            });
+        }
+        
+
+
+        console.log(data);
         grid = new Slick.Grid("#gridAcciones", data, columns, options);
         grid.setSelectionModel(new Slick.CellSelectionModel());
         grid.onAddNewRow.subscribe(function (e, args) {
@@ -2159,9 +2076,211 @@
             }
         });
 </script>
-@*<script>
-        katex.render(String.raw`\dfrac{TAverías}{NumAverías}`, document.getElementById("formula"), {
-            throwOnError: false
-        });
+<script>
+    //EDICIÓN DE EWO
+    $(function () {
+        //VERIFICAR SI ES UNA EDICIÓN
+        var edit = $('#txtEdit').val();
+        if (edit >0)
+        {
+            //CARGAR LOS CAMPOS PARA SU EDICIÓN
+            $.ajax({
+                //PARAMETRIZAR SERVICIO AJAX
+                url: '@Url.Action("GetEwoAsync", "Home")',
+                type: 'post',
+                data: { id: edit },
+                //MOSTRAR LOADER ANTES DE INICIAR LA SOLICITUD
+                beforeSend: function () {
+                    $('.page-loader-wrapper').fadeIn();
+                },
+                success: function (r)
+                {
+                    console.log(r);
+                    //DILIGENCIAR CAMPOS
+                    $('.IdPlanta').val(r.IdPlanta);
+                    $('.IdTipoLinea').val(r.IdTipoLinea);
+                    $('.IdTipoLinea').trigger("change", r.IdLinea + '-' + r.IdMaquina);
 
-    </script>*@
+                    $('#txtHrNotAve').bootstrapMaterialDatePicker('setDate', r.HrNotAve);
+                    $('#txtHrIni').bootstrapMaterialDatePicker('setDate', r.HrIniRep);
+                    $('#TEspIniTec').val(r.TEspIniTec);
+                    $('#TDiagn').val(r.TDiagn);
+                    $('#TEspRep').val(r.TEspRep);
+                    $('#TRepCamP').val(r.TRepCamP);
+                    $('#PruTieArr').val(r.PruTieArr);
+                    $('#TiempoTotal').val(r.TiempoTotal);
+                    $('#txtHrFin').bootstrapMaterialDatePicker('setDate', r.HrFinRepEnt);
+                    $('select').selectpicker('refresh');
+                    $('#NumAviso').val(r.NumAviso);
+                    $(".IdTipoAveria").selectpicker('val', r.IdTipoAveria);
+                    $(".IdTurno").selectpicker('val', r.Turno);
+
+                    //PONER IMAGENES GUARDADAS #1
+
+                    var urls = [];
+                    urls.push(r.PathImage1);
+                    urls.push(r.PathImage2);
+                    urls.push(r.PathImagePQ1);
+                    urls.push(r.PathImagePQ2);
+
+                    var request = new Array(urls.length);
+                    var blobs = new Array(urls.length);
+
+                    for (let i = 0; i < urls.length; i++) {
+
+                        if (urls[i])
+                        {
+                            var imageUrl = '@Url.Content("../../Content/images/ewo_images/")' + urls[i];
+
+                            request[i] = new XMLHttpRequest();
+                            request[i].open('GET', imageUrl, true);
+                            request[i].responseType = 'blob';
+                            request[i].onload = function () {
+                                blobs[i] = request[i].response;
+
+                                if (i == 0 || i == 1) {
+                                    // Create the file:
+                                    var file = { name: urls[i], size: blobs[i].size };
+                                    // Call the default addedfile event handler
+                                    myDropzone1.emit("addedfile", file);
+                                    myDropzone1.files.push(file);
+
+                                    // And optionally show the thumbnail of the file:
+                                    myDropzone1.emit("thumbnail", file, imageUrl);
+
+                                    // Make sure that there is no progress bar, etc...
+                                    myDropzone1.emit("complete", file);
+                                    if (i == 0) {
+                                        $('#dropzoneJsForm').find('span[name^="dz_text"]').first().html(r.DescImg1);
+                                    }
+                                    if (i == 1) {
+                                        $('#dropzoneJsForm').find('span[name^="dz_text"]:eq(1)').html(r.DescImg2);
+                                    }
+                                }
+                                if (i == 2 || i == 3) {
+                                    // Create the file:
+                                    var file = { name: urls[i], size: blobs[i].size };
+                                    // Call the default addedfile event handler
+                                    myDropzone2.emit("addedfile", file);
+                                    myDropzone2.files.push(file);
+
+                                    // And optionally show the thumbnail of the file:
+                                    myDropzone2.emit("thumbnail", file, imageUrl);
+
+                                    // Make sure that there is no progress bar, etc...
+                                    myDropzone2.emit("complete", file);
+                                    if (i == 2) {
+                                        $('#dropzoneJsFormCr').find('span[name^="dz_text"]').first().html(r.DescImgPQ1);
+                                    }
+                                    if (i == 3) {
+                                        $('#dropzoneJsFormCr').find('span[name^="dz_text"]:eq(1)').html(r.DescImgPQ2);
+                                    }
+                                }
+                            }
+                            request[i].send();
+                        }
+                    }
+
+
+                    $('#DescripcionAveria').val(r.DescripcionAveria);
+
+                    if (r.Accion == 1) {
+                        $('#cc').prop('checked', true);
+                        $('#cc').trigger("change");
+
+                        //CARGAR LOS REPUESTOS UTILIZADOS
+                        $.ajax({
+                            //PARAMETRIZAR SERVICIO AJAX
+                            url: '@Url.Action("GetUsedSpares", "Home")',
+                            type: 'post',
+                            data: { id_ewo: r.Id },
+                            success: function (r)
+                            {
+                                r.forEach(function (rep) {
+                                    $("#tblRepuestos").find('tbody').fadeIn(300, function () {
+                                        $(this).append($('<tr>')
+                                            .append($('<td>').append(rep.codigo_sap))
+                                            .append($('<td>').append(rep.descripcion))
+                                            .append($('<td>').append(rep.cantidad_ewo))
+                                            .append($('<td>').append(rep.costo)));
+                                    });
+                                });
+                                $('#tblRepuestos').editableTableWidget().numericValidation();
+                            },
+                            //EN CASO DE ERROR, IMPRIMIRLO
+                            error: function (request, status, error) {
+                                alert('Error al consultar repuestos utilizados en la edición de ewo: ' + request.responseText);
+                            }
+                        });
+                    }
+                    else if (r.Accion == 0) {
+                        $('#a').prop('checked', true);
+                        $('#a').trigger("change");
+                    }
+
+                    $('#GembaDesc').val(r.GembaDesc);
+                    $('#GembutsuDesc').val(r.GembutsuDesc);
+                    $('#GenjitsuDesc').val(r.GenjitsuDesc);
+                    $('#GenriDesc').val(r.GenriDesc);
+                    $('#GensokuDesc').val(r.GensokuDesc);
+
+                    $('input[name^="GembaOk"]').prop('checked', r.GembaOkB);
+                    $('input[name^="GembutsuOk"]').prop('checked', r.GembutsuOkB);
+                    $('input[name^="GenjitsuOk"]').prop('checked', r.GenjitsuOkB);
+                    $('input[name^="GenriOk"]').prop('checked', r.GenriOkB);
+                    $('input[name^="GensokuOk"]').prop('checked', r.GensokuOkB);
+
+                    $('#QueDesc').val(r.QueDesc);
+                    $('#DondeDesc').val(r.DondeDesc);
+                    $('#CuandoDesc').val(r.CuandoDesc);
+                    $('#QuienDesc').val(r.QuienDesc);
+                    $('#CualDesc').val(r.CualDesc);
+                    $('#ComoDesc').val(r.ComoDesc);
+                    $('#FenomenoDesc').val(r.FenomenoDesc);
+
+                    //TABLA DE POR QUÉS
+                    $.ajax({
+                        //PARAMETRIZAR SERVICIO AJAX
+                        url: '@Url.Action("GetWhys", "Home")',
+                        type: 'post',
+                        data: { id_ewo: r.Id },
+                        success: function (r)
+                        {
+                            r.forEach(function (pq) {
+                                $("#tblPorque").find('tbody').fadeIn(300, function () {
+                                    $(this).append($('<tr>')
+                                        .append($('<td>').append(pq.porque_1))
+                                        .append($('<td>').append(pq.porque_2))
+                                        .append($('<td>').append(pq.porque_3))
+                                        .append($('<td>').append(pq.porque_4))
+                                        .append($('<td>').append(pq.porque_5)));
+                                });
+                            });
+                        },
+                        //EN CASO DE ERROR, IMPRIMIRLO
+                        error: function (request, status, error) {
+                            alert('Error al consultar repuestos utilizados en la edición de ewo: ' + request.responseText);
+                        }
+                    });
+
+                    $('#FchUltimoMtto').bootstrapMaterialDatePicker('setDate', r.FchUltimoMtto);
+                    $('#FchProxMtto').bootstrapMaterialDatePicker('setDate', r.FchProxMtto);
+                    $("#CausaRaiz").selectpicker('val', r.CausaRaiz);
+
+                    var cri = parseInt(r.CicloRaiz) + 1;
+                    $("input[name=CicloRaiz][value=" + cri+ "]").prop('checked', true);
+
+                    
+
+                    $('.page-loader-wrapper').fadeOut();
+                },
+                //EN CASO DE ERROR, IMPRIMIRLO
+                error: function (request, status, error) {
+                    alert('Error al generar consultar ewo para edición: ' + request.responseText);
+                }
+            });
+        }
+    });
+
+
+</script>

@@ -690,6 +690,27 @@ namespace DigiTools.Controllers
         }
 
         [HttpPost]
+        public async Task<JsonResult> GetUsedSpares(int id_ewo)
+        {
+            var usedsps = await daoRep.GetRepUtils(id_ewo);
+            return Json(usedsps);
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> GetWhys(int id_ewo)
+        {
+            var porques = await daoPor.GetPorques(id_ewo);
+            return Json(porques);
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> GetAcionsList(int id_ewo)
+        {
+            var actList = await daoAcc.GetActionsList(id_ewo);
+            return Json(actList);
+        }
+
+        [HttpPost]
         public async Task<JsonResult> GetEwoAsync(int id)
         {
             var ewo = await daoEwo.GetEwoDesc(id);

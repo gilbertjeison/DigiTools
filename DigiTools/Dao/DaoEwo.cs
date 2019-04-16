@@ -221,6 +221,7 @@ namespace DigiTools.Dao
                     {
                         lDecs = new KpiViewModel()
                         {
+                            Id = i.e.Id,
                             AreaLinea = i.l.nombre,
                             Equipo = i.m.nombre,
                             DiligenciadoPor = i.t.Nombres + " " + i.t.Apellidos,
@@ -268,6 +269,8 @@ namespace DigiTools.Dao
                             CualDesc = i.e.wich,
                             ComoDesc = i.e.how,
                             FenomenoDesc = i.e.fenomeno,
+                            FchUltimoMtto = i.e.fecha_ultimo_mtto.Value.ToString("dd-MM-yyyy"),
+                            FchProxMtto = i.e.fecha_proximo_mtto.Value.ToString("dd-MM-yyyy"),
                             FchUltimoMttoD = i.e.fecha_ultimo_mtto.Value,
                             FchProxMttoD = i.e.fecha_proximo_mtto.Value,
                             IdTecMattInv = i.e.tecnicos_man_involucrados,
