@@ -276,10 +276,10 @@ namespace DigiTools.Dao
                             IdTecMattInv = i.e.tecnicos_man_involucrados,
                             IdOpersInv = i.e.operarios_involucrados,
                             IdAnaElab = i.e.elaborador_analisis,
-                            FchAnaElab = i.e.fecha_analisis.Value.ToShortDateString(),
+                            FchAnaElab = i.e.fecha_analisis.Value.ToString("dd-MM-yyyy"),
                             IdContMedDef = i.e.definidor_contramedidas,
-                            FchDefConMed = i.e.fecha_contramedida.Value.ToShortDateString(),
-                            FchEjeVal = i.e.fecha_validacion.Value.ToShortDateString(),
+                            FchDefConMed = i.e.fecha_contramedida.Value.ToString("dd-MM-yyyy"),
+                            FchEjeVal = i.e.fecha_validacion.Value.ToString("dd-MM-yyyy"),
                             IdEjeValPor = i.e.validador_ejecucion,
                             CausaRaiz = i.e.falla_index.Value,
                             CicloRaiz = i.e.causa_raiz_index.Value,
@@ -445,6 +445,100 @@ namespace DigiTools.Dao
                 Debug.WriteLine(e.ToString());
                 regs = -1;
             }
+            return regs;
+        }
+
+        public async Task<int> EditEwo(ewos ewo)
+        {
+            ewos ed;
+
+            int regs = 0;
+
+            try
+            {
+                //1. Get row from DB
+                using (var context = new MttoAppEntities())
+                {
+                    ed = context.ewos.Where(s => s.Id == ewo.Id).FirstOrDefault();
+                }
+
+                //2. change data in disconnected mode (out of ctx scope)                
+                if (ed != null)
+                {
+                    ed.id_area_linea = ewo.id_area_linea;
+                    ed.id_equipo = ewo.id_equipo;
+                    ed.fecha_ewo = ewo.fecha_ewo;
+                    ed.aviso_numero = ewo.aviso_numero;
+                    ed.id_tecnico = ewo.id_tecnico;
+                    ed.id_tipo_averia = ewo.id_tipo_averia;
+                    ed.id_turno = ewo.id_turno;
+                    ed.notificacion_averia = ewo.notificacion_averia;
+                    ed.inicio_reparacion = ewo.inicio_reparacion;
+                    ed.tiempo_espera_tecnico = ewo.tiempo_espera_tecnico;
+                    ed.tiempo_diagnostico = ewo.tiempo_diagnostico;
+                    ed.tiempo_espera_repuestos = ewo.tiempo_espera_repuestos;
+                    ed.tiempo_reparacion = ewo.tiempo_reparacion;
+                    ed.tiempo_pruebas = ewo.tiempo_pruebas;
+                    ed.fin_reparacion = ewo.fin_reparacion;
+                    ed.tiempo_total = ewo.tiempo_total;
+                    ed.imagen_1 = ewo.imagen_1;
+                    ed.imagen_2 = ewo.imagen_2;
+                    ed.imagen_3 = ewo.imagen_3;
+                    ed.imagen_4 = ewo.imagen_4;
+                    ed.desc_imagen_1 = ewo.desc_imagen_1;
+                    ed.desc_imagen_2 = ewo.desc_imagen_2;
+                    ed.desc_imagen_3 = ewo.desc_imagen_3;
+                    ed.desc_imagen_4 = ewo.desc_imagen_4;
+                    ed.desc_averia = ewo.desc_averia;
+                    ed.cambio_componente = ewo.cambio_componente;
+                    ed.ajuste = ewo.ajuste;
+                    ed.what = ewo.what;
+                    ed.where = ewo.where;
+                    ed.when = ewo.when;
+                    ed.who = ewo.who;
+                    ed.wich = ewo.wich;
+                    ed.how = ewo.how;
+                    ed.fenomeno = ewo.fenomeno;
+                    ed.gemba = ewo.gemba;
+                    ed.gemba_ok = ewo.gemba_ok;
+                    ed.gembutsu = ewo.gembutsu;
+                    ed.gembutsu_ok = ewo.gembutsu_ok;
+                    ed.genjitsu = ewo.genjitsu;
+                    ed.genjitsu_ok = ewo.genjitsu_ok;
+                    ed.genri = ewo.genri;
+                    ed.genri_ok = ewo.genri_ok;
+                    ed.gensoku = ewo.gensoku;
+                    ed.gensoku_ok = ewo.gensoku_ok;
+                    ed.fecha_ultimo_mtto = ewo.fecha_ultimo_mtto;
+                    ed.fecha_proximo_mtto = ewo.fecha_proximo_mtto;
+                    ed.falla_index = ewo.falla_index;
+                    ed.causa_raiz_index = ewo.causa_raiz_index;
+                    ed.tecnicos_man_involucrados = ewo.tecnicos_man_involucrados;
+                    ed.operarios_involucrados = ewo.operarios_involucrados;
+                    ed.elaborador_analisis = ewo.elaborador_analisis;
+                    ed.fecha_analisis = ewo.fecha_analisis;
+                    ed.definidor_contramedidas = ewo.definidor_contramedidas;
+                    ed.fecha_contramedida = ewo.fecha_contramedida;
+                    ed.validador_ejecucion = ewo.validador_ejecucion;
+                    ed.fecha_validacion = ewo.fecha_validacion;
+                }
+
+                //save modified entity using new Context
+                using (var context = new MttoAppEntities())
+                {
+                    //3. Mark entity as modified
+                    context.Entry(ed).State = EntityState.Modified;
+
+                    //4. call SaveChanges
+                    regs = await context.SaveChangesAsync();
+                }
+
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine("Excepción al editar ewo: " + e.ToString());
+            }
+
             return regs;
         }
     }

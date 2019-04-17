@@ -640,21 +640,6 @@
         }
 
     }
-
-
-
-    //document.addEventListener("DOMContentLoaded", function () {
-    //    renderMathInElement(document.body, {
-    //        delimiters: [
-    //            { left: "$$", right: "$$", display: true },
-    //            { left: "\\[", right: "\\]", display: true },
-    //            { left: "$", right: "$", display: false },
-    //            { left: "\\(", right: "\\)", display: false }
-    //        ]
-    //    });
-    //});
-
-
 </script>
 
 <style>
@@ -1713,23 +1698,7 @@
                             </div>
                         </div>
                     </div>
-
                 </section>
-
-                @*<h3>Resumen - Cálculo</h3>
-                    <section>
-                        <b>Procedimiento para calcular MTTR</b>
-                        <hr />
-                       @* <span>*@
-                @*<div id="formula" class="gray_cube">
-                        <span class="katex" ></span>
-                    </div>*@
-                @*$$\dfrac{TAverías}{NumAverías} $$
-                    <br />
-                    <br />
-                    Donde <b>TAverías</b> es la suma de los tiempos de la actual avería y <b>NumAverías</b> el número total de averías de la línea seleccionada.*@
-                @*</span>*@
-                @*</section>*@
             }
         </div>
     </div>
@@ -1988,6 +1957,30 @@
 
         var data = [];
 
+        
+
+        grid = new Slick.Grid("#gridAcciones", data, columns, options);
+        grid.setSelectionModel(new Slick.CellSelectionModel());
+        grid.onAddNewRow.subscribe(function (e, args) {
+            var item = args.item;
+            grid.invalidateRow(data.length);
+            data.push(item);
+            grid.updateRowCount();
+            grid.render();
+        });
+        $('#gridAcciones').on('focusout', '#dateed', function () {
+
+            window.setTimeout(function () {
+
+                if (Slick.GlobalEditorLock.isActive())
+                    Slick.GlobalEditorLock.commitCurrentEdit();
+
+            }, 500);
+        });
+
+        firstTime = false;  
+
+
         var edit = $('#txtEdit').val();
         
         if (edit > 0) {
@@ -2000,8 +1993,12 @@
                 data: { id_ewo: edit },
                 success: function (r)
                 {
-                    console.log(r);
-                    data = r;
+                    r.forEach(function (item) {
+                        grid.invalidateRow(data.length);
+                        data.push(item);
+                        grid.updateRowCount();
+                        grid.render();
+                    });                   
                 },
                 //EN CASO DE ERROR, IMPRIMIRLO
                 error: function (request, status, error) {
@@ -2010,30 +2007,6 @@
             });
         }
         
-
-
-        console.log(data);
-        grid = new Slick.Grid("#gridAcciones", data, columns, options);
-        grid.setSelectionModel(new Slick.CellSelectionModel());
-        grid.onAddNewRow.subscribe(function (e, args) {
-            var item = args.item;
-            grid.invalidateRow(data.length);
-            data.push(item);
-            grid.updateRowCount();
-            grid.render();
-        });
-
-        $('#gridAcciones').on('focusout', '#dateed', function () {
-
-            window.setTimeout(function () {
-
-                if (Slick.GlobalEditorLock.isActive())
-                    Slick.GlobalEditorLock.commitCurrentEdit();
-
-            },500);
-        });
-
-        firstTime = false;
     }
 
     function getCurrentDate() {
@@ -2116,7 +2089,6 @@
                     $(".IdTurno").selectpicker('val', r.Turno);
 
                     //PONER IMAGENES GUARDADAS #1
-
                     var urls = [];
                     urls.push(r.PathImage1);
                     urls.push(r.PathImage2);
@@ -2180,7 +2152,6 @@
                             request[i].send();
                         }
                     }
-
 
                     $('#DescripcionAveria').val(r.DescripcionAveria);
 
@@ -2269,8 +2240,36 @@
 
                     var cri = parseInt(r.CicloRaiz) + 1;
                     $("input[name=CicloRaiz][value=" + cri+ "]").prop('checked', true);
+                    //
+                    var tecMtto = r.IdTecMattInv.split(',');
+                    var opeInv = r.IdOpersInv.split(',');
+                    var anaEla = r.IdAnaElab.split(',');
+                    var conDef = r.IdContMedDef.split(',');
+                    var ejeVal = r.IdEjeValPor.split(',');
 
-                    
+                    $.each(tecMtto, function (index, value) {
+                        $('#IdTecMattInv').tagsinput('add', value);                        
+                    });
+
+                    $.each(opeInv, function (index, value) {
+                        $('#IdOpersInv').tagsinput('add', value);
+                    });
+
+                    $.each(anaEla, function (index, value) {
+                        $('#IdAnaElab').tagsinput('add', value);
+                    });
+
+                    $.each(conDef, function (index, value) {
+                        $('#IdContMedDef').tagsinput('add', value);
+                    });
+
+                    $.each(ejeVal, function (index, value) {
+                        $('#IdEjeValPor').tagsinput('add', value);
+                    });
+
+                    $('#FchAnaElab').bootstrapMaterialDatePicker('setDate', r.FchAnaElab);
+                    $('#FchDefConMed').bootstrapMaterialDatePicker('setDate', r.FchDefConMed);
+                    $('#FchEjeVal').bootstrapMaterialDatePicker('setDate', r.FchEjeVal);
 
                     $('.page-loader-wrapper').fadeOut();
                 },

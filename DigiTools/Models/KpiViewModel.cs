@@ -183,5 +183,17 @@ namespace DigiTools.Models
         public string descripcion { get; set; }
         public string cantidad { get; set; }
         public string  costo { get; set; }
-    }   
+    }
+
+    public class Klista_accion
+    {        
+        public int Id { get; set; }
+        public string accion { get; set; }
+        public string tipo_accion { get; set; }
+        public string responsable { get; set; }
+        public string fecha { get; set; }
+        public Nullable<int> id_ewo { get; set; }
+        public byte[] SSMA_TimeStamp { get; set; }
+        
+    }
 }

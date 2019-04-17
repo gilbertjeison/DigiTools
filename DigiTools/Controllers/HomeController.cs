@@ -112,7 +112,7 @@ namespace DigiTools.Controllers
             string message;
 
             try
-            {
+            {               
                 ewos ewo = new ewos();
 
                 JavaScriptSerializer ser = new JavaScriptSerializer();
@@ -187,11 +187,23 @@ namespace DigiTools.Controllers
                 ewo.gensoku_ok = kvm.GensokuOk != null ? true : false;
                 ewo.gembutsu_ok = kvm.GembutsuOk != null ? true : false;
 
-                int res = await daoEwo.AddEwo(ewo);
+                int res = 0;
+                //EDITAR O GUARDAR
+                if (kvm.Id > 0)
+                {
+                    ewo.Id = kvm.Id;
+                    //ES UNA EDICIÓN
+                    res = await daoEwo.EditEwo(ewo);
+                }
+                else
+                {
+                    res = await daoEwo.AddEwo(ewo);
+                }                
 
                 //INTERACTUAR CON CADA UNA DE LAS LISTAS DE ITEMS PARA INGRESAR EN SU DETERMINADA TABLA
                 if (res > 0)
                 {
+                    //ASIGNAR EL ID EWO
                     foreach (var item in rep_Utils)
                     {
                         item.id_ewo = res;
@@ -206,10 +218,23 @@ namespace DigiTools.Controllers
                     {
                         item.id_ewo = res;
                     }
-
-                    await daoAcc.AddAcciones(lista_acc);
-                    await daoRep.AddRepUtil(rep_Utils);
-                    await daoPor.AddPorque(porques);
+                    
+                    //EDITAR O GUARDAR
+                    if (kvm.Id > 0)
+                    {
+                        //ES UNA EDICIÓN
+                        foreach (var item in rep_Utils)
+                        {
+                            await daoRep.EditRepuesto(item);
+                        }                        
+                    }
+                    else
+                    {                        
+                        await daoAcc.AddAcciones(lista_acc);
+                        await daoRep.AddRepUtil(rep_Utils);
+                        await daoPor.AddPorque(porques);
+                    }
+                    
 
                     var descData = await daoEwo.GetEwoDesc(res);
 
@@ -546,12 +571,10 @@ namespace DigiTools.Controllers
                             ws2.Shapes.AddShape(Microsoft.Office.Core.MsoAutoShapeType.msoShapeOval,
                                 sex, 1700, 80, 200).Fill.Transparency = 0.89f;
                             break;
-                    }
-                    
+                    }                    
 
                     wb.Save();
                     wb.Close();
-
                     r = 1;
                     message = "OK";
                 }
@@ -707,7 +730,21 @@ namespace DigiTools.Controllers
         public async Task<JsonResult> GetAcionsList(int id_ewo)
         {
             var actList = await daoAcc.GetActionsList(id_ewo);
-            return Json(actList);
+            List<Klista_accion> kla = new List<Klista_accion>();
+            actList.ForEach(x => 
+            {
+                kla.Add(new Klista_accion()
+                {
+                    id_ewo = x.id_ewo,
+                    accion = x.accion,
+                    fecha = x.fecha.Value.ToShortDateString(),
+                    Id = x.Id,
+                    responsable = x.responsable,
+                    tipo_accion = x.tipo_accion
+                });
+            });
+
+            return Json(kla);
         }
 
         [HttpPost]

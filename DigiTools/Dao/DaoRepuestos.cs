@@ -54,5 +54,47 @@ namespace DigiTools.Dao
 
             return list;
         }
+
+        public async Task<int> EditRepuesto(repuestos_utilizados ru)
+        {
+            repuestos_utilizados rud;
+
+            int regs = 0;
+
+            try
+            {
+                //1. Get row from DB
+                using (var context = new MttoAppEntities())
+                {
+                    rud = context.repuestos_utilizados.Where(s => s.Id == ru.Id).FirstOrDefault();
+                }
+
+                //2. change data in disconnected mode (out of ctx scope)                
+                if (rud != null)
+                {
+                    rud.descripcion = ru.descripcion;
+                    rud.codigo_sap = ru.codigo_sap;
+                    rud.cantidad_ewo = ru.cantidad_ewo;
+                    rud.costo = ru.costo;
+                }
+
+                //save modified entity using new Context
+                using (var context = new MttoAppEntities())
+                {
+                    //3. Mark entity as modified
+                    context.Entry(rud).State = EntityState.Modified;
+
+                    //4. call SaveChanges
+                    regs = await context.SaveChangesAsync();
+                }
+
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine("Excepción al editar repuesto utilizado: " + e.ToString());
+            }
+
+            return regs;
+        }
     }
 }
