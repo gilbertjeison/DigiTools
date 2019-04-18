@@ -485,6 +485,7 @@
     <Content Include="Content\cities.json" />
     <Content Include="Content\cremallera2.eprt" />
     <Content Include="Content\formats\FEU.XLSX" />
+    <Content Include="libman.json" />
     <None Include="Properties\PublishProfiles\CustomProfile.pubxml" />
     <None Include="Properties\PublishProfiles\Default Settings.pubxml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
