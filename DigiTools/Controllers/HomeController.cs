@@ -38,6 +38,7 @@ namespace DigiTools.Controllers
         int Consecutivo = 0;         
         static string ewo_images = "~/Content/images/ewo_images/";
         AspNetUsers aspNetUsers;
+        int id = 0;
 
 
         private static readonly int LINES = 21;
@@ -86,6 +87,7 @@ namespace DigiTools.Controllers
 
                 if (edit.HasValue && edit.Value > 0)
                 {
+                    id = edit.Value;
                     kpiWiewModel.Edit = edit.Value;
                     Consecutivo = daoEwo.GetConsecutive(edit.Value);
                 }
@@ -112,7 +114,7 @@ namespace DigiTools.Controllers
             string message;
 
             try
-            {               
+            {
                 ewos ewo = new ewos();
 
                 JavaScriptSerializer ser = new JavaScriptSerializer();
@@ -130,7 +132,7 @@ namespace DigiTools.Controllers
                 ewo.id_turno = kvm.Turno;
 
                 //CONVERTIR FECHAS A DATETIME
-                ewo.notificacion_averia = kvm.HrNotAve == null? DateTime.Now :DateTime.ParseExact(kvm.HrNotAve, "dd-MM-yyyy HH:mm",CultureInfo.InvariantCulture);
+                ewo.notificacion_averia = kvm.HrNotAve == null ? DateTime.Now : DateTime.ParseExact(kvm.HrNotAve, "dd-MM-yyyy HH:mm", CultureInfo.InvariantCulture);
                 ewo.inicio_reparacion = kvm.HrIniRep == null ? DateTime.Now : DateTime.ParseExact(kvm.HrIniRep, "dd-MM-yyyy HH:mm", CultureInfo.InvariantCulture);
                 ewo.fin_reparacion = kvm.HrFinRepEnt == null ? DateTime.Now : DateTime.ParseExact(kvm.HrFinRepEnt, "dd-MM-yyyy HH:mm", CultureInfo.InvariantCulture);
                 ewo.fecha_ultimo_mtto = kvm.FchUltimoMtto == null ? DateTime.Now : DateTime.ParseExact(kvm.FchUltimoMtto, "dd-MM-yyyy", CultureInfo.InvariantCulture);
@@ -146,11 +148,30 @@ namespace DigiTools.Controllers
                 ewo.tiempo_pruebas = kvm.PruTieArr;
                 ewo.tiempo_total = kvm.TiempoTotal;
 
-                //GUARDAR RUTA DE LAS IMAGENES                
-                ewo.imagen_1 = kvm.Image1 != null ? kvm.Image1.FileName : "";
-                ewo.imagen_2 = kvm.Image2 != null ? kvm.Image2.FileName : "";
-                ewo.imagen_3 = kvm.ImagePQ1 != null ? kvm.ImagePQ1.FileName : "";
-                ewo.imagen_4 = kvm.ImagePQ2 != null ? kvm.ImagePQ2.FileName : "";
+                //GUARDAR RUTA DE LAS IMAGENES     
+
+                //SI ESTÁ EDITANDO, VERIFICAR QUE LA IMAGEN HAYA SIDO CAMBIADA
+                if (kvm.Id > 0)
+                {
+                    var imagen_1 = kvm.Image1 != null ? kvm.Image1.FileName : "";
+                    var imagen_2 = kvm.Image2 != null ? kvm.Image2.FileName : "";
+                    var imagen_3 = kvm.ImagePQ1 != null ? kvm.ImagePQ1.FileName : "";
+                    var imagen_4 = kvm.ImagePQ2 != null ? kvm.ImagePQ2.FileName : "";
+
+                    string[] images = daoEwo.GetEwoImages(kvm.Id);
+                    if (!images[0].Equals(imagen_1))
+                    {
+
+                    }
+                }
+                else
+                {
+                    ewo.imagen_1 = kvm.Image1 != null ? kvm.Image1.FileName : "";
+                    ewo.imagen_2 = kvm.Image2 != null ? kvm.Image2.FileName : "";
+                    ewo.imagen_3 = kvm.ImagePQ1 != null ? kvm.ImagePQ1.FileName : "";
+                    ewo.imagen_4 = kvm.ImagePQ2 != null ? kvm.ImagePQ2.FileName : "";
+                }
+                
 
                 ewo.desc_imagen_1 = kvm.DescImg1;
                 ewo.desc_imagen_2 = kvm.DescImg2;
@@ -226,7 +247,17 @@ namespace DigiTools.Controllers
                         foreach (var item in rep_Utils)
                         {
                             await daoRep.EditRepuesto(item);
-                        }                        
+                        }
+
+                        foreach (var item in porques)
+                        {
+                            await daoPor.EditPorque(item);
+                        }
+
+                        foreach (var item in lista_acc)
+                        {
+                            await daoAcc.EditAcciones(item);
+                        }
                     }
                     else
                     {                        
@@ -611,7 +642,7 @@ namespace DigiTools.Controllers
 
         private void SaveImageEwoServer(HttpPostedFileBase file)
         {
-            string nameAndLocation = ewo_images + file.FileName;
+            string nameAndLocation = ewo_images + file.FileName;            
             file.SaveAs(Server.MapPath(nameAndLocation));
         }
 

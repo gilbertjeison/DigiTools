@@ -54,5 +54,48 @@ namespace DigiTools.Dao
 
             return list;
         }
+
+        public async Task<int> EditPorque(porques pq)
+        {
+            porques pqd;
+
+            int regs = 0;
+
+            try
+            {
+                //1. Get row from DB
+                using (var context = new MttoAppEntities())
+                {
+                    pqd = context.porques.Where(s => s.Id == pq.Id).FirstOrDefault();
+                }
+
+                //2. change data in disconnected mode (out of ctx scope)                
+                if (pqd != null)
+                {
+                    pqd.porque_1 = pq.porque_1;
+                    pqd.porque_2 = pq.porque_2;
+                    pqd.porque_3 = pq.porque_3;
+                    pqd.porque_4 = pq.porque_4;
+                    pqd.porque_5 = pq.porque_5;
+                }
+
+                //save modified entity using new Context
+                using (var context = new MttoAppEntities())
+                {
+                    //3. Mark entity as modified
+                    context.Entry(pqd).State = EntityState.Modified;
+
+                    //4. call SaveChanges
+                    regs = await context.SaveChangesAsync();
+                }
+
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine("Excepción al editar porques: " + e.ToString());
+            }
+
+            return regs;
+        }
     }
 }

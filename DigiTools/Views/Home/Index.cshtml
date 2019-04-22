@@ -4,6 +4,7 @@
 
     var tedit = Model.Edit;
     <input type="hidden" id="txtEdit" value="@tedit.ToString()" />
+   
 }
 
 <!-- Bootstrap Select Css -->
@@ -833,6 +834,7 @@
             @using (Html.BeginForm("CreateKpi", "Home", FormMethod.Post, new { @id = "wizard_validation" }))
             {
                 @*@Html.AntiForgeryToken()*@
+                @Html.Hidden("Id", tedit.ToString())
                 <h3>Ubicación & Tiempos de avería</h3>
                 <section class="clearfix">
                     <div class="row">
@@ -1957,7 +1959,7 @@
 
         var data = [];
 
-        
+
 
         grid = new Slick.Grid("#gridAcciones", data, columns, options);
         grid.setSelectionModel(new Slick.CellSelectionModel());
@@ -1978,11 +1980,11 @@
             }, 500);
         });
 
-        firstTime = false;  
+        firstTime = false;
 
 
         var edit = $('#txtEdit').val();
-        
+
         if (edit > 0) {
             //SI SE ESTÁ EDITANDO, CARGAR LOS DATOS
             //LISTA DE ACCIONES
@@ -1998,7 +2000,7 @@
                         data.push(item);
                         grid.updateRowCount();
                         grid.render();
-                    });                   
+                    });
                 },
                 //EN CASO DE ERROR, IMPRIMIRLO
                 error: function (request, status, error) {
@@ -2006,7 +2008,7 @@
                 }
             });
         }
-        
+
     }
 
     function getCurrentDate() {
@@ -2248,7 +2250,7 @@
                     var ejeVal = r.IdEjeValPor.split(',');
 
                     $.each(tecMtto, function (index, value) {
-                        $('#IdTecMattInv').tagsinput('add', value);                        
+                        $('#IdTecMattInv').tagsinput('add', value);
                     });
 
                     $.each(opeInv, function (index, value) {

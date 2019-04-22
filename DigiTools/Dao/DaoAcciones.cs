@@ -54,5 +54,48 @@ namespace DigiTools.Dao
 
             return list;
         }
+
+        public async Task<int> EditAcciones(lista_acciones la)
+        {
+            lista_acciones lad;
+
+            int regs = 0;
+
+            try
+            {
+                //1. Get row from DB
+                using (var context = new MttoAppEntities())
+                {
+                    lad = context.lista_acciones.Where(s => s.Id == la.Id).FirstOrDefault();
+                }
+
+                //2. change data in disconnected mode (out of ctx scope)                
+                if (lad != null)
+                {
+                    lad.accion = la.accion;
+                    lad.fecha = la.fecha;
+                    lad.id_ewo = la.id_ewo;
+                    lad.responsable = la.responsable;
+                    lad.tipo_accion = la.tipo_accion;
+                }
+
+                //save modified entity using new Context
+                using (var context = new MttoAppEntities())
+                {
+                    //3. Mark entity as modified
+                    context.Entry(lad).State = EntityState.Modified;
+
+                    //4. call SaveChanges
+                    regs = await context.SaveChangesAsync();
+                }
+
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine("Excepción al editar acción: " + e.ToString());
+            }
+
+            return regs;
+        }
     }
 }

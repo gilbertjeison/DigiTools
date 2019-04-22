@@ -71,6 +71,33 @@ namespace DigiTools.Dao
             return max;
         }
 
+        public string[] GetEwoImages(int id_ewo)
+        {
+            string[] images = new string[4];
+
+            try
+            {
+                using (var context = new MttoAppEntities())
+                {
+                    var query = from e in context.ewos                                
+                                where e.Id == id_ewo
+                                select new { e.imagen_1, e.imagen_2,e.imagen_3,e.imagen_4 };
+                 
+                    images[0] = query.First().imagen_1;
+                    images[1] = query.First().imagen_2;
+                    images[2] = query.First().imagen_3;
+                    images[3] = query.First().imagen_4;                    
+                    
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine("Error al consultar imagenes de ewo: " + e.ToString());
+            }
+
+            return images;
+        }
+
         public List<EwoTimesViewModel> GetEwoTime(int line, int year)
         {
             List<EwoTimesViewModel> list = new List<EwoTimesViewModel>();
