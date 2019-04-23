@@ -1,5 +1,7 @@
 ﻿@model IEnumerable<DigiTools.Database.ewos>
-
+@{
+    ViewBag.Title = "EWOS";
+}
 <!-- JQuery DataTable Css -->
 <link href="~/Scripts/plugins/jquery-datatable/skin/bootstrap/css/dataTables.bootstrap.min.css" rel="stylesheet">
 <link href="~/Scripts/plugins/jquery-datatable/Responsive-2.2.2/css/responsive.dataTables.min.css" rel="stylesheet">
@@ -149,7 +151,7 @@
 
     function editEwo(edit) {
         window.location.href = "/Home/Index?edit=" + edit;
-        
+
     }
 </script>
 

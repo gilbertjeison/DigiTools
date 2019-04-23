@@ -112,7 +112,8 @@ namespace DigiTools.Controllers
         {
             int r;
             string message;
-
+            bool img1=false, img2=false, img3=false, img4=false;
+            string[] images = null;
             try
             {
                 ewos ewo = new ewos();
@@ -148,8 +149,7 @@ namespace DigiTools.Controllers
                 ewo.tiempo_pruebas = kvm.PruTieArr;
                 ewo.tiempo_total = kvm.TiempoTotal;
 
-                //GUARDAR RUTA DE LAS IMAGENES     
-
+                //GUARDAR RUTA DE LAS IMAGENES    
                 //SI ESTÁ EDITANDO, VERIFICAR QUE LA IMAGEN HAYA SIDO CAMBIADA
                 if (kvm.Id > 0)
                 {
@@ -158,10 +158,31 @@ namespace DigiTools.Controllers
                     var imagen_3 = kvm.ImagePQ1 != null ? kvm.ImagePQ1.FileName : "";
                     var imagen_4 = kvm.ImagePQ2 != null ? kvm.ImagePQ2.FileName : "";
 
-                    string[] images = daoEwo.GetEwoImages(kvm.Id);
+                    images = daoEwo.GetEwoImages(kvm.Id);
+                    //SI LA IMAGEN ES DIFERENTE, SE EDITA.
                     if (!images[0].Equals(imagen_1))
                     {
-
+                        img1 = true;
+                        ewo.imagen_1 = kvm.Image1 != null ? kvm.Image1.FileName : "";
+                        
+                    }
+                    if (!images[1].Equals(imagen_2))
+                    {
+                        img2 = true;
+                        ewo.imagen_2 = kvm.Image2 != null ? kvm.Image2.FileName : "";
+                        RemoveImageEwoServer(images[1]);
+                    }
+                    if (!images[2].Equals(imagen_3))
+                    {
+                        img3 = true;
+                        ewo.imagen_3 = kvm.ImagePQ1 != null ? kvm.ImagePQ1.FileName : "";
+                        RemoveImageEwoServer(images[2]);
+                    }
+                    if (!images[3].Equals(imagen_4))
+                    {
+                        img4 = true;
+                        ewo.imagen_4 = kvm.ImagePQ2 != null ? kvm.ImagePQ2.FileName : "";
+                        RemoveImageEwoServer(images[3]);
                     }
                 }
                 else
@@ -170,8 +191,7 @@ namespace DigiTools.Controllers
                     ewo.imagen_2 = kvm.Image2 != null ? kvm.Image2.FileName : "";
                     ewo.imagen_3 = kvm.ImagePQ1 != null ? kvm.ImagePQ1.FileName : "";
                     ewo.imagen_4 = kvm.ImagePQ2 != null ? kvm.ImagePQ2.FileName : "";
-                }
-                
+                }                
 
                 ewo.desc_imagen_1 = kvm.DescImg1;
                 ewo.desc_imagen_2 = kvm.DescImg2;
@@ -327,8 +347,24 @@ namespace DigiTools.Controllers
                         eImg.From.RowOff = Pixel2MTU(60);
 
                         //GUARDAR IMAGEN EN SERVIDOR
-                        SaveImageEwoServer(kvm.Image1);
-                        SaveImageEwoServer(kvm.ImagePQ1);
+                        if (kvm.Id>0)
+                        {
+                            if (img1)
+                            {
+                                SaveImageEwoServer(kvm.Image1);
+                                RemoveImageEwoServer(images[0]);
+                            }                            
+                            if (img3)
+                            {
+                                SaveImageEwoServer(kvm.ImagePQ1);
+                                RemoveImageEwoServer(images[2]);
+                            }
+                        }
+                        else
+                        {
+                            SaveImageEwoServer(kvm.Image1);
+                            SaveImageEwoServer(kvm.ImagePQ1);
+                        }                        
 
                         //IMAGEN 2
                         if (kvm.Image2 != null)
@@ -343,7 +379,18 @@ namespace DigiTools.Controllers
                             eImg2.From.RowOff = Pixel2MTU(60);
 
                             //GUARDAR IMAGEN EN SERVIDOR
-                            SaveImageEwoServer(kvm.Image2);
+                            if (kvm.Id > 0)
+                            {
+                                if (img2)
+                                {
+                                    SaveImageEwoServer(kvm.Image2);
+                                    RemoveImageEwoServer(images[1]);
+                                }
+                            }
+                            else
+                            {
+                                SaveImageEwoServer(kvm.Image2);
+                            }
                         }
 
 
@@ -499,10 +546,20 @@ namespace DigiTools.Controllers
                             eImg4.From.RowOff = Pixel2MTU(30);
 
                             //GUARDAR IMAGEN EN SERVIDOR
-                            SaveImageEwoServer(kvm.ImagePQ2);
+                            if (kvm.Id > 0)
+                            {
+                                if (img4)
+                                {
+                                    SaveImageEwoServer(kvm.ImagePQ2);
+                                    RemoveImageEwoServer(images[4]);
+                                }
+                            }
+                            else
+                            {
+                                SaveImageEwoServer(kvm.ImagePQ2);
+                            }
                         }
                             
-
                         //DESC IMAGE XQ
                         ws.Cells["A55"].Value = ewo.desc_imagen_3;
                         ws.Cells["F55"].Value = ewo.desc_imagen_4;
@@ -646,6 +703,19 @@ namespace DigiTools.Controllers
             file.SaveAs(Server.MapPath(nameAndLocation));
         }
 
+        private void RemoveImageEwoServer(string file)
+        {
+            try
+            {
+                string nameAndLocation = ewo_images + file;
+                System.IO.File.Delete(Server.MapPath(nameAndLocation));
+            }
+            catch (Exception exc)
+            {
+                Trace.WriteLine("Error al eliminar imagen de ewo del servidor {0}", exc.Message);                
+            }            
+        }
+
         public ActionResult About()
         {
             ViewBag.Message = "Your application description page.";
@@ -768,7 +838,7 @@ namespace DigiTools.Controllers
                 {
                     id_ewo = x.id_ewo,
                     accion = x.accion,
-                    fecha = x.fecha.Value.ToShortDateString(),
+                    fecha = x.fecha.Value.ToString("MM-dd-yyyy"),
                     Id = x.Id,
                     responsable = x.responsable,
                     tipo_accion = x.tipo_accion

@@ -2083,7 +2083,7 @@
                     $('#TEspRep').val(r.TEspRep);
                     $('#TRepCamP').val(r.TRepCamP);
                     $('#PruTieArr').val(r.PruTieArr);
-                    $('#TiempoTotal').val(r.TiempoTotal);
+                    $('#txtTiempoTotal').val(r.TiempoTotal);
                     $('#txtHrFin').bootstrapMaterialDatePicker('setDate', r.HrFinRepEnt);
                     $('select').selectpicker('refresh');
                     $('#NumAviso').val(r.NumAviso);
@@ -2240,7 +2240,7 @@
                     $('#FchProxMtto').bootstrapMaterialDatePicker('setDate', r.FchProxMtto);
                     $("#CausaRaiz").selectpicker('val', r.CausaRaiz);
 
-                    var cri = parseInt(r.CicloRaiz) + 1;
+                    var cri = parseInt(r.CicloRaiz);
                     $("input[name=CicloRaiz][value=" + cri+ "]").prop('checked', true);
                     //
                     var tecMtto = r.IdTecMattInv.split(',');
