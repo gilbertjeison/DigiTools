@@ -4,7 +4,7 @@
 
     var tedit = Model.Edit;
     <input type="hidden" id="txtEdit" value="@tedit.ToString()" />
-   
+
 }
 
 <!-- Bootstrap Select Css -->
@@ -27,7 +27,6 @@
 <link href="~/Scripts/plugins/slickgrid/examples.css" rel="stylesheet" />
 <link href="~/Scripts/plugins/slickgrid/css/select2.css" rel="stylesheet" />
 
-
 <!-- SWEETALERT Css -->
 <link href="~/Scripts/plugins/sweetalert/sweetalert.css" rel="stylesheet">
 
@@ -38,7 +37,6 @@
 <script src="~/Scripts/plugins/bootstrap-select/js/bootstrap-select.js"></script>
 <!--CUSTOM DROPZONE-->
 <script src="~/Scripts/plugins/dropzone-custom/dropzone.js"></script>
-
 <script>
     //PARA CARGAR EL GRID LA PRIMERA VEZ LA QUE
     //SE INTERACTUE CON LA PESTAÑA #3
@@ -816,6 +814,11 @@
 
     .switch label .lever {
         background-color: red;
+    }
+
+    .dz-progress {
+        /* progress bar covers file name */
+        display: none !important;
     }
 </style>
 
@@ -2097,63 +2100,119 @@
                     urls.push(r.PathImagePQ1);
                     urls.push(r.PathImagePQ2);
 
-                    var request = new Array(urls.length);
-                    var blobs = new Array(urls.length);
 
-                    for (let i = 0; i < urls.length; i++) {
+                    var imageUrl = '@Url.Content("../../Content/images/ewo_images/")'+ r.PathImage1;
+                    //HACER QUE LAS IMAGENES SE CARGEN DE MANERA INDEPENDIENTE EN EL DROPZONE
+                    var request = new XMLHttpRequest();
+                    request.open('GET', imageUrl, true);
+                    request.responseType = 'blob';
+                    request.onload = function () {
+                        var blob = request.response;
+                        var file = { name: r.PathImage1, size: blob.size };
 
-                        if (urls[i])
-                        {
-                            var imageUrl = '@Url.Content("../../Content/images/ewo_images/")' + urls[i];
+                        myDropzone1.emit("addedfile", file);
+                        myDropzone1.files.push(file);
 
-                            request[i] = new XMLHttpRequest();
-                            request[i].open('GET', imageUrl, true);
-                            request[i].responseType = 'blob';
-                            request[i].onload = function () {
-                                blobs[i] = request[i].response;
-
-                                if (i == 0 || i == 1) {
-                                    // Create the file:
-                                    var file = { name: urls[i], size: blobs[i].size };
-                                    // Call the default addedfile event handler
-                                    myDropzone1.emit("addedfile", file);
-                                    myDropzone1.files.push(file);
-
-                                    // And optionally show the thumbnail of the file:
-                                    myDropzone1.emit("thumbnail", file, imageUrl);
-
-                                    // Make sure that there is no progress bar, etc...
-                                    myDropzone1.emit("complete", file);
-                                    if (i == 0) {
-                                        $('#dropzoneJsForm').find('span[name^="dz_text"]').first().html(r.DescImg1);
-                                    }
-                                    if (i == 1) {
-                                        $('#dropzoneJsForm').find('span[name^="dz_text"]:eq(1)').html(r.DescImg2);
-                                    }
-                                }
-                                if (i == 2 || i == 3) {
-                                    // Create the file:
-                                    var file = { name: urls[i], size: blobs[i].size };
-                                    // Call the default addedfile event handler
-                                    myDropzone2.emit("addedfile", file);
-                                    myDropzone2.files.push(file);
-
-                                    // And optionally show the thumbnail of the file:
-                                    myDropzone2.emit("thumbnail", file, imageUrl);
-
-                                    // Make sure that there is no progress bar, etc...
-                                    myDropzone2.emit("complete", file);
-                                    if (i == 2) {
-                                        $('#dropzoneJsFormCr').find('span[name^="dz_text"]').first().html(r.DescImgPQ1);
-                                    }
-                                    if (i == 3) {
-                                        $('#dropzoneJsFormCr').find('span[name^="dz_text"]:eq(1)').html(r.DescImgPQ2);
-                                    }
-                                }
-                            }
-                            request[i].send();
-                        }
+                        // And optionally show the thumbnail of the file:
+                        myDropzone1.emit("thumbnail", file, imageUrl);
+                        //myDropzone1.createThumbnailFromUrl(file, imageUrl);
+                        // Make sure that there is no progress bar, etc...
+                        myDropzone1.emit("complete", file);
+                       
+                        $('#dropzoneJsForm').find('span[name^="dz_text"]').first().html(r.DescImg1);
+                        
                     }
+                    request.send();
+
+                    
+                    if (r.PathImage2)
+                    {
+                        var imageUrl2 = '@Url.Content("../../Content/images/ewo_images/")'+ r.PathImage2;
+                        //HACER QUE LAS IMAGENES SE CARGEN DE MANERA INDEPENDIENTE EN EL DROPZONE
+                        var request2 = new XMLHttpRequest();
+                        request2.open('GET', imageUrl2, true);
+                        request2.responseType = 'blob';
+                        request2.onload = function () {
+                            setTimeout(function () {
+                                var blob = request2.response;
+                                var file = { name: r.PathImage2, size: blob.size };
+
+                                myDropzone1.emit("addedfile", file);
+                                myDropzone1.files.push(file);
+
+                                // And optionally show the thumbnail of the file:
+                                myDropzone1.emit("thumbnail", file, imageUrl2);
+                                //myDropzone1.createThumbnailFromUrl(file, imageUrl);
+                                // Make sure that there is no progress bar, etc...
+                                myDropzone1.emit("complete", file);
+
+                            
+                                    $('#dropzoneJsForm').find('span[name^="dz_text"]:eq(1)').html(r.DescImg2);
+                            }, 500);
+                            
+                        
+                        }
+                        request2.send();
+                    }
+
+
+
+
+                    var imageUrl3 = '@Url.Content("../../Content/images/ewo_images/")' + r.PathImagePQ1;
+                    //HACER QUE LAS IMAGENES SE CARGEN DE MANERA INDEPENDIENTE EN EL DROPZONE
+                    var request3 = new XMLHttpRequest();
+                    request3.open('GET', imageUrl3, true);
+                    request3.responseType = 'blob';
+                    request3.onload = function () {
+                        var blob = request3.response;
+                        var file = { name: r.PathImagePQ1, size: blob.size };
+
+                        myDropzone2.emit("addedfile", file);
+                        myDropzone2.files.push(file);
+
+                        // And optionally show the thumbnail of the file:
+                        myDropzone2.emit("thumbnail", file, imageUrl3);
+                        //myDropzone1.createThumbnailFromUrl(file, imageUrl);
+                        // Make sure that there is no progress bar, etc...
+                        myDropzone2.emit("complete", file);
+                       
+                        $('#dropzoneJsFormCr').find('span[name^="dz_text"]').first().html(r.DescImgPQ1);
+                        
+                    }
+                    request3.send();
+
+
+                    if (r.PathImagePQ2)
+                    {
+                        var imageUrl4 = '@Url.Content("../../Content/images/ewo_images/")' + r.PathImagePQ2;
+                        //HACER QUE LAS IMAGENES SE CARGEN DE MANERA INDEPENDIENTE EN EL DROPZONE
+                        var request4 = new XMLHttpRequest();
+                        request4.open('GET', imageUrl4, true);
+                        request4.responseType = 'blob';
+                        request4.onload = function () {
+                            setTimeout(function () {
+                                var blob = request4.response;
+                                var file = { name: r.PathImagePQ2, size: blob.size };
+
+                                myDropzone2.emit("addedfile", file);
+                                myDropzone2.files.push(file);
+
+                                // And optionally show the thumbnail of the file:
+                                myDropzone2.emit("thumbnail", file, imageUrl4);
+                                //myDropzone1.createThumbnailFromUrl(file, imageUrl);
+                                // Make sure that there is no progress bar, etc...
+                                myDropzone2.emit("complete", file);
+
+                            
+                                $('#dropzoneJsFormCr').find('span[name^="dz_text"]:eq(1)').html(r.DescImgPQ2);
+                            }, 500);
+                            
+                        
+                        }
+                        request4.send();
+                    }
+                    
+                   
 
                     $('#DescripcionAveria').val(r.DescripcionAveria);
 

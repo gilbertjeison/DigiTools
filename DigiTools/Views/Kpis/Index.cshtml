@@ -287,7 +287,7 @@
     function initGridM() {
 
         var dataProviderM = new TotalsDataProviderM(dataM, columnsM);
-        console.log(options);
+       
         gridM = new Slick.Grid("#gridMtbf", dataProviderM, columnsM, options);
 
         //HABILITAR ORDENACIÓN
@@ -620,7 +620,7 @@
     function InitChar(response_chart, d) {
 
         $("canvas#chart").remove();
-        $("div.initC").append('<canvas id="chart" class="animated fadeIn"></canvas>');
+        $("div.initC").html('<canvas id="chart" class="animated fadeIn"></canvas>');
         // set default to straight lines - no curves
         // Chart.defaults.global.elements.line.tension = 0;
         // set default no fill beneath the line
@@ -738,7 +738,7 @@
     function InitCharM(response_chart, d) {
 
         $("canvas#chartM").remove();
-        $("div.initCM").append('<canvas id="chartM" class="animated fadeIn"></canvas>');
+        $("div.initCM").html('<canvas id="chartM" class="animated fadeIn"></canvas>');
         // set default to straight lines - no curves
         // Chart.defaults.global.elements.line.tension = 0;
         // set default no fill beneath the line

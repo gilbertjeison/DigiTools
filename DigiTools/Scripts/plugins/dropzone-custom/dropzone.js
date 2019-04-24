@@ -604,7 +604,9 @@ require.register("dropzone/lib/dropzone.js", function(exports, require, module){
         var thumbnailElement, _i, _len, _ref, _results;
         file.previewElement.classList.remove("dz-file-preview");
         file.previewElement.classList.add("dz-image-preview");
-        _ref = file.previewElement.querySelectorAll("[data-dz-thumbnail]");
+          _ref = file.previewElement.querySelectorAll("[data-dz-thumbnail]");
+          console.log(file);
+          console.log(dataUrl);
         _results = [];
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           thumbnailElement = _ref[_i];
@@ -1313,7 +1315,43 @@ require.register("dropzone/lib/dropzone.js", function(exports, require, module){
         return img.src = fileReader.result;
       };
       return fileReader.readAsDataURL(file);
-    };
+      };
+
+      Dropzone.prototype.createThumbnailFromUrl = function (file, imageUrl, callback, crossOrigin) {
+          var img;
+          img = document.createElement("img");
+          if (crossOrigin) {
+              img.crossOrigin = crossOrigin;
+          }
+          img.onload = (function (_this) {
+              return function () {
+                  var canvas, ctx, resizeInfo, thumbnail, _ref, _ref1, _ref2, _ref3;
+                  file.width = img.width;
+                  file.height = img.height;
+                  resizeInfo = _this.options.resize.call(_this, file);
+                  if (resizeInfo.trgWidth == null) {
+                      resizeInfo.trgWidth = resizeInfo.optWidth;
+                  }
+                  if (resizeInfo.trgHeight == null) {
+                      resizeInfo.trgHeight = resizeInfo.optHeight;
+                  }
+                  canvas = document.createElement("canvas");
+                  ctx = canvas.getContext("2d");
+                  canvas.width = resizeInfo.trgWidth;
+                  canvas.height = resizeInfo.trgHeight;
+                  drawImageIOSFix(ctx, img, (_ref = resizeInfo.srcX) != null ? _ref : 0, (_ref1 = resizeInfo.srcY) != null ? _ref1 : 0, resizeInfo.srcWidth, resizeInfo.srcHeight, (_ref2 = resizeInfo.trgX) != null ? _ref2 : 0, (_ref3 = resizeInfo.trgY) != null ? _ref3 : 0, resizeInfo.trgWidth, resizeInfo.trgHeight);
+                  thumbnail = canvas.toDataURL("image/png");
+                  _this.emit("thumbnail", file, thumbnail);
+                  if (callback != null) {
+                      return callback();
+                  }
+              };
+          })(this);
+          if (callback != null) {
+              img.onerror = callback;
+          }
+          return img.src = imageUrl;
+      };
 
     Dropzone.prototype.processQueue = function() {
       var i, parallelUploads, processingLength, queuedFiles;
