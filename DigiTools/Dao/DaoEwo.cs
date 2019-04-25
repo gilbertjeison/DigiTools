@@ -557,7 +557,8 @@ namespace DigiTools.Dao
                     context.Entry(ed).State = EntityState.Modified;
 
                     //4. call SaveChanges
-                    regs = await context.SaveChangesAsync();
+                    await context.SaveChangesAsync();
+                    regs = ed.Id;
                 }
 
             }

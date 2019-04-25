@@ -96,5 +96,28 @@ namespace DigiTools.Dao
 
             return regs;
         }
+
+        public async Task<int> DeleteRepuestosFromEwo(int id_ewo)
+        {
+            Task<int> regs = Task<int>.Factory.StartNew(() => 0);
+
+            try
+            {
+                //1. Get row from DB
+                using (var context = new MttoAppEntities())
+                {
+                    context.repuestos_utilizados.RemoveRange
+                        (context.repuestos_utilizados.Where(x => x.id_ewo == id_ewo));
+
+                    regs = context.SaveChangesAsync();
+                    return await regs;
+                }                
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine("Excepción al eliminar repuestos utilizados: " + e.ToString());
+            }
+            return 0;
+        }
     }
 }

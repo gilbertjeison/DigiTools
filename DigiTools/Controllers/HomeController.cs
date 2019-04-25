@@ -114,6 +114,8 @@ namespace DigiTools.Controllers
             string message;
             bool img1=false, img2=false, img3=false, img4=false;
             string[] images = null;
+            var form = Request.Files;
+            Console.WriteLine(form);
             try
             {
                 ewos ewo = new ewos();
@@ -122,8 +124,9 @@ namespace DigiTools.Controllers
                 List<repuestos_utilizados> rep_Utils = ser.Deserialize<List<repuestos_utilizados>>(kvm.RepUtil);
                 List<porques> porques = ser.Deserialize<List<porques>>(kvm.Porques);
                 List<lista_acciones> lista_acc = ser.Deserialize<List<lista_acciones>>(kvm.Cmd);
-
-                ewo.consecutivo = await daoEwo.GetLastConsecutive();
+                                
+                ewo.consecutivo = kvm.Id > 0 ? daoEwo.GetConsecutive(kvm.Id) : await daoEwo.GetLastConsecutive()  ;
+                                
                 ewo.id_area_linea = kvm.IdLinea;
                 ewo.id_equipo = kvm.IdMaquina;
                 ewo.fecha_ewo = DateTime.Now;
@@ -162,36 +165,27 @@ namespace DigiTools.Controllers
                     //SI LA IMAGEN ES DIFERENTE, SE EDITA.
                     if (!images[0].Equals(imagen_1))
                     {
-                        img1 = true;
-                        ewo.imagen_1 = kvm.Image1 != null ? kvm.Image1.FileName : "";
-                        
+                        img1 = true;                        
                     }
                     if (!images[1].Equals(imagen_2))
                     {
                         img2 = true;
-                        ewo.imagen_2 = kvm.Image2 != null ? kvm.Image2.FileName : "";
-                        RemoveImageEwoServer(images[1]);
                     }
                     if (!images[2].Equals(imagen_3))
                     {
                         img3 = true;
-                        ewo.imagen_3 = kvm.ImagePQ1 != null ? kvm.ImagePQ1.FileName : "";
-                        RemoveImageEwoServer(images[2]);
                     }
                     if (!images[3].Equals(imagen_4))
                     {
                         img4 = true;
-                        ewo.imagen_4 = kvm.ImagePQ2 != null ? kvm.ImagePQ2.FileName : "";
-                        RemoveImageEwoServer(images[3]);
                     }
                 }
-                else
-                {
-                    ewo.imagen_1 = kvm.Image1 != null ? kvm.Image1.FileName : "";
-                    ewo.imagen_2 = kvm.Image2 != null ? kvm.Image2.FileName : "";
-                    ewo.imagen_3 = kvm.ImagePQ1 != null ? kvm.ImagePQ1.FileName : "";
-                    ewo.imagen_4 = kvm.ImagePQ2 != null ? kvm.ImagePQ2.FileName : "";
-                }                
+                
+                ewo.imagen_1 = kvm.Image1 != null ? kvm.Image1.FileName : "";
+                ewo.imagen_2 = kvm.Image2 != null ? kvm.Image2.FileName : "";
+                ewo.imagen_3 = kvm.ImagePQ1 != null ? kvm.ImagePQ1.FileName : "";
+                ewo.imagen_4 = kvm.ImagePQ2 != null ? kvm.ImagePQ2.FileName : "";
+                             
 
                 ewo.desc_imagen_1 = kvm.DescImg1;
                 ewo.desc_imagen_2 = kvm.DescImg2;
@@ -263,28 +257,16 @@ namespace DigiTools.Controllers
                     //EDITAR O GUARDAR
                     if (kvm.Id > 0)
                     {
-                        //ES UNA EDICIÓN
-                        foreach (var item in rep_Utils)
-                        {
-                            await daoRep.EditRepuesto(item);
-                        }
-
-                        foreach (var item in porques)
-                        {
-                            await daoPor.EditPorque(item);
-                        }
-
-                        foreach (var item in lista_acc)
-                        {
-                            await daoAcc.EditAcciones(item);
-                        }
+                        //BORRAR REGISTROS DE BASE DE DATOS RELACIONADOS CON EL EWO
+                        await daoAcc.DeleteAccionFromEwo(res);
+                        await daoRep.DeleteRepuestosFromEwo(res);
+                        await daoPor.DeletePorqueFromEwo(res);
                     }
-                    else
-                    {                        
-                        await daoAcc.AddAcciones(lista_acc);
-                        await daoRep.AddRepUtil(rep_Utils);
-                        await daoPor.AddPorque(porques);
-                    }
+                                          
+                    await daoAcc.AddAcciones(lista_acc);
+                    await daoRep.AddRepUtil(rep_Utils);
+                    await daoPor.AddPorque(porques);
+                    
                     
 
                     var descData = await daoEwo.GetEwoDesc(res);
@@ -589,7 +571,7 @@ namespace DigiTools.Controllers
                                     }
                                     if (cols == 4)
                                     {
-                                        ws.SetValue(row, cols+6, lista_acc[row - 88].fecha);
+                                        ws.SetValue(row, cols+6, lista_acc[row - 88].fecha.Value.ToShortDateString());
                                     }
                                 }
                             }

@@ -201,11 +201,15 @@
                 var dataString = new FormData(form);
 
                 //ADJUNTAR GRUPO DE IMÁGENES 1
+                
                 myDropzone1.files.forEach((file, i) => {
+                    console.log(file);
+                    if (file.state == "") {
 
+                    }
                     var text = $('#dropzoneJsForm').find('span[name^="dz_text"]').get(i).textContent;
                     dataString.append('Image'+(i+1), file);
-                    dataString.append('DescImg'+(i+1), text);
+                    dataString.append('DescImg' + (i + 1), text);
                 })
 
                 //ADJUNTAR GRUPO DE IMAGENES 2
@@ -2108,17 +2112,18 @@
                     request.responseType = 'blob';
                     request.onload = function () {
                         var blob = request.response;
-                        var file = { name: r.PathImage1, size: blob.size };
+                        var file = { name: r.PathImage1, size: blob.size, status: Dropzone.ADDED, accepted: true };
 
                         myDropzone1.emit("addedfile", file);
-                        myDropzone1.files.push(file);
+                        
 
                         // And optionally show the thumbnail of the file:
                         myDropzone1.emit("thumbnail", file, imageUrl);
                         //myDropzone1.createThumbnailFromUrl(file, imageUrl);
                         // Make sure that there is no progress bar, etc...
                         myDropzone1.emit("complete", file);
-                       
+
+                        myDropzone1.files.push(new File([blob], r.PathImage1));
                         $('#dropzoneJsForm').find('span[name^="dz_text"]').first().html(r.DescImg1);
                         
                     }
@@ -2135,29 +2140,24 @@
                         request2.onload = function () {
                             setTimeout(function () {
                                 var blob = request2.response;
-                                var file = { name: r.PathImage2, size: blob.size };
+                                var file = {
+                                    name: r.PathImage2, size: blob.size, status: Dropzone.ADDED, accepted: true };
 
                                 myDropzone1.emit("addedfile", file);
-                                myDropzone1.files.push(file);
 
                                 // And optionally show the thumbnail of the file:
                                 myDropzone1.emit("thumbnail", file, imageUrl2);
                                 //myDropzone1.createThumbnailFromUrl(file, imageUrl);
                                 // Make sure that there is no progress bar, etc...
                                 myDropzone1.emit("complete", file);
-
+                                myDropzone1.files.push(new File([blob], r.PathImage2));
                             
-                                    $('#dropzoneJsForm').find('span[name^="dz_text"]:eq(1)').html(r.DescImg2);
-                            }, 500);
-                            
-                        
+                                $('#dropzoneJsForm').find('span[name^="dz_text"]:eq(1)').html(r.DescImg2);
+                            }, 1000);    
                         }
                         request2.send();
-                    }
-
-
-
-
+                    }                    
+                    
                     var imageUrl3 = '@Url.Content("../../Content/images/ewo_images/")' + r.PathImagePQ1;
                     //HACER QUE LAS IMAGENES SE CARGEN DE MANERA INDEPENDIENTE EN EL DROPZONE
                     var request3 = new XMLHttpRequest();
@@ -2165,19 +2165,18 @@
                     request3.responseType = 'blob';
                     request3.onload = function () {
                         var blob = request3.response;
-                        var file = { name: r.PathImagePQ1, size: blob.size };
+                        var file = { name: r.PathImagePQ1, size: blob.size, status: Dropzone.ADDED, accepted: true };
 
                         myDropzone2.emit("addedfile", file);
-                        myDropzone2.files.push(file);
 
                         // And optionally show the thumbnail of the file:
                         myDropzone2.emit("thumbnail", file, imageUrl3);
                         //myDropzone1.createThumbnailFromUrl(file, imageUrl);
                         // Make sure that there is no progress bar, etc...
                         myDropzone2.emit("complete", file);
+                        myDropzone2.files.push(new File([blob], r.PathImagePQ1));
                        
-                        $('#dropzoneJsFormCr').find('span[name^="dz_text"]').first().html(r.DescImgPQ1);
-                        
+                        $('#dropzoneJsFormCr').find('span[name^="dz_text"]').first().html(r.DescImgPQ1);                        
                     }
                     request3.send();
 
@@ -2192,27 +2191,23 @@
                         request4.onload = function () {
                             setTimeout(function () {
                                 var blob = request4.response;
-                                var file = { name: r.PathImagePQ2, size: blob.size };
+                                var file = { name: r.PathImagePQ2, size: blob.size, status: Dropzone.ADDED, accepted: true };
 
                                 myDropzone2.emit("addedfile", file);
-                                myDropzone2.files.push(file);
 
                                 // And optionally show the thumbnail of the file:
                                 myDropzone2.emit("thumbnail", file, imageUrl4);
                                 //myDropzone1.createThumbnailFromUrl(file, imageUrl);
                                 // Make sure that there is no progress bar, etc...
                                 myDropzone2.emit("complete", file);
-
+                                myDropzone2.files.push(new File([blob], r.PathImagePQ2));
                             
                                 $('#dropzoneJsFormCr').find('span[name^="dz_text"]:eq(1)').html(r.DescImgPQ2);
-                            }, 500);
-                            
-                        
+                            }, 1000);      
                         }
                         request4.send();
                     }
-                    
-                   
+                                       
 
                     $('#DescripcionAveria').val(r.DescripcionAveria);
 
@@ -2340,7 +2335,5 @@
                 }
             });
         }
-    });
-
-
+    });    
 </script>

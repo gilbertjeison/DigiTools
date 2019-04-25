@@ -604,9 +604,7 @@ require.register("dropzone/lib/dropzone.js", function(exports, require, module){
         var thumbnailElement, _i, _len, _ref, _results;
         file.previewElement.classList.remove("dz-file-preview");
         file.previewElement.classList.add("dz-image-preview");
-          _ref = file.previewElement.querySelectorAll("[data-dz-thumbnail]");
-          console.log(file);
-          console.log(dataUrl);
+          _ref = file.previewElement.querySelectorAll("[data-dz-thumbnail]");       
         _results = [];
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           thumbnailElement = _ref[_i];

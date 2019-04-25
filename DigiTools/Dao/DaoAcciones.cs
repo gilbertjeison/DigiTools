@@ -97,5 +97,28 @@ namespace DigiTools.Dao
 
             return regs;
         }
+
+        public async Task<int> DeleteAccionFromEwo(int id_ewo)
+        {
+            Task<int> regs = Task<int>.Factory.StartNew(() => 0);
+
+            try
+            {
+                //1. Get row from DB
+                using (var context = new MttoAppEntities())
+                {
+                    context.lista_acciones.RemoveRange
+                        (context.lista_acciones.Where(x => x.id_ewo == id_ewo));
+
+                    regs = context.SaveChangesAsync();
+                    return await regs;
+                }
+            }
+            catch (Exception e)
+            {
+                Trace.WriteLine("Excepción al eliminar acción de lista de acciones: " + e.ToString());
+            }
+            return 0;
+        }
     }
 }
