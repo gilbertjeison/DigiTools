@@ -2,7 +2,6 @@
 using DigiTools.Database;
 using DigiTools.Models;
 using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.Office.Interop.Excel;
 using OfficeOpenXml;
 using System;
@@ -11,7 +10,6 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
@@ -101,7 +99,7 @@ namespace DigiTools.Controllers
             }
             catch (Exception ex)
             {
-                Debug.WriteLine("Error iniciando formato ewo: "+ex.ToString());
+                Trace.WriteLine("Error iniciando formato ewo: "+ex.ToString());
             }
 
             return View(kpiWiewModel);
@@ -110,12 +108,15 @@ namespace DigiTools.Controllers
         [HttpPost]
         public async Task<JsonResult> CreateKpi(KpiViewModel kvm)
         {
+            //CAMPOS´PARA ALMACENAR RESULTADO DE TRANSACCIÓN
             int r;
             string message;
-            bool img1=false, img2=false, img3=false, img4=false;
+            //EN EL MOMENTO DE EDITAR, VARIABLES USADAS PARA SABER SI EL CONETENIDO
+            //DE LAS IMAGENES HA CAMBIADO.
+            bool img1 = false, img2 = false, img3 = false, img4 = false;
+            //PARA CONSULTAR IMAGENES PREVIAMENTE ALMACENADAS EN LA BASE DE DATOS
             string[] images = null;
-            var form = Request.Files;
-            Console.WriteLine(form);
+
             try
             {
                 ewos ewo = new ewos();
@@ -266,21 +267,10 @@ namespace DigiTools.Controllers
                     await daoAcc.AddAcciones(lista_acc);
                     await daoRep.AddRepUtil(rep_Utils);
                     await daoPor.AddPorque(porques);
-                    
-                    
+                                        
 
                     var descData = await daoEwo.GetEwoDesc(res);
-
-                    //QUEBRAR PROCESO DE EXCEL
-                    //foreach (Process clsProcess in Process.GetProcesses())
-                    //{
-                    //    if (clsProcess.ProcessName.Equals("EXCEL"))
-                    //    {
-                    //        clsProcess.Kill();
-                    //        break;
-                    //    }
-                    //}
-
+                                      
                     string filename = Server.MapPath("~/Content/formats/FEU.XLSX");
                     string nfilename = Server.MapPath("~/Content/formats/FORMATO_EWO.XLSX");
 
@@ -334,12 +324,33 @@ namespace DigiTools.Controllers
                             if (img1)
                             {
                                 SaveImageEwoServer(kvm.Image1);
-                                RemoveImageEwoServer(images[0]);
-                            }                            
+                                if (!images[0].Equals(""))
+                                {
+                                    RemoveImageEwoServer(images[0]);
+                                }
+                                
+                            }
+                            if (img2)
+                            {
+                                if (!images[1].Equals(""))
+                                {
+                                    RemoveImageEwoServer(images[1]);
+                                }
+                            }
                             if (img3)
                             {
                                 SaveImageEwoServer(kvm.ImagePQ1);
-                                RemoveImageEwoServer(images[2]);
+                                if (!images[2].Equals(""))
+                                {
+                                    RemoveImageEwoServer(images[2]);
+                                }
+                            }
+                            if (img4)
+                            {
+                                if (!images[3].Equals(""))
+                                {
+                                    RemoveImageEwoServer(images[3]);
+                                }
                             }
                         }
                         else
@@ -360,22 +371,11 @@ namespace DigiTools.Controllers
                             eImg2.From.ColumnOff = Pixel2MTU(20);
                             eImg2.From.RowOff = Pixel2MTU(60);
 
-                            //GUARDAR IMAGEN EN SERVIDOR
-                            if (kvm.Id > 0)
-                            {
-                                if (img2)
-                                {
-                                    SaveImageEwoServer(kvm.Image2);
-                                    RemoveImageEwoServer(images[1]);
-                                }
-                            }
-                            else
-                            {
-                                SaveImageEwoServer(kvm.Image2);
-                            }
+                            //GUARDAR IMAGEN EN SERVIDOR    
+                            SaveImageEwoServer(kvm.Image2);
+                            
                         }
-
-
+                        
                         ws.Cells["A16"].Value = ewo.desc_imagen_1;
                         ws.Cells["C16"].Value = ewo.desc_imagen_2;
                         ws.Cells["F8"].Value = ewo.desc_averia;
@@ -528,18 +528,7 @@ namespace DigiTools.Controllers
                             eImg4.From.RowOff = Pixel2MTU(30);
 
                             //GUARDAR IMAGEN EN SERVIDOR
-                            if (kvm.Id > 0)
-                            {
-                                if (img4)
-                                {
-                                    SaveImageEwoServer(kvm.ImagePQ2);
-                                    RemoveImageEwoServer(images[4]);
-                                }
-                            }
-                            else
-                            {
-                                SaveImageEwoServer(kvm.ImagePQ2);
-                            }
+                            SaveImageEwoServer(kvm.ImagePQ2);                               
                         }
                             
                         //DESC IMAGE XQ
@@ -591,7 +580,7 @@ namespace DigiTools.Controllers
                     }
 
                     //ABRIR CON INTEROP PARA DILIGENCIAR CAMPOS PENDIENTES
-                    ExcelApp.Application xlApp = new ExcelApp.Application();
+                    Application xlApp = new Application();
                     xlApp.Visible = false;
                     Workbook wb = xlApp.Workbooks.Open(nfilename);
                     Worksheet ws2 = (Worksheet)wb.Worksheets[1];
@@ -656,14 +645,14 @@ namespace DigiTools.Controllers
             }
             catch (Exception e)
             {
-                Debug.WriteLine(e.ToString());
+                Trace.WriteLine(e.ToString());
                 r = -1;
                 message = e.ToString();
             }
 
             GC.Collect();
 
-            return Json(new { code = r, message = message });
+            return Json(new { code = r, message });
         }
 
         public ActionResult DownloadEwoFile()

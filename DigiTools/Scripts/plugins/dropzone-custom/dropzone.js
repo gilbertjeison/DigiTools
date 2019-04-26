@@ -568,7 +568,7 @@ require.register("dropzone/lib/dropzone.js", function(exports, require, module){
           file._removeLink = Dropzone.createElement("<a class=\"dz-remove\" href=\"javascript:undefined;\" data-dz-remove>" + this.options.dictRemoveFile + "</a>");
           file.previewElement.appendChild(file._removeLink);
         }
-        removeFileEvent = function(e) {
+          removeFileEvent = function (e) {
           e.preventDefault();
           e.stopPropagation();
           if (file.status === Dropzone.UPLOADING) {
@@ -1263,7 +1263,7 @@ require.register("dropzone/lib/dropzone.js", function(exports, require, module){
       this.emit("removedfile", file);
       if (this.files.length === 0) {
         return this.emit("reset");
-      }
+        }
     };
 
     Dropzone.prototype.removeAllFiles = function(cancelIfNecessary) {
