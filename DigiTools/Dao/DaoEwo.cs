@@ -569,5 +569,37 @@ namespace DigiTools.Dao
 
             return regs;
         }
+
+        public async Task<int> DeleteEwo(int id)
+        {
+            ewos ewod;
+            Task<int> regs = Task<int>.Factory.StartNew(() => 0);
+
+            try
+            {
+                //1. Get row from DB
+                using (var context = new MttoAppEntities())
+                {
+                    ewod = context.ewos.Where(s => s.Id.Equals(id)).FirstOrDefault();
+                }
+
+                //save modified entity using new Context
+                using (var context = new MttoAppEntities())
+                {
+                    //3. Mark entity as deleted
+                    context.Entry(ewod).State = EntityState.Deleted;
+
+                    //4. call SaveChanges
+                    regs = context.SaveChangesAsync();
+
+                    return await regs;
+                }
+            }
+            catch (Exception e)
+            {
+                Trace.WriteLine("Excepción al eliminar ewo: " + e.ToString());
+            }
+            return 0;
+        }
     }
 }

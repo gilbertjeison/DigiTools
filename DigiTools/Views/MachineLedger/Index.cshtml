@@ -239,13 +239,13 @@
 <script>
     $(function ()
     {
-        $.extend(jQuery.validator.messages, {
-            required: "Este campo es requerido..."
-        });
+        //$.extend(jQuery.validator.messages, {
+        //    required: "Este campo es requerido..."
+        //});
 
-        $.validator.addMethod("valueNotEquals", function (value, element, arg) {
-            return arg !== value;
-        }, "Este campo es requerido...");
+        //$.validator.addMethod("valueNotEquals", function (value, element, arg) {
+        //    return arg !== value;
+        //}, "Este campo es requerido...");
 
         $('#TipoLinea').change(function () {
             $(this).parents('.form-line').removeClass('error');

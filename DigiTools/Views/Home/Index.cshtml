@@ -236,7 +236,7 @@
 
                         //MENSAJE DE CONFIRMACIÓN O ERROR
                         if (response.code == 1) {
-                            $('#modalMsg').text("Formato creado correctamente!");
+                            $('#modalMsg').text("Formato creado correctamente!");                            
                             window.location = '/Home/DownloadEwoFile';
                         }
                         else if (response.code == -1) {
@@ -1777,6 +1777,7 @@
     function downloadFile() {
         window.location = '/Home/DownloadEwoFile';
     }
+        
 </script>
 
 <script>

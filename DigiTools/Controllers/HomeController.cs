@@ -820,6 +820,46 @@ namespace DigiTools.Controllers
         }
 
         [HttpPost]
+        public async Task<JsonResult> DeleteEwo(int id_ewo)
+        {
+            int code;
+            string message;
+
+            try
+            {
+                // ELIMINAR IMAGENES DEL EWO
+                string[] imagesDel = daoEwo.GetEwoImages(id_ewo);
+                foreach (var item in imagesDel)
+                {
+                    if (!item.Equals(""))
+                    {
+                        RemoveImageEwoServer(item);
+                    }
+                }
+
+                //ELIMINANDO LISTA DE ACCIONES
+                await daoAcc.DeleteAccionFromEwo(id_ewo);
+                //ELIMINADO LISTA DE PORQUES
+                await daoPor.DeletePorqueFromEwo(id_ewo);
+                //ELIMINANDO REPUESTOS UTILIZADOS
+                await daoRep.DeleteRepuestosFromEwo(id_ewo);
+                //ELIMINANDO FORMATO
+                await daoEwo.DeleteEwo(id_ewo);
+
+                code = 1;
+                message = "Documento eliminado correctamente!";
+            }
+            catch (Exception ex)
+            {
+                code = -1;
+                message = "Error al eliminar ewo: "+ex.Message;
+                Trace.WriteLine(message);
+            }                        
+
+            return Json(new { code, message });
+        }
+
+        [HttpPost]
         public async Task<JsonResult> GetEwoAsync(int id)
         {
             var ewo = await daoEwo.GetEwoDesc(id);

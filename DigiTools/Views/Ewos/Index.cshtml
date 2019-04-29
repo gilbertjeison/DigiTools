@@ -106,7 +106,7 @@
                 },
                 {
                     data: null, "autoWidth": true, render: function (data, type, row) {
-                        return "<a class='btn btn-danger waves-effect'>Eliminar</a>";
+                        return "<a class='btn btn-danger waves-effect' onClick=deleteEwoFromServer(" + row.Id +")>Eliminar</a>";
                     }
                 }
             ],
@@ -152,6 +152,41 @@
     function editEwo(edit) {
         window.location.href = "/Home/Index?edit=" + edit;
 
+    }
+
+    function deleteEwoFromServer(id) {
+        var result = confirm("Desea eliminar el formato ("+id+")?");
+
+        if (result) {
+           $.ajax({
+            //PARAMETRIZAR SERVICIO AJAX
+            url: '@Url.Action("DeleteEwo", "Home")',
+            type: 'post',
+            data: { id_ewo: id },
+            //MOSTRAR LOADER ANTES DE INICIAR LA SOLICITUD
+            beforeSend: function () {
+                $('.page-loader-wrapper').fadeIn();
+            },
+            success: function (response) {
+                if (response.code == 1) {
+                    showSweetAlert('FORMATO EWO ', 'Documento eliminado correctamente!', 'success');
+                    setTimeout(function () { location.reload(); }, 3000);
+                }               
+                else {
+                    showSweetAlert('FORMATO EWO ', response.message, 'error');
+                }
+
+                $('.page-loader-wrapper').fadeOut();
+            },
+            //EN CASO DE ERROR, IMPRIMIRLO
+            error: function (request, status, error) {                
+                showSweetAlert('FORMATO EWO', 'Error al eliminar formato ewo: ' + request.responseText, 'error');
+            }
+        });
+        }
+        else {
+            showSweetAlert('FORMATO EWO', 'No se eliminará formato', 'warning');
+        }
     }
 </script>
 
