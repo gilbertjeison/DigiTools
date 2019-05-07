@@ -4,7 +4,6 @@
 
     var tedit = Model.Edit;
     <input type="hidden" id="txtEdit" value="@tedit.ToString()" />
-
 }
 
 <!-- Bootstrap Select Css -->
@@ -302,8 +301,7 @@
         $('.IdTipoLinea',).change(function (e,selected) {
             var id1 = $('.IdPlanta').find("option:selected").val();
             var id2 = $(this).find("option:selected").val();
-
-
+            
             var url = '@Url.Content("~/")' + "Home/GetDropDownListAsync";
 
             $('.IdLinea').selectpicker('destroy');
