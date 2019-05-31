@@ -33,6 +33,7 @@ namespace DigiTools.Utils
         static string ewo_images = "~/Content/images/ewo_images/";
         
         static string nombreE;
+        static string callBackUrl;
 
         static string noti_reg = "<div style=\"background: #fff; min-height: 50px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2); position: relative; margin-bottom: 30px; -webkit-border-radius: 2px; -moz-border-radius: 2px; -ms-border-radius: 2px; border-radius: 2px;\"> "
             + " <div  style=\"color:#2EFE2E; padding: 20px; position: relative;  border-bottom: 1px solid rgba(204, 204, 204, 0.35); background-color: #03A9F4 !important;\"> "
@@ -64,6 +65,8 @@ namespace DigiTools.Utils
             + "Su usuario está en estado de <strong>Rechazado</strong>, no puede iniciar en el sistema. "
             + " </div> <small style=\"font-size:8px;\">Desarrollado por (gilbertjeison@gmail.com)</small>";
 
+        
+
 
         public static async Task SendGridAsync(int type, string mail, string nombre)
         {
@@ -71,7 +74,7 @@ namespace DigiTools.Utils
 
             var apiKey = ConfigurationManager.AppSettings["SendGridApi"];
             var client = new SendGridClient(apiKey);
-            var from = new EmailAddress("gilbertjeison@gmail.com", "Jeison Desarrollador");
+            var from = new EmailAddress("info@digitoolsunilever.com", "Información del sistema");
             var subject = "Notificación de registro al sistema";
             var to = new EmailAddress(mail, nombre);
             var plainTextContent = "Sistema de herramientas digitales Unilever";
@@ -97,7 +100,33 @@ namespace DigiTools.Utils
             var msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);
             var response = await client.SendEmailAsync(msg);
 
-            System.Diagnostics.Debug.WriteLine("Respuesta de correo electrónico " + response.StatusCode);
+            Debug.WriteLine("Respuesta de correo electrónico " + response.StatusCode);
+        }
+
+        public static async Task SendGridAsync(string mail, string nombre, string callBU)
+        {
+            var apiKey = ConfigurationManager.AppSettings["SendGridApi"];
+            var client = new SendGridClient(apiKey);
+            var from = new EmailAddress("info@digitoolsunilever.com", "Información del sistema");
+            var subject = "Recuperación de contraseña";
+            var to = new EmailAddress(mail, nombre);
+            var plainTextContent = "Sistema de herramientas digitales Unilever";
+
+            string htmlContent = "<div style=\"border: solid 1px #03a9f4; background: #fff; min-height: 50px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2); position: relative; margin-bottom: 30px; -webkit-border-radius: 2px; -moz-border-radius: 2px; -ms-border-radius: 2px; border-radius: 2px;\"> "
+            + " <div  style=\"color:#FF0040; padding: 20px; position: relative;  border-bottom: 1px solid rgba(204, 204, 204, 0.35); background-color: #03A9F4 !important;\"> "
+            + " <h2 style=\"color:white; margin: 0;font-size: 18px;font-weight: normal;\"> "
+            + " " + nombre + " <small style=\"display: block; font-size: 12px; margin-top: 5px; color: white; line-height: 15px;\">Procedimiento para recuperación de contraseña [DIGITOOLS]...</small> "
+            + " </h2> "
+            + " </div> "
+            + " <div style=\"font-size: 14px; color: #555; padding: 20px;\"> "
+            + "" + callBU + ""
+            + " </div> <small style=\"font-size:8px;\">Desarrollado por (gilbertjeison@gmail.com)</small>";
+
+                        
+            var msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);
+            var response = await client.SendEmailAsync(msg);
+
+            Debug.WriteLine("Respuesta de correo electrónico " + response.StatusCode);
         }
 
         public static string VerifyEmail(string email)

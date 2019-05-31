@@ -12,7 +12,6 @@
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
 
     <!-- Google Fonts -->
-
     <link href="~/Content/google_fonts/font.css" rel="stylesheet" type="text/css">
     <link href="~/Content/material_icons/material_icons.css" rel="stylesheet" type="text/css">
 
@@ -95,7 +94,7 @@
                     </div>
                     <hr />
                     <div style="margin-top:5px;">
-                        @Html.ActionLink("Olvidé mi contraseña.", "ForgotPassword", "Account", htmlAttributes: new { @class = "btn bg-white btn-block" })
+                        @Html.ActionLink("Olvidé mi contraseña.", "ForgotPassword", "Account",null, htmlAttributes: new { @class = "btn bg-white btn-block" })
                     </div>
                 }
             </div>
@@ -104,19 +103,14 @@
 
     <!-- Jquery Core Js -->
     <script src="~/Scripts/plugins/jquery/jquery.min.js"></script>
-
     <!-- Bootstrap Core Js -->
     <script src="~/Scripts/plugins/bootstrap/js/bootstrap.js"></script>
-
     <!-- Waves Effect Plugin Js -->
     <script src="~/Scripts/plugins/node-waves/waves.js"></script>
-
     <!-- Vegas Plugin Js -->
     <script src="~/Scripts/plugins/vegas/vegas.min.js"></script>
-
     <!-- Validation Plugin Js -->
     <script src="~/Scripts/plugins/jquery-validation/jquery.validate.js"></script>
-
     <!-- Custom Js -->
     <script src="~/Scripts/js/admin.js"></script>
     <script src="~/Scripts/js/ex/sign-in.js"></script>
@@ -135,14 +129,12 @@
                 { src: '@Url.Content("~/Content/images/slides/planta_4.JPG")' },
                 { src: '@Url.Content("~/Content/images/slides/planta_3.JPG")' },
                 { src: '@Url.Content("~/Content/images/slides/planta_2.JPG")'},
-                { src: '@Url.Content("~/Content/images/slides/jpeg.jpg")'}
-                
+                { src: '@Url.Content("~/Content/images/slides/jpeg.jpg")'}                
             ],
             transition: ['fade', 'swirlLeft', 'zoomOut', 'flash']
         });
     });
     </script>
-
 </body>
 </html>
 

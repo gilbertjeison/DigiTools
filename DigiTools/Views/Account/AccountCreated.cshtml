@@ -13,28 +13,26 @@
     <link rel="icon" href="~/favicon.ico" type="image/x-icon">
 
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet" type="text/css">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css">
-
+    <link href="~/Content/google_fonts/font.css" rel="stylesheet" type="text/css">
+    <link href="~/Content/material_icons/material_icons.css" rel="stylesheet" type="text/css">
 
     <!-- Bootstrap Core Css -->
     <link href="~/Content/bootstrap.min.css" rel="stylesheet">
 
     <!-- Waves Effect Css -->
-    <link href="~/Scripts/Adminbsb/plugins/waves.css" rel="stylesheet" />
+    <link href="~/Scripts/plugins/waves.css" rel="stylesheet" />
 
     <!-- Animation Css -->
-    <link href="~/Scripts/Adminbsb/plugins/animate-css/animate.min.css" rel="stylesheet" />
+    <link href="~/Scripts/plugins/animate-css/animate.min.css" rel="stylesheet" />
 
     <!-- Custom Css -->
-    <link href="~/Content/Adminbsb/style.css" rel="stylesheet">
-
+    <link href="~/Content/Adminbsb/style.css" rel="stylesheet" />
 </head>
 <body class="login-page">
 
     <div class="login-box">
         <div class="logo">
-            <a style="align-content:center;" href="javascript:void(0);"><b>@User.Identity.Name <br /></b></a>
+            <a style="align-content:center;"><b>@User.Identity.Name <br /></b></a>
             <small>Bienvenido</small>
         </div>
         <div class="card">
@@ -50,26 +48,10 @@
                             @Html.AntiForgeryToken()
                             <button class="btn btn-block bg-pink waves-effect" href="javascript:document.getElementById('logoutForm').submit()">CERRAR</button>
                         }
-                        @*@Html.ActionLink("CERRAR", "LogOff", "Account", null, new { @class = "btn btn-block bg-pink waves-effect" })*@
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
-    <!-- Jquery Core Js -->
-    <script src="~/Scripts/Adminbsb/plugins/jquery/jquery.min.js"></script>
-
-    <!-- Bootstrap Core Js -->
-    <script src="~/Scripts/Adminbsb/plugins/bootstrap/js/bootstrap.min.js"></script>
-
-    <!-- Waves Effect Plugin Js -->
-    <script src="~/Scripts/Adminbsb/plugins/node-waves/waves.js"></script>
-
-    <!-- Validation Plugin Js -->
-    <script src="~/Scripts/Adminbsb/plugins/jquery-validation/jquery.validate.js"></script>
-
-    <!-- Custom Js -->
-    <script src="~/Scripts/Adminbsb/js/admin.js"></script>
 </body>
 </html>
