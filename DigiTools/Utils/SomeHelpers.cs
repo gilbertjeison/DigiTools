@@ -550,5 +550,33 @@ namespace DigiTools.Utils
             file.SaveAs(HttpContext.Current.Server.MapPath(nameAndLocation));
         }
 
+        public static string GetCausaRaizDesc(int index)
+        {
+            string res = "";
+            switch (index)
+            {
+                case 1:
+                    res = "Factores externos [FI]";
+                    break;
+                case 2:
+                    res = "Falta de Conocimiento [PD]";
+                    break;
+                case 3:
+                    res = "Falta de Diseño [FI]";
+                    break;
+                case 4:
+                    res = "Falta de Mantenimiento [PM]";
+                    break;
+                case 5:
+                    res = "Condiciones Sub estandar de operación [PD]";
+                    break;
+                case 6:
+                    res = "Falta de Condiciones básicas [AA]";
+                    break;
+            }
+
+            return res;
+        }
+
     }
 }

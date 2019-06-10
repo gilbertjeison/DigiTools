@@ -428,22 +428,22 @@ namespace DigiTools.Dao
 
             switch (index)
             {
-                case 0:
+                case 1:
                     r = "Factores externos [FI]";
                     break;
-                case 1:
+                case 2:
                     r = "Falta de Conocimiento [PD]";
                     break;
-                case 2:
+                case 3:
                     r = "Falta de Diseño [FI]";
                     break;
-                case 3:
+                case 4:
                     r = "Falta de Mantenimiento [PM]";
                     break;
-                case 4:
+                case 5:
                     r = "Condiciones Sub estandar de operación [PD]";
                     break;
-                case 5:
+                case 6:
                     r = "Falta de Condiciones básicas [AA]";
                     break;
                 default:
@@ -600,6 +600,98 @@ namespace DigiTools.Dao
                 Trace.WriteLine("Excepción al eliminar ewo: " + e.ToString());
             }
             return 0;
+        }
+
+        public async Task<IndexAdminViewModel> GetIndexData()
+        {
+            IndexAdminViewModel iavm = new IndexAdminViewModel();
+
+            try
+            {
+                using (var context = new MttoAppEntities())
+                {
+                    await Task.Run(() =>
+                    {
+                        iavm.IncidentesReportados = (from e in context.ewos select e).Count();                        
+                        iavm.TiempoLinParada = (from e in context.ewos
+                                                select e).Sum(x => x.tiempo_total.Value);
+                        iavm.UsuariosRegistrados = (from e in context.AspNetUsers
+                                                    select e).Count();
+
+                    });
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine("Error al consultar porcentajes de tipos de incidentes: " + e.ToString());
+            }
+
+            return iavm;
+        }
+
+        public List<DonutViewModel> GetEwoPercents()
+        {
+            List<DonutViewModel> list = new List<DonutViewModel>();
+
+            try
+            {
+                using (var context = new MttoAppEntities())
+                {
+
+                    var query = (from e in context.ewos
+                                 group e by new { e.causa_raiz_index } into g
+                                 select new
+                                 {
+                                     g.Key,
+                                     Count = g.Count()
+                                 }).AsEnumerable()
+                                .Select(g => new
+                                {
+                                    des = DesCausaRaiz(g.Key.causa_raiz_index),
+                                    g.Count
+                                });
+
+                    if (query != null)
+                    {
+                        foreach (var item in query)
+                        {
+                            list.Add(new DonutViewModel()
+                            {
+                                label = item.des,
+                                value = ((double)item.Count / GetCount() * 100).ToString("F2")
+                            });
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine("Error al consultar porcentajes de tipos de incidentes: " + e.ToString());
+            }
+
+            return list;
+        }
+
+        public int GetCount()
+        {
+            int max = 0;
+
+            try
+            {
+                using (var context = new MttoAppEntities())
+                {
+                    var maxv = context.ewos.Count();
+                    
+                    max = maxv;
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine("Error al consultar cantidad de ewos: " + e.ToString());
+                max = -1;
+            }
+
+            return max;
         }
     }
 }

@@ -1,7 +1,131 @@
-﻿
-@{
-    ViewBag.Title = "IndexAdmin";
-}
+﻿@model DigiTools.Models.IndexAdminViewModel
+    @{
+        ViewBag.Title = "Página principal";
+    }
 
-<h2>IndexAdmin</h2>
+    <link href="~/Scripts/plugins/morrisjs/morris.css" rel="stylesheet" />
 
+    <style>
+
+        .card {
+            border-radius: 10px;
+            margin-top: 25px;
+        }
+
+        svg:not(:root) {
+            left: 50% !important;
+            transform: translateX(-50%);
+        }
+    </style>
+
+    <div class="row clearfix">
+        <div class="col-md-6">
+            <div class="card clearfix">
+                <div class="header">
+                    <h2>DATOS DE EWOS</h2>
+                </div>
+                <div class="body">
+                    <div class="col-md-12">
+                        <div class="info-box bg-light-blue hover-expand-effect">
+                            <div class="icon">
+                                <i class="material-icons">playlist_add_check</i>
+                            </div>
+                            <div class="content">
+                                <div class="text">EWOS REPORTADOS</div>
+                                <div class="number count-to" data-from="0" data-to="@Model.IncidentesReportados" data-speed="2000" data-fresh-interval="20"></div>
+                            </div>
+                        </div>
+                    </div>                                        
+                    <div class="col-md-12">
+                        <div class="info-box bg-light-blue hover-expand-effect">
+                            <div class="icon">
+                                <i class="material-icons">timer_off</i>
+                            </div>
+                            <div class="content">
+                                <div class="text">TIEMPO DE AVERÍAS (MIN)</div>
+                                <div class="number count-to" data-from="0" data-to="@Model.TiempoLinParada" data-speed="2000" data-fresh-interval="20"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="info-box bg-light-blue hover-expand-effect">
+                            <div class="icon">
+                                <i class="material-icons">person_add</i>
+                            </div>
+                            <div class="content">
+                                <div class="text">USUARIOS REGISTRADOS</div>
+                                <div class="number count-to" data-from="0" data-to="@Model.UsuariosRegistrados" data-speed="2000" data-fresh-interval="20"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="header">
+                    <h2>FACTOR DE FALLA</h2>
+                </div>
+                <div class="body">
+                    <div id="donut_chart" class="dashboard-donut-chart"></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+    $(function () {
+        //Widgets count
+        $('.count-to').countTo();
+
+        initDonutChart();
+
+    });
+
+    function initDonutChart() {
+        //URL PARA OBTENER LOS DATOS
+        var url = '@Url.Content("~/")' + "Home/GetDonutData";
+        //INICIALIZAR OBJETO AJAX PARA TRAER DATOS DEL SERVIDOR
+        $.ajax({
+            //PARAMETRIZAR SERVICIO AJAX
+            url: url,
+            type: 'post',
+            //MOSTRAR LOADER ANTES DE INICIAR LA SOLICITUD
+            beforeSend: function () {
+                $('.page-loader-wrapper').fadeIn();
+            },
+            success: function (response) {
+
+                console.log(response);
+                Morris.Donut({
+                    element: 'donut_chart',
+                    data: response,
+
+                    colors: ['rgb(255, 5, 100)', 'rgb(5, 200, 211)', 'rgb(232, 0, 180)','rgb(233, 30, 99)', 'rgb(0, 188, 212)', 'rgb(255, 152, 0)', 'rgb(0, 150, 136)', 'rgb(96, 125, 139)'],
+                    formatter: function (y) {
+                        return y + '%'
+                    }
+                });
+
+
+                //OCULTAR LOADER UNA VEZ CARAGADA LA INFORMACIÓN
+                $('.page-loader-wrapper').fadeOut();
+            },
+            //EN CASO DE ERROR, IMPRIMIRLO
+            error: function (request, status, error) {
+                alert('Error al aplicar filtros a tiempos de carga: ' + error + request.responseText);
+
+            }
+        });
+
+    }
+    </script>
+
+    <!-- Counto Js -->
+    <script src="~/Scripts/plugins/jquery-countto/jquery.countTo.js"></script>
+
+    <!-- MORRIS Js -->
+    <script src="~/Scripts/plugins/raphael/raphael.js"></script>
+    <script src="~/Scripts/plugins/morrisjs/morris.js"></script>

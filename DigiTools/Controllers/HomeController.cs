@@ -42,7 +42,7 @@ namespace DigiTools.Controllers
         private static readonly int LINES = 21;
         private static readonly int BREAKDOWNSTYPES = 13;
 
-        public ActionResult IndexMec()
+        public async Task<ActionResult> IndexMec()
         {
             aspNetUsers = daoUser.GetUser(User.Identity.GetUserId());
 
@@ -54,7 +54,9 @@ namespace DigiTools.Controllers
             }
             else
             {
-                return View("IndexAdmin");
+                var model = new IndexAdminViewModel();
+                model = await daoEwo.GetIndexData();
+                return View("IndexAdmin",model);
             }            
         }
 
@@ -864,6 +866,19 @@ namespace DigiTools.Controllers
         {
             var ewo = await daoEwo.GetEwoDesc(id);
             return Json(ewo);
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> GetDonutData()
+        {
+            List<DonutViewModel> donut = null;
+
+            await Task.Run(() =>
+            {
+                donut = daoEwo.GetEwoPercents();
+            });
+
+            return Json(donut);
         }
         #endregion
     }
