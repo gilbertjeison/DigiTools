@@ -45,6 +45,7 @@
         <AssociationConnector Association="MttoAppModel.FK_tiempos_carga_lineas1" />
         <EntityTypeShape EntityType="MttoAppModel.ewos" Width="1.5" PointX="5.375" PointY="10.75" />
         <EntityTypeShape EntityType="MttoAppModel.repuestos_utilizados" Width="1.5" PointX="7.375" PointY="10.75" />
+        <EntityTypeShape EntityType="MttoAppModel.excepciones" Width="1.5" PointX="7.375" PointY="14.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

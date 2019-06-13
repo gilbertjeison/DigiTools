@@ -13,6 +13,17 @@ namespace DigiTools.Controllers
             Response.StatusCode = statusCode;
             ViewBag.StatusCode = statusCode + " Error " ;
             ViewBag.Detail = exception.ToString();
+
+            //REPORTAR ERROR EN LA BASE DE DATOS
+            Dao.DaoExcepcion.AddException(
+                new Database.excepciones()
+                {
+                    codigo_error = statusCode,
+                    codigo_usuario = User.Identity.Name == null ? "No definido" : User.Identity.Name,
+                    descripcion = exception.ToString(),
+                    fecha = DateTime.Now
+                });
+
             return View();
         }
     }

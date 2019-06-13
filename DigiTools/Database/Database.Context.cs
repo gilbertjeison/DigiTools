@@ -60,5 +60,6 @@ namespace DigiTools.Database
         public virtual DbSet<kpis> kpis { get; set; }
         public virtual DbSet<ewos> ewos { get; set; }
         public virtual DbSet<repuestos_utilizados> repuestos_utilizados { get; set; }
+        public virtual DbSet<excepciones> excepciones { get; set; }
     }
 }

@@ -27,6 +27,15 @@ namespace DigiTools.Dao
             {
                 Debug.WriteLine("Error agregando lista de acciones: " + e.ToString());
                 regs = -1;
+                //REPORTAR ERROR EN LA BASE DE DATOS
+                DaoExcepcion.AddException(
+                    new excepciones()
+                    {
+                        codigo_error = -1,
+                        codigo_usuario = HttpContext.Current.User.Identity.Name == null ? "No definido" : HttpContext.Current.User.Identity.Name,
+                        descripcion = "Dao Acciones "+e.ToString(),
+                        fecha = DateTime.Now
+                    });
             }
 
             return regs;
@@ -50,6 +59,15 @@ namespace DigiTools.Dao
             catch (Exception e)
             {
                 Debug.WriteLine("Excepción al momento de consultar lista de acciones: " + e.ToString());
+                //REPORTAR ERROR EN LA BASE DE DATOS
+                DaoExcepcion.AddException(
+                    new excepciones()
+                    {
+                        codigo_error = -1,
+                        codigo_usuario = HttpContext.Current.User.Identity.Name == null ? "No definido" : HttpContext.Current.User.Identity.Name,
+                        descripcion = "Dao Acciones " + e.ToString(),
+                        fecha = DateTime.Now
+                    });
             }
 
             return list;
@@ -93,6 +111,15 @@ namespace DigiTools.Dao
             catch (Exception e)
             {
                 Debug.WriteLine("Excepción al editar acción: " + e.ToString());
+                //REPORTAR ERROR EN LA BASE DE DATOS
+                DaoExcepcion.AddException(
+                    new excepciones()
+                    {
+                        codigo_error = -1,
+                        codigo_usuario = HttpContext.Current.User.Identity.Name == null ? "No definido" : HttpContext.Current.User.Identity.Name,
+                        descripcion = "Dao Acciones " + e.ToString(),
+                        fecha = DateTime.Now
+                    });
             }
 
             return regs;
@@ -117,6 +144,15 @@ namespace DigiTools.Dao
             catch (Exception e)
             {
                 Trace.WriteLine("Excepción al eliminar acción de lista de acciones: " + e.ToString());
+                //REPORTAR ERROR EN LA BASE DE DATOS
+                DaoExcepcion.AddException(
+                    new excepciones()
+                    {
+                        codigo_error = -1,
+                        codigo_usuario = HttpContext.Current.User.Identity.Name == null ? "No definido" : HttpContext.Current.User.Identity.Name,
+                        descripcion = "Dao Acciones " + e.ToString(),
+                        fecha = DateTime.Now
+                    });
             }
             return 0;
         }

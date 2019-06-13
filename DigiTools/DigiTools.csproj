@@ -233,6 +233,7 @@
     <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Dao\DaoAcciones.cs" />
     <Compile Include="Dao\DaoEwo.cs" />
+    <Compile Include="Dao\DaoExcepcion.cs" />
     <Compile Include="Dao\DaoLineas.cs" />
     <Compile Include="Dao\DaoMaquina.cs" />
     <Compile Include="Dao\DaoPersonal.cs" />
@@ -296,6 +297,9 @@
       <DependentUpon>Database.tt</DependentUpon>
     </Compile>
     <Compile Include="Database\ewos.cs">
+      <DependentUpon>Database.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Database\excepciones.cs">
       <DependentUpon>Database.tt</DependentUpon>
     </Compile>
     <Compile Include="Database\herramientas.cs">

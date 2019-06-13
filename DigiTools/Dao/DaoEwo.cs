@@ -37,6 +37,15 @@ namespace DigiTools.Dao
             {
                 Debug.WriteLine("Error al consultar consecutivo de ewo: " + e.ToString());
                 max = -1;
+                //REPORTAR ERROR EN LA BASE DE DATOS
+                DaoExcepcion.AddException(
+                    new excepciones()
+                    {
+                        codigo_error = -1,
+                        codigo_usuario = HttpContext.Current.User.Identity.Name == null ? "No definido" : HttpContext.Current.User.Identity.Name,
+                        descripcion = "Dao Ewo " + e.ToString(),
+                        fecha = DateTime.Now
+                    });
             }
 
             return max;

@@ -222,6 +222,16 @@
           <Property Name="user_id" Type="int" />
           <Property Name="kpi" Type="bit" />
         </EntityType>
+        <EntityType Name="excepciones">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="codigo_error" Type="int" />
+          <Property Name="codigo_usuario" Type="nvarchar" MaxLength="128" />
+          <Property Name="descripcion" Type="text" />
+          <Property Name="fecha" Type="datetime" />
+        </EntityType>
         <EntityType Name="herramientas">
           <Key>
             <PropertyRef Name="Id" />
@@ -570,6 +580,7 @@
           <EntitySet Name="epps" EntityType="Self.epps" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="equipos" EntityType="Self.equipos" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ewos" EntityType="Self.ewos" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="excepciones" EntityType="Self.excepciones" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="herramientas" EntityType="Self.herramientas" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="kpis" EntityType="Self.kpis" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="lineas" EntityType="Self.lineas" Schema="dbo" store:Type="Tables" />
@@ -1005,6 +1016,7 @@
           </AssociationSet>
           <EntitySet Name="ewos" EntityType="MttoAppModel.ewos" />
           <EntitySet Name="repuestos_utilizados" EntityType="MttoAppModel.repuestos_utilizados" />
+          <EntitySet Name="excepciones" EntityType="MttoAppModel.excepciones" />
         </EntityContainer>
         <EntityType Name="C__MigrationHistory">
           <Key>
@@ -1205,6 +1217,16 @@
           <Property Name="image_path" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="SSMA_TimeStamp" Type="Binary" Nullable="false" MaxLength="8" FixedLength="true" annotation:StoreGeneratedPattern="Computed" />
           <Property Name="cantidad_ewo" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="excepciones">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="codigo_error" Type="Int32" />
+          <Property Name="codigo_usuario" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="descripcion" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="fecha" Type="DateTime" Precision="3" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -1711,6 +1733,17 @@
                 <ScalarProperty Name="descripcion" ColumnName="descripcion" />
                 <ScalarProperty Name="codigo_sap" ColumnName="codigo_sap" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="excepciones">
+            <EntityTypeMapping TypeName="MttoAppModel.excepciones">
+              <MappingFragment StoreEntitySet="excepciones">
+                <ScalarProperty Name="fecha" ColumnName="fecha" />
+                <ScalarProperty Name="descripcion" ColumnName="descripcion" />
+                <ScalarProperty Name="codigo_usuario" ColumnName="codigo_usuario" />
+                <ScalarProperty Name="codigo_error" ColumnName="codigo_error" />
+                <ScalarProperty Name="id" ColumnName="id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
