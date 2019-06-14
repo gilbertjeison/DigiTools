@@ -689,11 +689,7 @@ namespace DigiTools.Controllers
             }            
         }
 
-        public ActionResult About()
-        {
-            ViewBag.Message = "Your application description page.";
-            return View();
-        }
+       
 
         public ActionResult Contact()
         {
@@ -881,8 +877,17 @@ namespace DigiTools.Controllers
             return Json(donut);
         }
 
-        
+
         #endregion
+
+        #region ACERCA DE
+        public ActionResult About()
+        {
+            ViewBag.Message = "Your application description page.";
+            return View();
+        }
+        #endregion
+
 
     }
 }

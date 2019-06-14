@@ -25,8 +25,18 @@ namespace DigiTools.Dao
             }
             catch (Exception e)
             {
-                Debug.WriteLine("Error agregando Rep utilizados: "+e.ToString());
                 regs = -1;
+                string err = "Error agregando Rep utilizados: " + e.ToString();
+                Trace.WriteLine(err);
+                //REPORTAR ERROR EN LA BASE DE DATOS
+                DaoExcepcion.AddException(
+                    new excepciones()
+                    {
+                        codigo_error = -1,
+                        codigo_usuario = HttpContext.Current.User.Identity.Name ?? "No definido",
+                        descripcion = err,
+                        fecha = DateTime.Now
+                    });
             }
 
             return regs;
@@ -49,7 +59,17 @@ namespace DigiTools.Dao
             }
             catch (Exception e)
             {
-                Debug.WriteLine("Excepción al momento de consultar repuestos utilizados: " + e.ToString());
+                string err = "Excepción al momento de consultar repuestos utilizados: " + e.ToString();
+                Trace.WriteLine(err);
+                //REPORTAR ERROR EN LA BASE DE DATOS
+                DaoExcepcion.AddException(
+                    new excepciones()
+                    {
+                        codigo_error = -1,
+                        codigo_usuario = HttpContext.Current.User.Identity.Name ?? "No definido",
+                        descripcion = err,
+                        fecha = DateTime.Now
+                    });
             }
 
             return list;
@@ -91,7 +111,17 @@ namespace DigiTools.Dao
             }
             catch (Exception e)
             {
-                Debug.WriteLine("Excepción al editar repuesto utilizado: " + e.ToString());
+                string err = "Excepción al editar repuesto utilizado: " + e.ToString();
+                Trace.WriteLine(err);
+                //REPORTAR ERROR EN LA BASE DE DATOS
+                DaoExcepcion.AddException(
+                    new excepciones()
+                    {
+                        codigo_error = -1,
+                        codigo_usuario = HttpContext.Current.User.Identity.Name ?? "No definido",
+                        descripcion = err,
+                        fecha = DateTime.Now
+                    });
             }
 
             return regs;
@@ -115,7 +145,17 @@ namespace DigiTools.Dao
             }
             catch (Exception e)
             {
-                Debug.WriteLine("Excepción al eliminar repuestos utilizados: " + e.ToString());
+                string err = "Excepción al eliminar repuestos utilizados: " + e.ToString();
+                Trace.WriteLine(err);
+                //REPORTAR ERROR EN LA BASE DE DATOS
+                DaoExcepcion.AddException(
+                    new excepciones()
+                    {
+                        codigo_error = -1,
+                        codigo_usuario = HttpContext.Current.User.Identity.Name ?? "No definido",
+                        descripcion = err,
+                        fecha = DateTime.Now
+                    });
             }
             return 0;
         }

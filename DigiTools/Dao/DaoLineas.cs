@@ -33,8 +33,18 @@ namespace DigiTools.Dao
                 }
             }
             catch (Exception e)
-            {
-                Debug.WriteLine(e.ToString());
+            {                
+                string err = "GetLinesAsync: " + e.ToString();
+                Trace.WriteLine(err);
+                //REPORTAR ERROR EN LA BASE DE DATOS
+                DaoExcepcion.AddException(
+                    new excepciones()
+                    {
+                        codigo_error = -1,
+                        codigo_usuario = HttpContext.Current.User.Identity.Name ?? "No definido",
+                        descripcion = err,
+                        fecha = DateTime.Now
+                    });
             }
 
             return listLines;
@@ -57,7 +67,17 @@ namespace DigiTools.Dao
             }
             catch (Exception e)
             {
-                Debug.WriteLine(e.ToString());
+                string err = "GetLinesAsync: " + e.ToString();
+                Trace.WriteLine(err);
+                //REPORTAR ERROR EN LA BASE DE DATOS
+                DaoExcepcion.AddException(
+                    new excepciones()
+                    {
+                        codigo_error = -1,
+                        codigo_usuario = HttpContext.Current.User.Identity.Name ?? "No definido",
+                        descripcion = err,
+                        fecha = DateTime.Now
+                    });
             }
 
             return listLines;
@@ -80,7 +100,17 @@ namespace DigiTools.Dao
             }
             catch (Exception e)
             {
-                Debug.WriteLine(e.ToString());
+                string err = "GetLinesAsyncById: " + e.ToString();
+                Trace.WriteLine(err);
+                //REPORTAR ERROR EN LA BASE DE DATOS
+                DaoExcepcion.AddException(
+                    new excepciones()
+                    {
+                        codigo_error = -1,
+                        codigo_usuario = HttpContext.Current.User.Identity.Name ?? "No definido",
+                        descripcion = err,
+                        fecha = DateTime.Now
+                    });
             }
 
             return listLines;
@@ -103,7 +133,17 @@ namespace DigiTools.Dao
             }
             catch (Exception e)
             {
-                Debug.WriteLine(e.ToString());
+                string err = "GetLinesById: " + e.ToString();
+                Trace.WriteLine(err);
+                //REPORTAR ERROR EN LA BASE DE DATOS
+                DaoExcepcion.AddException(
+                    new excepciones()
+                    {
+                        codigo_error = -1,
+                        codigo_usuario = HttpContext.Current.User.Identity.Name ?? "No definido",
+                        descripcion = err,
+                        fecha = DateTime.Now
+                    });
             }
 
             return listLines;
@@ -141,7 +181,17 @@ namespace DigiTools.Dao
             }
             catch (Exception e)
             {
-                Debug.WriteLine("Excepción al consultar custom lineas: " + e);
+                string err = "Excepción al consultar custom lineas: " + e.ToString();
+                Trace.WriteLine(err);
+                //REPORTAR ERROR EN LA BASE DE DATOS
+                DaoExcepcion.AddException(
+                    new excepciones()
+                    {
+                        codigo_error = -1,
+                        codigo_usuario = HttpContext.Current.User.Identity.Name ?? "No definido",
+                        descripcion = err,
+                        fecha = DateTime.Now
+                    });
             }
 
             return list;
@@ -168,7 +218,17 @@ namespace DigiTools.Dao
             }
             catch (Exception e)
             {
-                Debug.WriteLine("Excepción al agregar línea: " + e.ToString());
+                string err = "Excepción al agregar línea: " + e.ToString();
+                Trace.WriteLine(err);
+                //REPORTAR ERROR EN LA BASE DE DATOS
+                DaoExcepcion.AddException(
+                    new excepciones()
+                    {
+                        codigo_error = -1,
+                        codigo_usuario = HttpContext.Current.User.Identity.Name ?? "No definido",
+                        descripcion = err,
+                        fecha = DateTime.Now
+                    });
             }
             return regs;
         }
@@ -214,7 +274,17 @@ namespace DigiTools.Dao
             }
             catch (Exception e)
             {
-                Debug.WriteLine("Excepción al editar linea: " + e.ToString());
+                string err = "Excepción al editar linea: " + e.ToString();
+                Trace.WriteLine(err);
+                //REPORTAR ERROR EN LA BASE DE DATOS
+                DaoExcepcion.AddException(
+                    new excepciones()
+                    {
+                        codigo_error = -1,
+                        codigo_usuario = HttpContext.Current.User.Identity.Name ?? "No definido",
+                        descripcion = err,
+                        fecha = DateTime.Now
+                    });
             }
             return regs;
         }

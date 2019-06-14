@@ -28,7 +28,17 @@ namespace DigiTools.Dao
             }
             catch (Exception e)
             {
-                Debug.WriteLine(e.ToString());
+                string err = "GetTypesAsync: " + e.ToString();
+                Trace.WriteLine(err);
+                //REPORTAR ERROR EN LA BASE DE DATOS
+                DaoExcepcion.AddException(
+                    new excepciones()
+                    {
+                        codigo_error = -1,
+                        codigo_usuario = HttpContext.Current.User.Identity.Name ?? "No definido",
+                        descripcion = err,
+                        fecha = DateTime.Now
+                    });
             }
 
             return tiposData;

@@ -50,7 +50,17 @@ namespace DigiTools.Dao
             }
             catch (Exception e)
             {
-                Debug.WriteLine(e.ToString());
+                string err = "GetTiemposCargaAsync " + e.ToString();
+                Trace.WriteLine(err);
+                //REPORTAR ERROR EN LA BASE DE DATOS
+                DaoExcepcion.AddException(
+                    new excepciones()
+                    {
+                        codigo_error = -1,
+                        codigo_usuario = HttpContext.Current.User.Identity.Name ?? "No definido",
+                        descripcion = err,
+                        fecha = DateTime.Now
+                    });
             }
 
             return listTC;
@@ -91,7 +101,17 @@ namespace DigiTools.Dao
             }
             catch (Exception e)
             {
-                Debug.WriteLine(e.ToString());
+                string err = "GetTiemposCargaAsync " + e.ToString();
+                Trace.WriteLine(err);
+                //REPORTAR ERROR EN LA BASE DE DATOS
+                DaoExcepcion.AddException(
+                    new excepciones()
+                    {
+                        codigo_error = -1,
+                        codigo_usuario = HttpContext.Current.User.Identity.Name ?? "No definido",
+                        descripcion = err,
+                        fecha = DateTime.Now
+                    });
             }
 
             return listTC.OrderBy(x => x.Mes).ToList();
@@ -125,7 +145,17 @@ namespace DigiTools.Dao
             }
             catch (Exception e)
             {
-                Debug.WriteLine(e.ToString());
+                string err = "GetTiempoCargaAsync " + e.ToString();
+                Trace.WriteLine(err);
+                //REPORTAR ERROR EN LA BASE DE DATOS
+                DaoExcepcion.AddException(
+                    new excepciones()
+                    {
+                        codigo_error = -1,
+                        codigo_usuario = HttpContext.Current.User.Identity.Name ?? "No definido",
+                        descripcion = err,
+                        fecha = DateTime.Now
+                    });
             }
 
             return TC;
@@ -158,7 +188,17 @@ namespace DigiTools.Dao
             }
             catch (Exception e)
             {
-                Debug.WriteLine(e.ToString());
+                string err = "GetTiempoCarga " + e.ToString();
+                Trace.WriteLine(err);
+                //REPORTAR ERROR EN LA BASE DE DATOS
+                DaoExcepcion.AddException(
+                    new excepciones()
+                    {
+                        codigo_error = -1,
+                        codigo_usuario = HttpContext.Current.User.Identity.Name ?? "No definido",
+                        descripcion = err,
+                        fecha = DateTime.Now
+                    });
             }
 
             return TC;
@@ -190,7 +230,17 @@ namespace DigiTools.Dao
             }
             catch (Exception e)
             {
-                Debug.WriteLine(e.ToString());
+                string err = "GetTiempoCarga " + e.ToString();
+                Trace.WriteLine(err);
+                //REPORTAR ERROR EN LA BASE DE DATOS
+                DaoExcepcion.AddException(
+                    new excepciones()
+                    {
+                        codigo_error = -1,
+                        codigo_usuario = HttpContext.Current.User.Identity.Name ?? "No definido",
+                        descripcion = err,
+                        fecha = DateTime.Now
+                    });
             }
 
             return TC;
@@ -221,7 +271,17 @@ namespace DigiTools.Dao
             }
             catch (Exception e)
             {
-                Debug.WriteLine(e.ToString());
+                string err = "GetTiempoCarga " + e.ToString();
+                Trace.WriteLine(err);
+                //REPORTAR ERROR EN LA BASE DE DATOS
+                DaoExcepcion.AddException(
+                    new excepciones()
+                    {
+                        codigo_error = -1,
+                        codigo_usuario = HttpContext.Current.User.Identity.Name ?? "No definido",
+                        descripcion = err,
+                        fecha = DateTime.Now
+                    });
             }
 
             return TC;
@@ -249,7 +309,17 @@ namespace DigiTools.Dao
             }
             catch (Exception e)
             {
-                Debug.WriteLine(e.ToString());
+                string err = "GetDistinctYearAsync " + e.ToString();
+                Trace.WriteLine(err);
+                //REPORTAR ERROR EN LA BASE DE DATOS
+                DaoExcepcion.AddException(
+                    new excepciones()
+                    {
+                        codigo_error = -1,
+                        codigo_usuario = HttpContext.Current.User.Identity.Name ?? "No definido",
+                        descripcion = err,
+                        fecha = DateTime.Now
+                    });
             }
 
             return listTC;
@@ -288,7 +358,17 @@ namespace DigiTools.Dao
             }
             catch (Exception e)
             {
-                Debug.WriteLine("Excepción al editar tiempos de carga: " + e.ToString());
+                string err = "Excepción al editar tiempos de carga: " + e.ToString();
+                Trace.WriteLine(err);
+                //REPORTAR ERROR EN LA BASE DE DATOS
+                DaoExcepcion.AddException(
+                    new excepciones()
+                    {
+                        codigo_error = -1,
+                        codigo_usuario = HttpContext.Current.User.Identity.Name ?? "No definido",
+                        descripcion = err,
+                        fecha = DateTime.Now
+                    });
             }
 
             return regs;
@@ -319,7 +399,17 @@ namespace DigiTools.Dao
             }
             catch (Exception e)
             {
-                Debug.WriteLine("Excepción al agregar línea: " + e.ToString());
+                string err = "Excepción al agregar línea: " + e.ToString();
+                Trace.WriteLine(err);
+                //REPORTAR ERROR EN LA BASE DE DATOS
+                DaoExcepcion.AddException(
+                    new excepciones()
+                    {
+                        codigo_error = -1,
+                        codigo_usuario = HttpContext.Current.User.Identity.Name ?? "No definido",
+                        descripcion = err,
+                        fecha = DateTime.Now
+                    });
             }
             return regs;
         }
@@ -353,7 +443,17 @@ namespace DigiTools.Dao
             }
             catch (Exception e)
             {
-                Debug.WriteLine("Error al consultar averias por líneas y mes: " + e.ToString());
+                string err = "Error al consultar averias por líneas y mes: " + e.ToString();
+                Trace.WriteLine(err);
+                //REPORTAR ERROR EN LA BASE DE DATOS
+                DaoExcepcion.AddException(
+                    new excepciones()
+                    {
+                        codigo_error = -1,
+                        codigo_usuario = HttpContext.Current.User.Identity.Name ?? "No definido",
+                        descripcion = err,
+                        fecha = DateTime.Now
+                    });
             }
 
             return mttr;
@@ -389,7 +489,17 @@ namespace DigiTools.Dao
             }
             catch (Exception e)
             {
-                Debug.WriteLine("Error al consultar averias por planta: " + e.ToString());
+                string err = "Error al consultar averías por planta: " + e.ToString();
+                Trace.WriteLine(err);
+                //REPORTAR ERROR EN LA BASE DE DATOS
+                DaoExcepcion.AddException(
+                    new excepciones()
+                    {
+                        codigo_error = -1,
+                        codigo_usuario = HttpContext.Current.User.Identity.Name ?? "No definido",
+                        descripcion = err,
+                        fecha = DateTime.Now
+                    });
             }
 
             return mttr;
@@ -422,7 +532,17 @@ namespace DigiTools.Dao
             }
             catch (Exception e)
             {
-                Debug.WriteLine("Error al consultar averias por site: " + e.ToString());
+                string err = "Error al consultar averías por site: " + e.ToString();
+                Trace.WriteLine(err);
+                //REPORTAR ERROR EN LA BASE DE DATOS
+                DaoExcepcion.AddException(
+                    new excepciones()
+                    {
+                        codigo_error = -1,
+                        codigo_usuario = HttpContext.Current.User.Identity.Name ?? "No definido",
+                        descripcion = err,
+                        fecha = DateTime.Now
+                    });
             }
 
             return mttr;
@@ -459,7 +579,17 @@ namespace DigiTools.Dao
             }
             catch (Exception e)
             {
-                Debug.WriteLine("Error al consultar averias por líneas y mes (MTBF): " + e.ToString());
+                string err = "Error al consultar averias por líneas y mes (MTBF): " + e.ToString();
+                Trace.WriteLine(err);
+                //REPORTAR ERROR EN LA BASE DE DATOS
+                DaoExcepcion.AddException(
+                    new excepciones()
+                    {
+                        codigo_error = -1,
+                        codigo_usuario = HttpContext.Current.User.Identity.Name ?? "No definido",
+                        descripcion = err,
+                        fecha = DateTime.Now
+                    });
             }
 
             return mtbf;
@@ -497,7 +627,17 @@ namespace DigiTools.Dao
             }
             catch (Exception e)
             {
-                Debug.WriteLine("Error al consultar averias por planta (MTBF): " + e.ToString());
+                string err = "Error al consultar averias por planta (MTBF): " + e.ToString();
+                Trace.WriteLine(err);
+                //REPORTAR ERROR EN LA BASE DE DATOS
+                DaoExcepcion.AddException(
+                    new excepciones()
+                    {
+                        codigo_error = -1,
+                        codigo_usuario = HttpContext.Current.User.Identity.Name ?? "No definido",
+                        descripcion = err,
+                        fecha = DateTime.Now
+                    });
             }
 
             return mtbf;
@@ -532,7 +672,17 @@ namespace DigiTools.Dao
             }
             catch (Exception e)
             {
-                Debug.WriteLine("Error al consultar averias por site (MTBF): " + e.ToString());
+                string err = "Error al consultar averias por site (MTBF): " + e.ToString();
+                Trace.WriteLine(err);
+                //REPORTAR ERROR EN LA BASE DE DATOS
+                DaoExcepcion.AddException(
+                    new excepciones()
+                    {
+                        codigo_error = -1,
+                        codigo_usuario = HttpContext.Current.User.Identity.Name ?? "No definido",
+                        descripcion = err,
+                        fecha = DateTime.Now
+                    });
             }
 
             return mtbf;
