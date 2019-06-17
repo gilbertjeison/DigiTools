@@ -130,8 +130,8 @@ namespace DigiTools.Dao
                                 join ln in context.lineas
                                 on td.id_linea equals ln.id
                                 where td.id_linea == line
-                                && td.year.ToString().Equals(SomeHelpers.GetCurrentTime().Year.ToString())
-                                && td.mes == SomeHelpers.GetCurrentTime().Month
+                                && td.year.ToString().Equals(DateTime.Now.Year.ToString())
+                                && td.mes == DateTime.Now.Month
                                 select new { td, ln };
 
                     var res = await query.ToListAsync();
