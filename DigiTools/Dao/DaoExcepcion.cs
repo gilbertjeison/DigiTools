@@ -9,7 +9,7 @@ namespace DigiTools.Dao
 {
     public static class DaoExcepcion
     {
-        public static int AddException(excepciones ex)
+        public static async System.Threading.Tasks.Task<int> AddExceptionAsync(excepciones ex)
         {
             int regs = 0;
                         
@@ -18,7 +18,10 @@ namespace DigiTools.Dao
                 context.excepciones.Add(ex);
                 regs = context.SaveChanges();
             }
-            
+
+            //ENVIAR CORREO ELECTRONICO A DESARROLLADOR DEL SISTEMA
+            await Utils.SomeHelpers.SendGridAsync(4, "gilbertjeison@gmail.com", ex.descripcion);
+
             return regs;
         }
     }

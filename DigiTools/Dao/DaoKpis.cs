@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Web;
 using MoreLinq.Extensions;
 using System.Data.Entity;
+using DigiTools.Utils;
 
 namespace DigiTools.Dao
 {
@@ -53,13 +54,13 @@ namespace DigiTools.Dao
                 string err = "GetTiemposCargaAsync " + e.ToString();
                 Trace.WriteLine(err);
                 //REPORTAR ERROR EN LA BASE DE DATOS
-                DaoExcepcion.AddException(
+                await DaoExcepcion.AddExceptionAsync(
                     new excepciones()
                     {
                         codigo_error = -1,
                         codigo_usuario = HttpContext.Current.User.Identity.Name ?? "No definido",
                         descripcion = err,
-                        fecha = DateTime.Now
+                        fecha = SomeHelpers.GetCurrentTime()
                     });
             }
 
@@ -104,13 +105,13 @@ namespace DigiTools.Dao
                 string err = "GetTiemposCargaAsync " + e.ToString();
                 Trace.WriteLine(err);
                 //REPORTAR ERROR EN LA BASE DE DATOS
-                DaoExcepcion.AddException(
+                await DaoExcepcion.AddExceptionAsync(
                     new excepciones()
                     {
                         codigo_error = -1,
                         codigo_usuario = HttpContext.Current.User.Identity.Name ?? "No definido",
                         descripcion = err,
-                        fecha = DateTime.Now
+                        fecha = SomeHelpers.GetCurrentTime()
                     });
             }
 
@@ -129,8 +130,8 @@ namespace DigiTools.Dao
                                 join ln in context.lineas
                                 on td.id_linea equals ln.id
                                 where td.id_linea == line
-                                && td.year.ToString().Equals(DateTime.Now.Year.ToString())
-                                && td.mes == DateTime.Now.Month
+                                && td.year.ToString().Equals(SomeHelpers.GetCurrentTime().Year.ToString())
+                                && td.mes == SomeHelpers.GetCurrentTime().Month
                                 select new { td, ln };
 
                     var res = await query.ToListAsync();
@@ -148,20 +149,20 @@ namespace DigiTools.Dao
                 string err = "GetTiempoCargaAsync " + e.ToString();
                 Trace.WriteLine(err);
                 //REPORTAR ERROR EN LA BASE DE DATOS
-                DaoExcepcion.AddException(
+                await DaoExcepcion.AddExceptionAsync(
                     new excepciones()
                     {
                         codigo_error = -1,
                         codigo_usuario = HttpContext.Current.User.Identity.Name ?? "No definido",
                         descripcion = err,
-                        fecha = DateTime.Now
+                        fecha = SomeHelpers.GetCurrentTime()
                     });
             }
 
             return TC;
         }
 
-        public decimal GetTiempoCarga(int line, int month, int year)
+        public async Task<decimal> GetTiempoCargaAsync(int line, int month, int year)
         {
             decimal TC = 0;
 
@@ -191,20 +192,20 @@ namespace DigiTools.Dao
                 string err = "GetTiempoCarga " + e.ToString();
                 Trace.WriteLine(err);
                 //REPORTAR ERROR EN LA BASE DE DATOS
-                DaoExcepcion.AddException(
+                await DaoExcepcion.AddExceptionAsync(
                     new excepciones()
                     {
                         codigo_error = -1,
                         codigo_usuario = HttpContext.Current.User.Identity.Name ?? "No definido",
                         descripcion = err,
-                        fecha = DateTime.Now
+                        fecha = SomeHelpers.GetCurrentTime()
                     });
             }
 
             return TC;
         }
 
-        public decimal GetTiempoCarga(int plant, int year)
+        public async Task<decimal> GetTiempoCargaAsync(int plant, int year)
         {
             decimal TC = 0;
 
@@ -233,20 +234,20 @@ namespace DigiTools.Dao
                 string err = "GetTiempoCarga " + e.ToString();
                 Trace.WriteLine(err);
                 //REPORTAR ERROR EN LA BASE DE DATOS
-                DaoExcepcion.AddException(
+                await DaoExcepcion.AddExceptionAsync(
                     new excepciones()
                     {
                         codigo_error = -1,
                         codigo_usuario = HttpContext.Current.User.Identity.Name ?? "No definido",
                         descripcion = err,
-                        fecha = DateTime.Now
+                        fecha = SomeHelpers.GetCurrentTime()
                     });
             }
 
             return TC;
         }
 
-        public decimal GetTiempoCarga(int year)
+        public async Task<decimal> GetTiempoCargaAsyncYear(int year)
         {
             decimal TC = 0;
 
@@ -274,20 +275,20 @@ namespace DigiTools.Dao
                 string err = "GetTiempoCarga " + e.ToString();
                 Trace.WriteLine(err);
                 //REPORTAR ERROR EN LA BASE DE DATOS
-                DaoExcepcion.AddException(
+                await DaoExcepcion.AddExceptionAsync(
                     new excepciones()
                     {
                         codigo_error = -1,
                         codigo_usuario = HttpContext.Current.User.Identity.Name ?? "No definido",
                         descripcion = err,
-                        fecha = DateTime.Now
+                        fecha = SomeHelpers.GetCurrentTime()
                     });
             }
 
             return TC;
         }
 
-        public async Task<List<string>> GetDistinctYearAsync(Nullable<int> line)
+        public async Task<List<string>> GetDistinctYearAsync(int? line)
         {
             List<string> listTC = new List<string>();
 
@@ -312,13 +313,13 @@ namespace DigiTools.Dao
                 string err = "GetDistinctYearAsync " + e.ToString();
                 Trace.WriteLine(err);
                 //REPORTAR ERROR EN LA BASE DE DATOS
-                DaoExcepcion.AddException(
+                await DaoExcepcion.AddExceptionAsync(
                     new excepciones()
                     {
                         codigo_error = -1,
                         codigo_usuario = HttpContext.Current.User.Identity.Name ?? "No definido",
                         descripcion = err,
-                        fecha = DateTime.Now
+                        fecha = SomeHelpers.GetCurrentTime()
                     });
             }
 
@@ -361,13 +362,13 @@ namespace DigiTools.Dao
                 string err = "Excepción al editar tiempos de carga: " + e.ToString();
                 Trace.WriteLine(err);
                 //REPORTAR ERROR EN LA BASE DE DATOS
-                DaoExcepcion.AddException(
+                await DaoExcepcion.AddExceptionAsync(
                     new excepciones()
                     {
                         codigo_error = -1,
                         codigo_usuario = HttpContext.Current.User.Identity.Name ?? "No definido",
                         descripcion = err,
-                        fecha = DateTime.Now
+                        fecha = SomeHelpers.GetCurrentTime()
                     });
             }
 
@@ -402,19 +403,19 @@ namespace DigiTools.Dao
                 string err = "Excepción al agregar línea: " + e.ToString();
                 Trace.WriteLine(err);
                 //REPORTAR ERROR EN LA BASE DE DATOS
-                DaoExcepcion.AddException(
+                await DaoExcepcion.AddExceptionAsync(
                     new excepciones()
                     {
                         codigo_error = -1,
                         codigo_usuario = HttpContext.Current.User.Identity.Name ?? "No definido",
                         descripcion = err,
-                        fecha = DateTime.Now
+                        fecha = SomeHelpers.GetCurrentTime()
                     });
             }
             return regs;
         }
 
-        public decimal GetMttrByLineMonth(int line, int month, int year)
+        public async Task<decimal> GetMttrByLineMonthAsync(int line, int month, int year)
         {
             decimal mttr = 0;
 
@@ -446,20 +447,20 @@ namespace DigiTools.Dao
                 string err = "Error al consultar averias por líneas y mes: " + e.ToString();
                 Trace.WriteLine(err);
                 //REPORTAR ERROR EN LA BASE DE DATOS
-                DaoExcepcion.AddException(
+                await DaoExcepcion.AddExceptionAsync(
                     new excepciones()
                     {
                         codigo_error = -1,
                         codigo_usuario = HttpContext.Current.User.Identity.Name ?? "No definido",
                         descripcion = err,
-                        fecha = DateTime.Now
+                        fecha = SomeHelpers.GetCurrentTime()
                     });
             }
 
             return mttr;
         }
 
-        public decimal GetMttrByPlant(int plant, int year)
+        public async Task<decimal> GetMttrByPlantAsync(int plant, int year)
         {
             decimal mttr = 0;
 
@@ -492,20 +493,20 @@ namespace DigiTools.Dao
                 string err = "Error al consultar averías por planta: " + e.ToString();
                 Trace.WriteLine(err);
                 //REPORTAR ERROR EN LA BASE DE DATOS
-                DaoExcepcion.AddException(
+                await DaoExcepcion.AddExceptionAsync(
                     new excepciones()
                     {
                         codigo_error = -1,
                         codigo_usuario = HttpContext.Current.User.Identity.Name ?? "No definido",
                         descripcion = err,
-                        fecha = DateTime.Now
+                        fecha = SomeHelpers.GetCurrentTime()
                     });
             }
 
             return mttr;
         }
 
-        public decimal GetMttrBySite(int year)
+        public async Task<decimal> GetMttrBySiteAsync(int year)
         {
             decimal mttr = 0;
 
@@ -535,20 +536,20 @@ namespace DigiTools.Dao
                 string err = "Error al consultar averías por site: " + e.ToString();
                 Trace.WriteLine(err);
                 //REPORTAR ERROR EN LA BASE DE DATOS
-                DaoExcepcion.AddException(
+                await DaoExcepcion.AddExceptionAsync(
                     new excepciones()
                     {
                         codigo_error = -1,
                         codigo_usuario = HttpContext.Current.User.Identity.Name ?? "No definido",
                         descripcion = err,
-                        fecha = DateTime.Now
+                        fecha = SomeHelpers.GetCurrentTime()
                     });
             }
 
             return mttr;
         }
 
-        public decimal GetMtbfByLineMonth(int line, int month, int year)
+        public async Task<decimal> GetMtbfByLineMonthAsync(int line, int month, int year)
         {
             decimal mtbf = 0;
 
@@ -568,7 +569,7 @@ namespace DigiTools.Dao
                     {
                         var minT = query.ToList().Sum(x => x.e.tiempo_total);
                         var avrs = query.ToList().Count;
-                        var tc = GetTiempoCarga(line, month, year);
+                        var tc = GetTiempoCargaAsync(line, month, year).Result;
 
                         if (avrs > 0)
                         {
@@ -582,20 +583,20 @@ namespace DigiTools.Dao
                 string err = "Error al consultar averias por líneas y mes (MTBF): " + e.ToString();
                 Trace.WriteLine(err);
                 //REPORTAR ERROR EN LA BASE DE DATOS
-                DaoExcepcion.AddException(
+                await DaoExcepcion.AddExceptionAsync(
                     new excepciones()
                     {
                         codigo_error = -1,
                         codigo_usuario = HttpContext.Current.User.Identity.Name ?? "No definido",
                         descripcion = err,
-                        fecha = DateTime.Now
+                        fecha = SomeHelpers.GetCurrentTime()
                     });
             }
 
             return mtbf;
         }
 
-        public decimal GetMtbfByPlant(int plant, int year)
+        public async Task<decimal> GetMtbfByPlantAsync(int plant, int year)
         {
             decimal mtbf = 0;
 
@@ -616,7 +617,7 @@ namespace DigiTools.Dao
                     {
                         var minT = query.ToList().Sum(x => x.e.tiempo_total);
                         var avrs = query.ToList().Count;
-                        var tc = GetTiempoCarga(plant, year);
+                        var tc = GetTiempoCargaAsync(plant, year).Result;
 
                         if (avrs > 0)
                         {
@@ -630,20 +631,20 @@ namespace DigiTools.Dao
                 string err = "Error al consultar averias por planta (MTBF): " + e.ToString();
                 Trace.WriteLine(err);
                 //REPORTAR ERROR EN LA BASE DE DATOS
-                DaoExcepcion.AddException(
+                await DaoExcepcion.AddExceptionAsync(
                     new excepciones()
                     {
                         codigo_error = -1,
                         codigo_usuario = HttpContext.Current.User.Identity.Name ?? "No definido",
                         descripcion = err,
-                        fecha = DateTime.Now
+                        fecha = SomeHelpers.GetCurrentTime()
                     });
             }
 
             return mtbf;
         }
 
-        public decimal GetMtbfBySite(int year)
+        public async Task<decimal> GetMtbfBySiteAsync(int year)
         {
             decimal mtbf = 0;
 
@@ -661,7 +662,7 @@ namespace DigiTools.Dao
                     {
                         var minT = query.ToList().Sum(x => x.e.tiempo_total);
                         var avrs = query.ToList().Count;
-                        var tc = GetTiempoCarga(year);
+                        var tc = GetTiempoCargaAsyncYear(year).Result;
 
                         if (avrs > 0)
                         {
@@ -675,13 +676,13 @@ namespace DigiTools.Dao
                 string err = "Error al consultar averias por site (MTBF): " + e.ToString();
                 Trace.WriteLine(err);
                 //REPORTAR ERROR EN LA BASE DE DATOS
-                DaoExcepcion.AddException(
+                await DaoExcepcion.AddExceptionAsync(
                     new excepciones()
                     {
                         codigo_error = -1,
                         codigo_usuario = HttpContext.Current.User.Identity.Name ?? "No definido",
                         descripcion = err,
-                        fecha = DateTime.Now
+                        fecha = SomeHelpers.GetCurrentTime()
                     });
             }
 

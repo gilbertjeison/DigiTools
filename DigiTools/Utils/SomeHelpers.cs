@@ -33,7 +33,6 @@ namespace DigiTools.Utils
         static string ewo_images = "~/Content/images/ewo_images/";
         
         static string nombreE;
-        static string callBackUrl;
 
         static string noti_reg = "<div style=\"background: #fff; min-height: 50px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2); position: relative; margin-bottom: 30px; -webkit-border-radius: 2px; -moz-border-radius: 2px; -ms-border-radius: 2px; border-radius: 2px;\"> "
             + " <div  style=\"color:#2EFE2E; padding: 20px; position: relative;  border-bottom: 1px solid rgba(204, 204, 204, 0.35); background-color: #03A9F4 !important;\"> "
@@ -65,7 +64,17 @@ namespace DigiTools.Utils
             + "Su usuario está en estado de <strong>Rechazado</strong>, no puede iniciar en el sistema. "
             + " </div> <small style=\"font-size:8px;\">Desarrollado por (gilbertjeison@gmail.com)</small>";
 
-        
+        static string noti_error = "<div style=\"background: #fff; min-height: 50px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2); position: relative; margin-bottom: 30px; -webkit-border-radius: 2px; -moz-border-radius: 2px; -ms-border-radius: 2px; border-radius: 2px;\"> "
+            + " <div  style=\"color:#FF0040; padding: 20px; position: relative;  border-bottom: 1px solid rgba(204, 204, 204, 0.35); background-color: #03A9F4 !important;\"> "
+            + " <h2 style=\"color:white; margin: 0;font-size: 18px;font-weight: normal;\"> "
+            + " " + nombreE + " <small style=\"display: block; font-size: 12px; margin-top: 5px; color: white; line-height: 15px;\">Error del sistema en tiempo de ejecución</small> "
+            + " </h2> "
+            + " </div> "
+            + " <div style=\"font-size: 14px; color: #555; padding: 20px;\"> "
+            + "Revisar base de datos para conocer el problema. "
+            + " </div> <small style=\"font-size:8px;\">Desarrollado por (gilbertjeison@gmail.com)</small>";
+
+
 
 
         public static async Task SendGridAsync(int type, string mail, string nombre)
@@ -97,6 +106,10 @@ namespace DigiTools.Utils
                 htmlContent = noti_elim;
             }
 
+            if (type == 4)
+            {
+                htmlContent = noti_error;
+            }
             var msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);
             var response = await client.SendEmailAsync(msg);
 
@@ -428,7 +441,7 @@ namespace DigiTools.Utils
                                 }
                                 if (cols == 3)
                                 {
-                                    ws.SetValue(row, cols + 5, daoTec.GetTecnico(int.Parse(lista_acc[row - 88].responsable)).Nombre);
+                                    ws.SetValue(row, cols + 5, daoTec.GetTecnicoAsync(int.Parse(lista_acc[row - 88].responsable)).Result.Nombre);
                                 }
                                 if (cols == 4)
                                 {
@@ -576,6 +589,13 @@ namespace DigiTools.Utils
             }
 
             return res;
+        }
+
+        public static DateTime GetCurrentTime()
+        {
+            DateTime serverTime = DateTime.Now;
+            DateTime _localTime = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(serverTime, TimeZoneInfo.Local.Id, "SA Pacific Standard Time");
+            return _localTime;
         }
 
     }

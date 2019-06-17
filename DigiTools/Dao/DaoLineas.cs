@@ -1,5 +1,6 @@
 ﻿using DigiTools.Database;
 using DigiTools.Models;
+using DigiTools.Utils;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -37,13 +38,13 @@ namespace DigiTools.Dao
                 string err = "GetLinesAsync: " + e.ToString();
                 Trace.WriteLine(err);
                 //REPORTAR ERROR EN LA BASE DE DATOS
-                DaoExcepcion.AddException(
+                await DaoExcepcion.AddExceptionAsync(
                     new excepciones()
                     {
                         codigo_error = -1,
                         codigo_usuario = HttpContext.Current.User.Identity.Name ?? "No definido",
                         descripcion = err,
-                        fecha = DateTime.Now
+                        fecha = SomeHelpers.GetCurrentTime()
                     });
             }
 
@@ -70,13 +71,13 @@ namespace DigiTools.Dao
                 string err = "GetLinesAsync: " + e.ToString();
                 Trace.WriteLine(err);
                 //REPORTAR ERROR EN LA BASE DE DATOS
-                DaoExcepcion.AddException(
+                await DaoExcepcion.AddExceptionAsync(
                     new excepciones()
                     {
                         codigo_error = -1,
                         codigo_usuario = HttpContext.Current.User.Identity.Name ?? "No definido",
                         descripcion = err,
-                        fecha = DateTime.Now
+                        fecha = SomeHelpers.GetCurrentTime()
                     });
             }
 
@@ -103,20 +104,20 @@ namespace DigiTools.Dao
                 string err = "GetLinesAsyncById: " + e.ToString();
                 Trace.WriteLine(err);
                 //REPORTAR ERROR EN LA BASE DE DATOS
-                DaoExcepcion.AddException(
+                await DaoExcepcion.AddExceptionAsync(
                     new excepciones()
                     {
                         codigo_error = -1,
                         codigo_usuario = HttpContext.Current.User.Identity.Name ?? "No definido",
                         descripcion = err,
-                        fecha = DateTime.Now
+                        fecha = SomeHelpers.GetCurrentTime()
                     });
             }
 
             return listLines;
         }
 
-        public List<lineas> GetLinesById(int id)
+        public async Task<List<lineas>> GetLinesByIdAsync(int id)
         {
             List<lineas> listLines = new List<lineas>();
 
@@ -136,13 +137,13 @@ namespace DigiTools.Dao
                 string err = "GetLinesById: " + e.ToString();
                 Trace.WriteLine(err);
                 //REPORTAR ERROR EN LA BASE DE DATOS
-                DaoExcepcion.AddException(
+                await DaoExcepcion.AddExceptionAsync(
                     new excepciones()
                     {
                         codigo_error = -1,
                         codigo_usuario = HttpContext.Current.User.Identity.Name ?? "No definido",
                         descripcion = err,
-                        fecha = DateTime.Now
+                        fecha = SomeHelpers.GetCurrentTime()
                     });
             }
 
@@ -184,20 +185,20 @@ namespace DigiTools.Dao
                 string err = "Excepción al consultar custom lineas: " + e.ToString();
                 Trace.WriteLine(err);
                 //REPORTAR ERROR EN LA BASE DE DATOS
-                DaoExcepcion.AddException(
+                await DaoExcepcion.AddExceptionAsync(
                     new excepciones()
                     {
                         codigo_error = -1,
                         codigo_usuario = HttpContext.Current.User.Identity.Name ?? "No definido",
                         descripcion = err,
-                        fecha = DateTime.Now
+                        fecha = SomeHelpers.GetCurrentTime()
                     });
             }
 
             return list;
         }
 
-        public int AddLine(LineasViewModel lin)
+        public async Task<int> AddLineAsync(LineasViewModel lin)
         {
             int regs = 0;
 
@@ -221,19 +222,19 @@ namespace DigiTools.Dao
                 string err = "Excepción al agregar línea: " + e.ToString();
                 Trace.WriteLine(err);
                 //REPORTAR ERROR EN LA BASE DE DATOS
-                DaoExcepcion.AddException(
+                await DaoExcepcion.AddExceptionAsync(
                     new excepciones()
                     {
                         codigo_error = -1,
                         codigo_usuario = HttpContext.Current.User.Identity.Name ?? "No definido",
                         descripcion = err,
-                        fecha = DateTime.Now
+                        fecha = SomeHelpers.GetCurrentTime()
                     });
             }
             return regs;
         }
 
-        public int EditLinea(LineasViewModel lin)
+        public async Task<int> EditLineaAsync(LineasViewModel lin)
         {
             lineas line;
 
@@ -277,13 +278,13 @@ namespace DigiTools.Dao
                 string err = "Excepción al editar linea: " + e.ToString();
                 Trace.WriteLine(err);
                 //REPORTAR ERROR EN LA BASE DE DATOS
-                DaoExcepcion.AddException(
+                await DaoExcepcion.AddExceptionAsync(
                     new excepciones()
                     {
                         codigo_error = -1,
                         codigo_usuario = HttpContext.Current.User.Identity.Name ?? "No definido",
                         descripcion = err,
-                        fecha = DateTime.Now
+                        fecha = SomeHelpers.GetCurrentTime()
                     });
             }
             return regs;

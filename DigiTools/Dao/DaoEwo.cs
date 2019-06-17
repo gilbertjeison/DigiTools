@@ -1,5 +1,6 @@
 ﻿using DigiTools.Database;
 using DigiTools.Models;
+using DigiTools.Utils;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -39,20 +40,20 @@ namespace DigiTools.Dao
                 Trace.WriteLine(err);
                 max = -1;
                 //REPORTAR ERROR EN LA BASE DE DATOS
-                DaoExcepcion.AddException(
+                await DaoExcepcion.AddExceptionAsync(
                     new excepciones()
                     {
                         codigo_error = -1,
                         codigo_usuario = HttpContext.Current.User.Identity.Name ?? "No definido",
                         descripcion = err,
-                        fecha = DateTime.Now
+                        fecha = SomeHelpers.GetCurrentTime()
                     });
             }
 
             return max;
         }
 
-        public int GetConsecutive(int id_ewo)
+        public async Task<int> GetConsecutiveAsync(int id_ewo)
         {
             int max = 0;
 
@@ -78,20 +79,20 @@ namespace DigiTools.Dao
                 Trace.WriteLine(err);
                 max = -1;
                 //REPORTAR ERROR EN LA BASE DE DATOS
-                DaoExcepcion.AddException(
+                await DaoExcepcion.AddExceptionAsync(
                     new excepciones()
                     {
                         codigo_error = -1,
                         codigo_usuario = HttpContext.Current.User.Identity.Name ?? "No definido",
                         descripcion = err,
-                        fecha = DateTime.Now
+                        fecha = SomeHelpers.GetCurrentTime()
                     });
             }
 
             return max;
         }
 
-        public string[] GetEwoImages(int id_ewo)
+        public async Task<string[]> GetEwoImagesAsync(int id_ewo)
         {
             string[] images = new string[4];
 
@@ -115,20 +116,20 @@ namespace DigiTools.Dao
                 string err = "Error al consultar imagenes de ewo: " + e.ToString();
                 Trace.WriteLine(err);
                 //REPORTAR ERROR EN LA BASE DE DATOS
-                DaoExcepcion.AddException(
+                await DaoExcepcion.AddExceptionAsync(
                     new excepciones()
                     {
                         codigo_error = -1,
                         codigo_usuario = HttpContext.Current.User.Identity.Name ?? "No definido",
                         descripcion = err,
-                        fecha = DateTime.Now
+                        fecha = SomeHelpers.GetCurrentTime()
                     });
             }
 
             return images;
         }
 
-        public List<EwoTimesViewModel> GetEwoTime(int line, int year)
+        public async Task<List<EwoTimesViewModel>> GetEwoTimeAsync(int line, int year)
         {
             List<EwoTimesViewModel> list = new List<EwoTimesViewModel>();
 
@@ -185,20 +186,20 @@ namespace DigiTools.Dao
                 string err = "Error al consultar averias por líneas y mes: " + e.ToString();
                 Trace.WriteLine(err);
                 //REPORTAR ERROR EN LA BASE DE DATOS
-                DaoExcepcion.AddException(
+                await DaoExcepcion.AddExceptionAsync(
                     new excepciones()
                     {
                         codigo_error = -1,
                         codigo_usuario = HttpContext.Current.User.Identity.Name ?? "No definido",
                         descripcion = err,
-                        fecha = DateTime.Now
+                        fecha = SomeHelpers.GetCurrentTime()
                     });
             }
 
             return list;
         }
 
-        public List<EwoTimesViewModelM> GetEwoCCR(int line, int year)
+        public async Task<List<EwoTimesViewModelM>> GetEwoCCRAsync(int line, int year)
         {
             List<EwoTimesViewModelM> list = new List<EwoTimesViewModelM>();
 
@@ -259,13 +260,13 @@ namespace DigiTools.Dao
                 string err = "Error al consultar causa ciclo raiz por líneas y mes MTBF: " + e.ToString();
                 Trace.WriteLine(err);
                 //REPORTAR ERROR EN LA BASE DE DATOS
-                DaoExcepcion.AddException(
+                await DaoExcepcion.AddExceptionAsync(
                     new excepciones()
                     {
                         codigo_error = -1,
                         codigo_usuario = HttpContext.Current.User.Identity.Name ?? "No definido",
                         descripcion = err,
-                        fecha = DateTime.Now
+                        fecha = SomeHelpers.GetCurrentTime()
                     });
             }
 
@@ -374,13 +375,13 @@ namespace DigiTools.Dao
                 string err = "Error al generar formato ewo (SOMEHELPERS): " + e.ToString();
                 Trace.WriteLine(err);
                 //REPORTAR ERROR EN LA BASE DE DATOS
-                DaoExcepcion.AddException(
+                await DaoExcepcion.AddExceptionAsync(
                     new excepciones()
                     {
                         codigo_error = -1,
                         codigo_usuario = HttpContext.Current.User.Identity.Name ?? "No definido",
                         descripcion = err,
-                        fecha = DateTime.Now
+                        fecha = SomeHelpers.GetCurrentTime()
                     });
             }
 
@@ -431,13 +432,13 @@ namespace DigiTools.Dao
                 string err = "Excepción al momento de consultar consolodado de Ewos: " + e.ToString();
                 Trace.WriteLine(err);
                 //REPORTAR ERROR EN LA BASE DE DATOS
-                DaoExcepcion.AddException(
+                await DaoExcepcion.AddExceptionAsync(
                     new excepciones()
                     {
                         codigo_error = -1,
                         codigo_usuario = HttpContext.Current.User.Identity.Name ?? "No definido",
                         descripcion = err,
-                        fecha = DateTime.Now
+                        fecha = SomeHelpers.GetCurrentTime()
                     });
             }
 
@@ -489,13 +490,13 @@ namespace DigiTools.Dao
                 string err = "Excepción al momento de consultar consolidado de Ewos: " + e.ToString();
                 Trace.WriteLine(err);
                 //REPORTAR ERROR EN LA BASE DE DATOS
-                DaoExcepcion.AddException(
+                await DaoExcepcion.AddExceptionAsync(
                     new excepciones()
                     {
                         codigo_error = -1,
                         codigo_usuario = HttpContext.Current.User.Identity.Name ?? "No definido",
                         descripcion = err,
-                        fecha = DateTime.Now
+                        fecha = SomeHelpers.GetCurrentTime()
                     });
             }
 
@@ -553,13 +554,13 @@ namespace DigiTools.Dao
                 string err = "Excepción al momento de agregar EWO: " + e.ToString();
                 Trace.WriteLine(err);
                 //REPORTAR ERROR EN LA BASE DE DATOS
-                DaoExcepcion.AddException(
+                await DaoExcepcion.AddExceptionAsync(
                     new excepciones()
                     {
                         codigo_error = -1,
                         codigo_usuario = HttpContext.Current.User.Identity.Name ?? "No definido",
                         descripcion = err,
-                        fecha = DateTime.Now
+                        fecha = SomeHelpers.GetCurrentTime()
                     });
             }
             return regs;
@@ -657,13 +658,13 @@ namespace DigiTools.Dao
                 string err = "Excepción al editar ewo: " + e.ToString();
                 Trace.WriteLine(err);
                 //REPORTAR ERROR EN LA BASE DE DATOS
-                DaoExcepcion.AddException(
+                await DaoExcepcion.AddExceptionAsync(
                     new excepciones()
                     {
                         codigo_error = -1,
                         codigo_usuario = HttpContext.Current.User.Identity.Name ?? "No definido",
                         descripcion = err,
-                        fecha = DateTime.Now
+                        fecha = SomeHelpers.GetCurrentTime()
                     });
             }
 
@@ -700,13 +701,13 @@ namespace DigiTools.Dao
                 string err = "Excepción al eliminar ewo: " + e.ToString();
                 Trace.WriteLine(err);
                 //REPORTAR ERROR EN LA BASE DE DATOS
-                DaoExcepcion.AddException(
+                await DaoExcepcion.AddExceptionAsync(
                     new excepciones()
                     {
                         codigo_error = -1,
                         codigo_usuario = HttpContext.Current.User.Identity.Name ?? "No definido",
                         descripcion = err,
-                        fecha = DateTime.Now
+                        fecha = SomeHelpers.GetCurrentTime()
                     });
             }
             return 0;
@@ -736,20 +737,20 @@ namespace DigiTools.Dao
                 string err = "Error al consultar porcentajes de tipos de incidentes: " + e.ToString();
                 Trace.WriteLine(err);
                 //REPORTAR ERROR EN LA BASE DE DATOS
-                DaoExcepcion.AddException(
+                await DaoExcepcion.AddExceptionAsync(
                     new excepciones()
                     {
                         codigo_error = -1,
                         codigo_usuario = HttpContext.Current.User.Identity.Name ?? "No definido",
                         descripcion = err,
-                        fecha = DateTime.Now
+                        fecha = SomeHelpers.GetCurrentTime()
                     });
             }
 
             return iavm;
         }
 
-        public List<DonutViewModel> GetEwoPercents()
+        public async Task<List<DonutViewModel>> GetEwoPercentsAsync()
         {
             List<DonutViewModel> list = new List<DonutViewModel>();
 
@@ -778,7 +779,7 @@ namespace DigiTools.Dao
                             list.Add(new DonutViewModel()
                             {
                                 label = item.des,
-                                value = ((double)item.Count / GetCount() * 100).ToString("F2")
+                                value = ((double)item.Count / GetCountAsync().Result * 100).ToString("F2")
                             });
                         }
                     }
@@ -789,20 +790,20 @@ namespace DigiTools.Dao
                 string err = "Error al consultar porcentajes de tipos de incidentes: " + e.ToString();
                 Trace.WriteLine(err);
                 //REPORTAR ERROR EN LA BASE DE DATOS
-                DaoExcepcion.AddException(
+                await DaoExcepcion.AddExceptionAsync(
                     new excepciones()
                     {
                         codigo_error = -1,
                         codigo_usuario = HttpContext.Current.User.Identity.Name ?? "No definido",
                         descripcion = err,
-                        fecha = DateTime.Now
+                        fecha = SomeHelpers.GetCurrentTime()
                     });
             }
 
             return list;
         }
 
-        public int GetCount()
+        public async Task<int> GetCountAsync()
         {
             int max = 0;
 
@@ -820,13 +821,13 @@ namespace DigiTools.Dao
                 string err = "Error al consultar cantidad de ewos: " + e.ToString();
                 Trace.WriteLine(err);
                 //REPORTAR ERROR EN LA BASE DE DATOS
-                DaoExcepcion.AddException(
+                await DaoExcepcion.AddExceptionAsync(
                     new excepciones()
                     {
                         codigo_error = -1,
                         codigo_usuario = HttpContext.Current.User.Identity.Name ?? "No definido",
                         descripcion = err,
-                        fecha = DateTime.Now
+                        fecha = SomeHelpers.GetCurrentTime()
                     });
                 max = -1;
             }

@@ -77,7 +77,8 @@ namespace DigiTools.Controllers
         public async Task<JsonResult> CalculateMttrAsync(int id_line, string year)
         {
             int yr = int.Parse(year);
-            var lnobj = daoLin.GetLinesById(id_line).First();
+            var lnobja = await daoLin.GetLinesByIdAsync(id_line);
+            var lnobj = lnobja.First();
             string lineName = lnobj.nombre;
             int plant = lnobj.id_planta.Value;
             List<MttrViewModel> mVM = new List<MttrViewModel>();
@@ -93,13 +94,13 @@ namespace DigiTools.Controllers
                         Mes = i,
                         MesName = new DateTime(yr, i, 1).ToString("MMMM", CultureInfo.CreateSpecificCulture("es")),
                         Year = yr,
-                        Mttr = daoTc.GetMttrByLineMonth(id_line, i, yr)
+                        Mttr = daoTc.GetMttrByLineMonthAsync(id_line, i, yr).Result
                     });
                 }
 
                 //MTTR DEL SITIO COMPLETO Y DE LA PLANTA
-                Response.Headers["MttrSite"] = daoTc.GetMttrBySite(yr).ToString("0.##");
-                Response.Headers["MttrPlant"] = daoTc.GetMttrByPlant(plant,yr).ToString("0.##");
+                Response.Headers["MttrSite"] = daoTc.GetMttrBySiteAsync(yr).Result.ToString("0.##");
+                Response.Headers["MttrPlant"] = daoTc.GetMttrByPlantAsync(plant,yr).Result.ToString("0.##");
             });
 
             return Json(mVM);
@@ -115,7 +116,7 @@ namespace DigiTools.Controllers
                 mVM.Add(new MttrViewModel()
                 {
                     Year = int.Parse(year),
-                    Mttr = daoTc.GetMttrBySite(int.Parse(year))
+                    Mttr = daoTc.GetMttrBySiteAsync(int.Parse(year)).Result
                 });                
             });
 
@@ -129,9 +130,9 @@ namespace DigiTools.Controllers
                         
             try
             {
-                await Task.Run(() => 
+                await Task.Run(async () => 
                 {
-                    var valuesFromDB = daoE.GetEwoTime(id_line, int.Parse(year));
+                    var valuesFromDB = await daoE.GetEwoTimeAsync(id_line, int.Parse(year));
 
                     for (int i = 1; i < 13; i++)
                     {
@@ -141,7 +142,7 @@ namespace DigiTools.Controllers
                             mVM.Add(new EwoTimesViewModel()
                             {
                                 Line = id_line,
-                                LineName = daoLin.GetLinesById(id_line).First().nombre,
+                                LineName = daoLin.GetLinesByIdAsync(id_line).Result.First().nombre,
                                 Year = int.Parse(year),
                                 Mes = i,
                                 MesName = new DateTime(int.Parse(year), i, 1).ToString("MMMM", CultureInfo.CreateSpecificCulture("es")).ToUpperInvariant()
@@ -151,7 +152,7 @@ namespace DigiTools.Controllers
                         {
                             EwoTimesViewModel et = reg.ToList().First();
                             et.Line = id_line;
-                            et.LineName = daoLin.GetLinesById(id_line).First().nombre;
+                            et.LineName = daoLin.GetLinesByIdAsync(id_line).Result.First().nombre;
                             mVM.Add(et);
                         }
                     }
@@ -172,9 +173,9 @@ namespace DigiTools.Controllers
 
             try
             {
-                await Task.Run(() =>
+                await Task.Run(async () =>
                 {
-                    var valuesFromDB = daoE.GetEwoCCR(id_line, int.Parse(year));
+                    var valuesFromDB = await daoE.GetEwoCCRAsync(id_line, int.Parse(year));
 
                     for (int i = 1; i < 13; i++)
                     {
@@ -184,7 +185,7 @@ namespace DigiTools.Controllers
                             mVM.Add(new EwoTimesViewModelM()
                             {
                                 Line = id_line,
-                                LineName = daoLin.GetLinesById(id_line).First().nombre,
+                                LineName = daoLin.GetLinesByIdAsync(id_line).Result.First().nombre,
                                 Year = int.Parse(year),                              
                                 Mes = i,
                                 MesName = new DateTime(int.Parse(year), i, 1).ToString("MMMM", CultureInfo.CreateSpecificCulture("es")).ToUpperInvariant()
@@ -194,7 +195,7 @@ namespace DigiTools.Controllers
                         {
                             EwoTimesViewModelM et = reg.ToList().First();
                             et.Line = id_line;
-                            et.LineName = daoLin.GetLinesById(id_line).First().nombre;
+                            et.LineName = daoLin.GetLinesByIdAsync(id_line).Result.First().nombre;
                             mVM.Add(et);
                         }
                     }
@@ -214,7 +215,7 @@ namespace DigiTools.Controllers
         public async Task<JsonResult> CalculateMtbfAsync(int id_line, string year)
         {
             int yr = int.Parse(year);
-            var lnobj = daoLin.GetLinesById(id_line).First();
+            var lnobj = daoLin.GetLinesByIdAsync(id_line).Result.First();
             string lineName = lnobj.nombre;
             int plant = lnobj.id_planta.Value;
             List<MtbfViewModel> mVM = new List<MtbfViewModel>();
@@ -230,13 +231,13 @@ namespace DigiTools.Controllers
                         Mes = i,
                         MesName = new DateTime(yr, i, 1).ToString("MMMM", CultureInfo.CreateSpecificCulture("es")),
                         Year = yr,
-                        Mtbf = daoTc.GetMtbfByLineMonth(id_line, i, yr)
+                        Mtbf = daoTc.GetMtbfByLineMonthAsync(id_line, i, yr).Result
                     });
                 }
 
                 //MTTR DEL SITIO COMPLETO Y DE LA PLANTA
-                Response.Headers["MtbfSite"] = daoTc.GetMtbfBySite(yr).ToString("0.##");
-                Response.Headers["MtbfPlant"] = daoTc.GetMtbfByPlant(plant, yr).ToString("0.##");
+                Response.Headers["MtbfSite"] = daoTc.GetMtbfBySiteAsync(yr).Result.ToString("0.##");
+                Response.Headers["MtbfPlant"] = daoTc.GetMtbfByPlantAsync(plant, yr).Result.ToString("0.##");
             });
 
             return Json(mVM);

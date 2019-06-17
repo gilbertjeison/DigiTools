@@ -1,6 +1,7 @@
 ﻿using DigiTools.Dao;
 using DigiTools.Database;
 using DigiTools.Models;
+using DigiTools.Utils;
 using Microsoft.AspNet.Identity;
 using Microsoft.Office.Interop.Excel;
 using OfficeOpenXml;
@@ -44,7 +45,7 @@ namespace DigiTools.Controllers
 
         public async Task<ActionResult> IndexMec()
         {
-            aspNetUsers = daoUser.GetUser(User.Identity.GetUserId());
+            aspNetUsers = await daoUser.GetUserAsync(User.Identity.GetUserId());
 
             var req = Request;
             if (aspNetUsers.IdRol.Equals("65b01f2a-0b46-4d0c-a227-304dc22e2f9d"))
@@ -57,7 +58,8 @@ namespace DigiTools.Controllers
                 var model = new IndexAdminViewModel();
                 model = await daoEwo.GetIndexData();
                 return View("IndexAdmin",model);
-            }            
+            }        
+            
         }
 
         public async Task<ActionResult> Index(int? edit)
@@ -66,7 +68,7 @@ namespace DigiTools.Controllers
 
             try
             {
-                aspNetUsers = daoUser.GetUser(User.Identity.GetUserId());
+                aspNetUsers = await daoUser.GetUserAsync(User.Identity.GetUserId());
                 
                 //LISTA DE PLANTAS
                 var list = await daoPlantas.GetPlants();
@@ -89,7 +91,7 @@ namespace DigiTools.Controllers
                 {
                     id = edit.Value;
                     kpiWiewModel.Edit = edit.Value;
-                    Consecutivo = daoEwo.GetConsecutive(edit.Value);
+                    Consecutivo = await daoEwo.GetConsecutiveAsync(edit.Value);
                 }
                 else
                 {
@@ -128,25 +130,25 @@ namespace DigiTools.Controllers
                 List<porques> porques = ser.Deserialize<List<porques>>(kvm.Porques);
                 List<lista_acciones> lista_acc = ser.Deserialize<List<lista_acciones>>(kvm.Cmd);
                                 
-                ewo.consecutivo = kvm.Id > 0 ? daoEwo.GetConsecutive(kvm.Id) : await daoEwo.GetLastConsecutive()  ;
+                ewo.consecutivo = kvm.Id > 0 ? daoEwo.GetConsecutiveAsync(kvm.Id).Result : await daoEwo.GetLastConsecutive()  ;
                                 
                 ewo.id_area_linea = kvm.IdLinea;
                 ewo.id_equipo = kvm.IdMaquina;
-                ewo.fecha_ewo = DateTime.Now;
+                ewo.fecha_ewo = SomeHelpers.GetCurrentTime();
                 ewo.aviso_numero = kvm.NumAviso;
-                ewo.id_tecnico = daoUser.GetUser(User.Identity.GetUserId()).Id;
+                ewo.id_tecnico = daoUser.GetUserAsync(User.Identity.GetUserId()).Result.Id;
                 ewo.id_tipo_averia = kvm.IdTipoAveria;
                 ewo.id_turno = kvm.Turno;
 
                 //CONVERTIR FECHAS A DATETIME
-                ewo.notificacion_averia = kvm.HrNotAve == null ? DateTime.Now : DateTime.ParseExact(kvm.HrNotAve, "dd-MM-yyyy HH:mm", CultureInfo.InvariantCulture);
-                ewo.inicio_reparacion = kvm.HrIniRep == null ? DateTime.Now : DateTime.ParseExact(kvm.HrIniRep, "dd-MM-yyyy HH:mm", CultureInfo.InvariantCulture);
-                ewo.fin_reparacion = kvm.HrFinRepEnt == null ? DateTime.Now : DateTime.ParseExact(kvm.HrFinRepEnt, "dd-MM-yyyy HH:mm", CultureInfo.InvariantCulture);
-                ewo.fecha_ultimo_mtto = kvm.FchUltimoMtto == null ? DateTime.Now : DateTime.ParseExact(kvm.FchUltimoMtto, "dd-MM-yyyy", CultureInfo.InvariantCulture);
-                ewo.fecha_proximo_mtto = kvm.FchProxMtto == null ? DateTime.Now : DateTime.ParseExact(kvm.FchProxMtto, "dd-MM-yyyy", CultureInfo.InvariantCulture);
-                ewo.fecha_analisis = kvm.FchAnaElab == null ? DateTime.Now : DateTime.ParseExact(kvm.FchAnaElab, "dd-MM-yyyy", CultureInfo.InvariantCulture);
-                ewo.fecha_validacion = kvm.FchEjeVal == null ? DateTime.Now : DateTime.ParseExact(kvm.FchEjeVal, "dd-MM-yyyy", CultureInfo.InvariantCulture);
-                ewo.fecha_contramedida = kvm.FchDefConMed == null ? DateTime.Now : DateTime.ParseExact(kvm.FchDefConMed, "dd-MM-yyyy", CultureInfo.InvariantCulture);
+                ewo.notificacion_averia = kvm.HrNotAve == null ? SomeHelpers.GetCurrentTime() : DateTime.ParseExact(kvm.HrNotAve, "dd-MM-yyyy HH:mm", CultureInfo.InvariantCulture);
+                ewo.inicio_reparacion = kvm.HrIniRep == null ? SomeHelpers.GetCurrentTime() : DateTime.ParseExact(kvm.HrIniRep, "dd-MM-yyyy HH:mm", CultureInfo.InvariantCulture);
+                ewo.fin_reparacion = kvm.HrFinRepEnt == null ? SomeHelpers.GetCurrentTime() : DateTime.ParseExact(kvm.HrFinRepEnt, "dd-MM-yyyy HH:mm", CultureInfo.InvariantCulture);
+                ewo.fecha_ultimo_mtto = kvm.FchUltimoMtto == null ? SomeHelpers.GetCurrentTime() : DateTime.ParseExact(kvm.FchUltimoMtto, "dd-MM-yyyy", CultureInfo.InvariantCulture);
+                ewo.fecha_proximo_mtto = kvm.FchProxMtto == null ? SomeHelpers.GetCurrentTime() : DateTime.ParseExact(kvm.FchProxMtto, "dd-MM-yyyy", CultureInfo.InvariantCulture);
+                ewo.fecha_analisis = kvm.FchAnaElab == null ? SomeHelpers.GetCurrentTime() : DateTime.ParseExact(kvm.FchAnaElab, "dd-MM-yyyy", CultureInfo.InvariantCulture);
+                ewo.fecha_validacion = kvm.FchEjeVal == null ? SomeHelpers.GetCurrentTime() : DateTime.ParseExact(kvm.FchEjeVal, "dd-MM-yyyy", CultureInfo.InvariantCulture);
+                ewo.fecha_contramedida = kvm.FchDefConMed == null ? SomeHelpers.GetCurrentTime() : DateTime.ParseExact(kvm.FchDefConMed, "dd-MM-yyyy", CultureInfo.InvariantCulture);
 
                 ewo.tiempo_espera_tecnico = kvm.TEspIniTec;
                 ewo.tiempo_diagnostico = kvm.TDiagn;
@@ -164,7 +166,7 @@ namespace DigiTools.Controllers
                     var imagen_3 = kvm.ImagePQ1 != null ? kvm.ImagePQ1.FileName : "";
                     var imagen_4 = kvm.ImagePQ2 != null ? kvm.ImagePQ2.FileName : "";
 
-                    images = daoEwo.GetEwoImages(kvm.Id);
+                    images = await daoEwo.GetEwoImagesAsync(kvm.Id);
                     //SI LA IMAGEN ES DIFERENTE, SE EDITA.
                     if (!images[0].Equals(imagen_1))
                     {
@@ -558,7 +560,7 @@ namespace DigiTools.Controllers
                                     }
                                     if (cols == 3)
                                     {
-                                        ws.SetValue(row, cols+5,daoTec.GetTecnico(int.Parse(lista_acc[row - 88].responsable)).Nombre);
+                                        ws.SetValue(row, cols+5,daoTec.GetTecnicoAsync(int.Parse(lista_acc[row - 88].responsable)).Result.Nombre);
                                     }
                                     if (cols == 4)
                                     {
@@ -826,7 +828,7 @@ namespace DigiTools.Controllers
             try
             {
                 // ELIMINAR IMAGENES DEL EWO
-                string[] imagesDel = daoEwo.GetEwoImages(id_ewo);
+                string[] imagesDel = await daoEwo.GetEwoImagesAsync(id_ewo);
                 foreach (var item in imagesDel)
                 {
                     if (!item.Equals(""))
@@ -869,15 +871,14 @@ namespace DigiTools.Controllers
         {
             List<DonutViewModel> donut = null;
 
-            await Task.Run(() =>
+            await Task.Run(async () =>
             {
-                donut = daoEwo.GetEwoPercents();
+                donut = await daoEwo.GetEwoPercentsAsync();
             });
 
             return Json(donut);
         }
-
-
+        
         #endregion
 
         #region ACERCA DE
@@ -886,8 +887,6 @@ namespace DigiTools.Controllers
             ViewBag.Message = "Your application description page.";
             return View();
         }
-        #endregion
-
-
+        #endregion        
     }
 }

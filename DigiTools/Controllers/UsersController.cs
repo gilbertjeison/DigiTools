@@ -22,11 +22,11 @@ namespace DigiTools.Controllers
         DaoRoles daoRol = new DaoRoles();
 
         // GET: Users
-        public ActionResult Index()
+        public async Task<ActionResult> Index()
         {
             var viewModel = new RoleViewModel();
             viewModel.RoleList = new List<SelectListItem>();
-            var roles = daoRol.GetRoles();
+            var roles = await daoRol.GetRolesAsync();
 
             var RoleList = new List<SelectListItem>();
 
@@ -102,14 +102,14 @@ namespace DigiTools.Controllers
                 {
                     return RedirectToAction("Users", "Index");
                 }
-                
 
-                int result = await daoUser.ApproveUser(id,role);
+                var rl = role.Trim().Equals("") ? Utils.SomeHelpers.ROL_MEC : role.Trim();
+                int result = await daoUser.ApproveUser(id,rl);
 
                 if (result > 0)
                 {
                     //ENVIAR CORREO ELECTRÓNICO DE NOTIFICACIÓN
-                    var user = daoUser.GetUser(id);
+                    var user = await daoUser.GetUserAsync(id);
                     await Utils.SomeHelpers.SendGridAsync(2, user.Email, user.Nombres + " " + user.Apellidos);
                     return Json(data: true);
                 }
@@ -134,7 +134,7 @@ namespace DigiTools.Controllers
                     return RedirectToAction("Users", "Index");
                 }
 
-                var user = daoUser.GetUser(id);
+                var user = await daoUser.GetUserAsync(id);
 
                 //ENVIAR CORREO ELECTRÓNICO DE NOTIFICACIÓN DE RECHAZO
                 await Utils.SomeHelpers.SendGridAsync(3, user.Email, user.Nombres + " " + user.Apellidos);

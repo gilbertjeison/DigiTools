@@ -124,6 +124,7 @@
 
         
         new $.fn.dataTable.FixedHeader(table);
+              
     });
 
     function onIdRoleChanged(role)
@@ -229,9 +230,7 @@
             if (result.value) {
                 //APROBAR REGISTRO EN EL SERVIDOR
                 var url = '@Url.Content("~/")' + "Users/DeleteUser";
-
-                console.log(url);
-
+                
                 $.post(url, { ID: Id }, function (data)
                 {
                     if (data)

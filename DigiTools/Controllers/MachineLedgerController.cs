@@ -64,7 +64,7 @@ namespace DigiTools.Controllers
 
         #region EXECUTIONS
         [HttpPost]
-        public JsonResult AddLine(LineasViewModel lineasViewModel)
+        public async Task<JsonResult> AddLine(LineasViewModel lineasViewModel)
         {
             try
             {
@@ -78,7 +78,7 @@ namespace DigiTools.Controllers
 
                 lineasViewModel.IdPlanta = int.Parse(Session["id_planta"].ToString());
                 
-                int res = daoLin.AddLine(lineasViewModel);
+                int res = await daoLin.AddLineAsync(lineasViewModel);
                 if (res == 1)
                 {
                     return Json("OK");
@@ -101,7 +101,7 @@ namespace DigiTools.Controllers
         }
 
         [HttpPost]
-        public JsonResult EditLine(LineasViewModel lineasViewModel)
+        public async Task<JsonResult> EditLine(LineasViewModel lineasViewModel)
         {
             try
             {
@@ -116,7 +116,7 @@ namespace DigiTools.Controllers
                 lineasViewModel.IdPlanta = int.Parse(Session["id_planta"].ToString());
                 
 
-                int res = daoLin.EditLinea(lineasViewModel);
+                int res = await daoLin.EditLineaAsync(lineasViewModel);
                 if (res == 1)
                 {
                     return Json("OK");

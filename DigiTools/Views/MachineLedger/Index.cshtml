@@ -1,4 +1,6 @@
-﻿@model DigiTools.Models.MlModelView
+﻿@using DigiTools.Utils
+
+@model DigiTools.Models.MlModelView
 @{
     ViewBag.Title = "Index";
 }
@@ -201,7 +203,7 @@
                     </div>
                     <div class="row">
                         <div class="col-sm-6">
-                            <label for="TiempoCarga">Tiempo de carga (@(DateTime.Now.ToString("MMMM").ToUpperInvariant() + " " + DateTime.Now.Year))</label>
+                            <label for="TiempoCarga">Tiempo de carga (@(SomeHelpers.GetCurrentTime().ToString("MMMM").ToUpperInvariant() + " " + SomeHelpers.GetCurrentTime().Year))</label>
                             <div class="input-group">
                                 <div class="form-line">
                                     <input type="text" readonly name="TiempoCarga" id="TiempoCargaEdit" placeholder="Aquí el tiempo de carga..." value="0" required />

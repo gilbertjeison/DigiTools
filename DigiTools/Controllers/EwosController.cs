@@ -35,7 +35,7 @@ namespace DigiTools.Controllers
 
             try
             {
-                AspNetUsers aspNetUsers = daoUser.GetUser(User.Identity.GetUserId());
+                AspNetUsers aspNetUsers = await daoUser.GetUserAsync(User.Identity.GetUserId());
 
                 var draw = Request.Form["draw"];
                 var start = Request.Form["start"];

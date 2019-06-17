@@ -1,5 +1,6 @@
 ﻿using DigiTools.Database;
 using DigiTools.Models;
+using DigiTools.Utils;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -12,7 +13,7 @@ namespace DigiTools.Dao
 {
     public class DaoUsuarios
     {
-        public AspNetUsers GetUser(string id)
+        public async Task<AspNetUsers> GetUserAsync(string id)
         {
             AspNetUsers user = new AspNetUsers();
 
@@ -32,13 +33,13 @@ namespace DigiTools.Dao
                 string err = "GetUser: " + e.ToString();
                 Trace.WriteLine(err);
                 //REPORTAR ERROR EN LA BASE DE DATOS
-                DaoExcepcion.AddException(
+                await DaoExcepcion.AddExceptionAsync(
                     new excepciones()
                     {
                         codigo_error = -1,
                         codigo_usuario = HttpContext.Current.User.Identity.Name ?? "No definido",
                         descripcion = err,
-                        fecha = DateTime.Now
+                        fecha = SomeHelpers.GetCurrentTime()
                     });
             }
 
@@ -84,13 +85,13 @@ namespace DigiTools.Dao
                 string err = "Error al seleccionar usuarios por aprobar: " + e.ToString();
                 Trace.WriteLine(err);
                 //REPORTAR ERROR EN LA BASE DE DATOS
-                DaoExcepcion.AddException(
+                await DaoExcepcion.AddExceptionAsync(
                     new excepciones()
                     {
                         codigo_error = -1,
                         codigo_usuario = HttpContext.Current.User.Identity.Name ?? "No definido",
                         descripcion = err,
-                        fecha = DateTime.Now
+                        fecha = SomeHelpers.GetCurrentTime()
                     });
             }
 
@@ -134,13 +135,13 @@ namespace DigiTools.Dao
                 string err = "Excepción al aprobar usuario: " + e.ToString();
                 Trace.WriteLine(err);
                 //REPORTAR ERROR EN LA BASE DE DATOS
-                DaoExcepcion.AddException(
+                await DaoExcepcion.AddExceptionAsync(
                     new excepciones()
                     {
                         codigo_error = -1,
                         codigo_usuario = HttpContext.Current.User.Identity.Name ?? "No definido",
                         descripcion = err,
-                        fecha = DateTime.Now
+                        fecha = SomeHelpers.GetCurrentTime()
                     });
             }
 
@@ -177,19 +178,19 @@ namespace DigiTools.Dao
                 string err = "Excepción al eliminar usuario: " + e.ToString();
                 Trace.WriteLine(err);
                 //REPORTAR ERROR EN LA BASE DE DATOS
-                DaoExcepcion.AddException(
+                await DaoExcepcion.AddExceptionAsync(
                     new excepciones()
                     {
                         codigo_error = -1,
                         codigo_usuario = HttpContext.Current.User.Identity.Name ?? "No definido",
                         descripcion = err,
-                        fecha = DateTime.Now
+                        fecha = SomeHelpers.GetCurrentTime()
                     });
             }
             return 0;
         }
 
-        public AspNetUsers GetUserByMail(string email)
+        public async Task<AspNetUsers> GetUserByMailAsync(string email)
         {
             AspNetUsers user = new AspNetUsers();
 
@@ -209,13 +210,13 @@ namespace DigiTools.Dao
                 string err = "GetUserByMail: " + e.ToString();
                 Trace.WriteLine(err);
                 //REPORTAR ERROR EN LA BASE DE DATOS
-                DaoExcepcion.AddException(
+                await DaoExcepcion.AddExceptionAsync(
                     new excepciones()
                     {
                         codigo_error = -1,
                         codigo_usuario = HttpContext.Current.User.Identity.Name ?? "No definido",
                         descripcion = err,
-                        fecha = DateTime.Now
+                        fecha = SomeHelpers.GetCurrentTime()
                     });
             }
 

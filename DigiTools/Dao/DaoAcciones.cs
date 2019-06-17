@@ -1,4 +1,5 @@
 ﻿using DigiTools.Database;
+using DigiTools.Utils;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -28,13 +29,13 @@ namespace DigiTools.Dao
                 Debug.WriteLine("Error agregando lista de acciones: " + e.ToString());
                 regs = -1;
                 //REPORTAR ERROR EN LA BASE DE DATOS
-                DaoExcepcion.AddException(
+                await DaoExcepcion.AddExceptionAsync(
                     new excepciones()
                     {
                         codigo_error = -1,
                         codigo_usuario = HttpContext.Current.User.Identity.Name == null ? "No definido" : HttpContext.Current.User.Identity.Name,
-                        descripcion = "Dao Acciones "+e.ToString(),
-                        fecha = DateTime.Now
+                        descripcion = "Dao Acciones " + e.ToString(),
+                        fecha = SomeHelpers.GetCurrentTime()
                     });
             }
 
@@ -60,13 +61,13 @@ namespace DigiTools.Dao
             {
                 Debug.WriteLine("Excepción al momento de consultar lista de acciones: " + e.ToString());
                 //REPORTAR ERROR EN LA BASE DE DATOS
-                DaoExcepcion.AddException(
+                await DaoExcepcion.AddExceptionAsync(
                     new excepciones()
                     {
                         codigo_error = -1,
                         codigo_usuario = HttpContext.Current.User.Identity.Name == null ? "No definido" : HttpContext.Current.User.Identity.Name,
                         descripcion = "Dao Acciones " + e.ToString(),
-                        fecha = DateTime.Now
+                        fecha = SomeHelpers.GetCurrentTime()
                     });
             }
 
@@ -112,13 +113,13 @@ namespace DigiTools.Dao
             {
                 Debug.WriteLine("Excepción al editar acción: " + e.ToString());
                 //REPORTAR ERROR EN LA BASE DE DATOS
-                DaoExcepcion.AddException(
+                await DaoExcepcion.AddExceptionAsync(
                     new excepciones()
                     {
                         codigo_error = -1,
                         codigo_usuario = HttpContext.Current.User.Identity.Name == null ? "No definido" : HttpContext.Current.User.Identity.Name,
                         descripcion = "Dao Acciones " + e.ToString(),
-                        fecha = DateTime.Now
+                        fecha = SomeHelpers.GetCurrentTime()
                     });
             }
 
@@ -145,13 +146,13 @@ namespace DigiTools.Dao
             {
                 Trace.WriteLine("Excepción al eliminar acción de lista de acciones: " + e.ToString());
                 //REPORTAR ERROR EN LA BASE DE DATOS
-                DaoExcepcion.AddException(
+                await DaoExcepcion.AddExceptionAsync(
                     new excepciones()
                     {
                         codigo_error = -1,
                         codigo_usuario = HttpContext.Current.User.Identity.Name == null ? "No definido" : HttpContext.Current.User.Identity.Name,
                         descripcion = "Dao Acciones " + e.ToString(),
-                        fecha = DateTime.Now
+                        fecha = SomeHelpers.GetCurrentTime()
                     });
             }
             return 0;

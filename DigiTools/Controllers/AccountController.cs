@@ -12,6 +12,7 @@ using DigiTools.Models;
 using System.Data.Entity.Validation;
 using System.Diagnostics;
 using DigiTools.Dao;
+using DigiTools.Utils;
 
 namespace DigiTools.Controllers
 {
@@ -92,10 +93,10 @@ namespace DigiTools.Controllers
             {
                 case SignInStatus.Success:
                     //VALIDAR QUE USUARIO 
-                    var user = daoUser.GetUserByMail(model.Email);
+                    var user = await daoUser.GetUserByMailAsync(model.Email);
                     if (user != null)
                     {
-                        if (user.Id != null)
+                        if (user != null)
                         {
                             if (user.EmailConfirmed)
                             {
@@ -196,7 +197,7 @@ namespace DigiTools.Controllers
                     Nombres = model.Nombres,
                     Apellidos = model.Apellidos,
                     IdRol = "65b01f2a-0b46-4d0c-a227-304dc22e2f9d",
-                    Registrado = DateTime.Now
+                    Registrado = SomeHelpers.GetCurrentTime()
                 };
 
                 IdentityResult result = new IdentityResult();
