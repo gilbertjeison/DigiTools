@@ -30,7 +30,7 @@ namespace DigiTools.Dao
                                 && td.id_tipo_linea == type
                                 select td;
 
-                    listLines = await query.ToListAsync();
+                    listLines = await query.OrderBy(x => x.nombre).ToListAsync();
                 }
             }
             catch (Exception e)
@@ -63,7 +63,7 @@ namespace DigiTools.Dao
                                 where td.id_planta == plant
                                 select td;
 
-                    listLines = await query.ToListAsync();
+                    listLines = await query.OrderBy(x => x.nombre).ToListAsync();
                 }
             }
             catch (Exception e)
@@ -96,7 +96,7 @@ namespace DigiTools.Dao
                                 where td.id == id
                                 select td;
 
-                    listLines = await query.ToListAsync();
+                    listLines = await query.OrderBy(x => x.nombre).ToListAsync();
                 }
             }
             catch (Exception e)
@@ -129,7 +129,7 @@ namespace DigiTools.Dao
                                 where td.id == id
                                 select td;
 
-                    listLines = query.ToList();
+                    listLines = query.OrderBy(x => x.nombre).ToList();
                 }
             }
             catch (Exception e)
@@ -163,7 +163,7 @@ namespace DigiTools.Dao
                               where b.id_planta == planta
                               select b;
 
-                    var l = await als.ToListAsync();
+                    var l = await als.OrderBy(x => x.nombre).ToListAsync();
 
                     foreach (var item in l)
                     {
@@ -211,7 +211,8 @@ namespace DigiTools.Dao
                         id_planta = lin.IdPlanta,
                         nombre = lin.Nombre,
                         image_path = lin.Image,
-                        id_tipo_linea = lin.TipoLinea
+                        id_tipo_linea = lin.TipoLinea,
+                        tiempo_carga = 0
                     });
 
                     regs = context.SaveChanges();

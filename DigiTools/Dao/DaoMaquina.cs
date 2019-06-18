@@ -26,7 +26,7 @@ namespace DigiTools.Dao
                                 where td.id_linea == line
                                 select td;
 
-                    listMachines = await query.ToListAsync();
+                    listMachines = await query.OrderBy(x=>x.nombre).ToListAsync();
                 }
             }
             catch (Exception e)
