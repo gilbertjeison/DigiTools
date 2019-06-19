@@ -73,7 +73,6 @@ namespace DigiTools.Dao
                             Nombre = item.nombre,
                             Image = (item.foto_path == null || item.foto_path == "") ? SomeHelpers.IMG_PATH + "default2.jpg" : SomeHelpers.IMG_PATH + item.foto_path,
                             IdPlanta = (int)item.id_planta,
-                            DescPlanta = GetPlantDesc(item.id_planta.Value),
                             IdLinea = (int)item.id_linea,
                             ListSistemas = await daoSys.GetSystemsAsync(item.Id)
                         });

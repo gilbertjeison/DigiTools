@@ -217,12 +217,12 @@ namespace DigiTools.Dao
                                  select new
                                  {
                                      g.Key.Month,
-                                     FactoresExt = g.Where(x => x.causa_raiz_index == 0).Count(),
-                                     FaltaCono = g.Where(x => x.causa_raiz_index == 1).Count(),
-                                     FaltaDis = g.Where(x => x.causa_raiz_index == 2).Count(),
-                                     FaltaMtto = g.Where(x => x.causa_raiz_index == 3).Count(),
-                                     CondSubEstOpe = g.Where(x => x.causa_raiz_index == 4).Count(),
-                                     FaltaConBas = g.Where(x => x.causa_raiz_index == 5).Count()
+                                     FactoresExt = g.Where(x => x.causa_raiz_index == 1).Count(),
+                                     FaltaCono = g.Where(x => x.causa_raiz_index == 2).Count(),
+                                     FaltaDis = g.Where(x => x.causa_raiz_index == 3).Count(),
+                                     FaltaMtto = g.Where(x => x.causa_raiz_index == 4).Count(),
+                                     CondSubEstOpe = g.Where(x => x.causa_raiz_index == 5).Count(),
+                                     FaltaConBas = g.Where(x => x.causa_raiz_index == 6).Count()
 
                                  }).AsEnumerable()
                                 .Select(g => new

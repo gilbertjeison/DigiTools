@@ -62,7 +62,6 @@ namespace DigiTools.Controllers
         {
             var maqList = await daoMaq.GetCustomMachinesAsync(linea);
             ViewBag.Linea = nombre;
-            ViewBag.Planta = maqList.First().DescPlanta;
             Session["id_linea"] = linea;
                       
 
