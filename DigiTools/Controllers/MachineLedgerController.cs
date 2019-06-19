@@ -2,6 +2,7 @@
 using DigiTools.Models;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -18,6 +19,7 @@ namespace DigiTools.Controllers
         DaoTipoData daoTD = new DaoTipoData();
         DaoPlantas daoPlantas = new DaoPlantas();
         DaoLineas daoLin = new DaoLineas();
+        DaoMaquina daoMaq = new DaoMaquina();
         // GET: MachineLedger
         public async Task<ActionResult> Index()
         {
@@ -43,22 +45,28 @@ namespace DigiTools.Controllers
         }
 
         //[HttpGet]
-        public async Task<ActionResult> GetLinesView(int planta)
+        public async Task<ActionResult> GetLinesView(int planta, string nombre)
         {
             var linList = await daoLin.GetCustomLinesAsync(planta);
-            if (planta == 1)
-            {
-                ViewBag.Planta = "planta de jabones";
-            }
-            else
-            {
-                ViewBag.Planta = "planta de detergentes";
-            }
+            
+            ViewBag.Planta = nombre;            
 
             Session["id_planta"] = planta;
-
-
+            Trace.WriteLine("Nombre de la planta: " + nombre);
+            
             return PartialView("_Lineas", linList);
+        }
+
+
+        public async Task<ActionResult> GetMachinesView(int linea, string nombre)
+        {
+            var maqList = await daoMaq.GetCustomMachinesAsync(linea);
+            ViewBag.Linea = nombre;
+            ViewBag.Planta = maqList.First().DescPlanta;
+            Session["id_linea"] = linea;
+                      
+
+            return PartialView("_Maquinas", maqList);
         }
         #endregion
 
@@ -88,14 +96,45 @@ namespace DigiTools.Controllers
                     return Json("No se pudo guardar línea, intente de nuevo...");
                 }
                 
-               
-
-                
             }
             catch (Exception e)
             {
                 Response.StatusCode = 500;
                 Response.StatusDescription = "Error al agregar línea" + e.Message;
+                return Json(e.Message);
+            }
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> AddMachine(MaquinasViewModel mVM)
+        {
+            try
+            {
+                string imageName = string.Empty;
+
+                if (mVM.Images != null)
+                {
+                    imageName = Save_File(mVM.Images.FileName);
+                    mVM.Image = imageName;
+                }
+
+                mVM.IdPlanta = int.Parse(Session["id_planta"].ToString());
+                mVM.IdLinea = int.Parse(Session["id_linea"].ToString());
+
+                int res = await daoMaq.AddMachineAsync(mVM);
+                if (res == 1)
+                {
+                    return Json("OK");
+                }
+                else
+                {
+                    return Json("No se pudo guardar máquina, intente de nuevo...");
+                }
+            }
+            catch (Exception e)
+            {
+                Response.StatusCode = 500;
+                Response.StatusDescription = "Error al agregar máquina" + e.Message;
                 return Json(e.Message);
             }
         }
@@ -130,6 +169,37 @@ namespace DigiTools.Controllers
             {
                 Response.StatusCode = 500;
                 Response.StatusDescription = "Error al agregar línea" + e.ToString();
+                return Json(e.Message);
+            }
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> EditMachine(MaquinasViewModel maqsViewModel)
+        {
+            try
+            {
+                string imageName = string.Empty;
+
+                if (maqsViewModel.Images != null)
+                {
+                    imageName = Save_File(maqsViewModel.Images.FileName);
+                    maqsViewModel.Image = imageName;
+                }                
+
+                int res = await daoMaq.EditMachineAsync(maqsViewModel);
+                if (res == 1)
+                {
+                    return Json("OK");
+                }
+                else
+                {
+                    return Json("No se pudo editar la máquina, intente de nuevo...");
+                }
+            }
+            catch (Exception e)
+            {
+                Response.StatusCode = 500;
+                Response.StatusDescription = "Error al editar máquina" + e.ToString();
                 return Json(e.Message);
             }
         }

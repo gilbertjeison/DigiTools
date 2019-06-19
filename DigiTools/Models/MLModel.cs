@@ -51,4 +51,31 @@ namespace DigiTools.Models
 
         public List<maquinas> ListMaquinas { get; set; }
     }
+
+    public class MaquinasViewModel
+    {
+        public int Id { get; set; }
+
+        [Display(Name = "Nombre")]
+        [Required(ErrorMessage = "Este campo es obligatorio...")]
+        public string Nombre { get; set; }
+
+        [Display(Name = "Imágen")]
+        [Required(ErrorMessage = "Este campo es obligatorio...")]
+        public string Image { get; set; }
+        
+        public HttpPostedFileBase Images { get; set; }
+
+        [Display(Name = "Línea")]
+        [Required(ErrorMessage = "Este campo es obligatorio...")]
+        public int IdLinea { get; set; }
+
+        [Display(Name = "Planta")]
+        [Required(ErrorMessage = "Este campo es obligatorio...")]
+        public int IdPlanta { get; set; }
+
+        public string DescPlanta { get; set; }
+
+        public List<sistemas> ListSistemas { get; set; }
+    }
 }

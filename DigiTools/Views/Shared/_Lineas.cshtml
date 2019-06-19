@@ -46,7 +46,7 @@
             </h2>
             <div class="mc-content">
                 <div class="img-container">
-                    <img class="img-responsive" src="@Url.Content(item.Image)" alt="imagen de @item.Nombre" />
+                    <img class="img-responsive" src="@Url.Content(item.Image)" alt="imagen de @item.Nombre" onerror="standbyImage(this)"/>
                 </div>
             </div>
             <div class="mc-description" style="overflow-y: scroll;">
@@ -63,7 +63,7 @@
             </div>
             <div class="mc-footer">
                 <h4>ACCIONES</h4>
-                <button type="button" class="btn btn-primary waves-effect" onclick="Explorar(@item.Id);">
+                <button type="button" class="btn btn-primary waves-effect" onclick="Explorar(@item.Id,'@item.Nombre');">
                     <i class="material-icons">search</i>
                 </button>
                 <button type="button" class="btn btn-primary waves-effect" onclick="Editar(@item.Id,'@item.Nombre','@item.TipoLinea','@item.TiempoCarga','@Url.Content(item.Image)')" data-toggle="tooltip" data-placement="botton" title="Editar línea...">
@@ -99,27 +99,39 @@
 
     });
 
-    function Explorar(id) {
-        @*$.ajax({
-            url: '@Url.Content("~/")' + "MachineLedger/GetLinesView",
+    function Explorar(id,nombre) {
+
+        $.ajax({
+            url: '@Url.Content("~/")' + "MachineLedger/GetMachinesView",
             type: 'GET',
-            data: { planta: id }
-        }).done(function (linesView) {
-            $('.body').html(linesView);
-        });*@
+            data: { linea: id, nombre:nombre },
+            beforeSend: function () {
+                $('.page-loader-wrapper').fadeIn();
+            }
+        }).done(function (machinesView, param) {
 
-        alert('Hola '+id);
+            $('.breadcrumb li:eq(2)').show();
+            $('.breadcrumb li a:eq(2)').text(nombre);
+            $('#CurrentLine').val(id);
 
+            $('.body').html(machinesView);
+
+            $('.page-loader-wrapper').fadeOut();
+        });       
     }
 
-    function Editar(id, nombre, tipoLinea, tiempoCarga, Image) {
-        
+    function Editar(id, nombre, tipoLinea, tiempoCarga, Image) {        
         $('#EditLinModal').modal('show');
         $('#EditLineName').val(nombre);
         $('#TiempoCargaEdit').val(tiempoCarga);
         $('#LineImageEdit').attr('src', Image);
         $('#IdLineaEdit').val(id);        
         $('#TipoLineaEdit').selectpicker('val', tipoLinea);
+    }
+
+     function standbyImage(el) {
+        $(el).addClass('noImageCard');        
+        $('.noImageCard').attr("src", "@Url.Content("/Content/images/v1/default2.jpg")");
     }
     </script>
 

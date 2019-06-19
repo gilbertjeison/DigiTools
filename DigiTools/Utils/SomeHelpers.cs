@@ -31,7 +31,8 @@ namespace DigiTools.Utils
         public static string ROL_MEC = "65b01f2a-0b46-4d0c-a227-304dc22e2f9d";
 
         static string ewo_images = "~/Content/images/ewo_images/";
-        
+        public static string IMG_PATH = "~/Content/images/v1/";
+
         static string nombreE;
 
         static string noti_reg = "<div style=\"background: #fff; min-height: 50px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2); position: relative; margin-bottom: 30px; -webkit-border-radius: 2px; -moz-border-radius: 2px; -ms-border-radius: 2px; border-radius: 2px;\"> "

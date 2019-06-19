@@ -242,6 +242,7 @@
     <Compile Include="Dao\DaoRepuestos.cs" />
     <Compile Include="Dao\DaoRoles.cs" />
     <Compile Include="Dao\DaoKpis.cs" />
+    <Compile Include="Dao\DaoSistemas.cs" />
     <Compile Include="Dao\DaoTecnicos.cs" />
     <Compile Include="Dao\DaoTipoData.cs" />
     <Compile Include="Dao\DaoUsuarios.cs" />
@@ -452,6 +453,7 @@
     <Content Include="Content\images\v1\DSC00346.JPG" />
     <Content Include="Content\images\v1\DSC00400.JPG" />
     <Content Include="Content\images\v1\emvasadora m2%281%29.PNG" />
+    <Content Include="Content\images\v1\hassia.jpg" />
     <Content Include="Content\images\v1\image017.jpg" />
     <Content Include="Content\images\v1\image267 - copia.png" />
     <Content Include="Content\images\v1\L2..PNG" />
@@ -4449,12 +4451,12 @@
     <Content Include="Views\Ewos\Details.cshtml" />
     <Content Include="Views\Ewos\Edit.cshtml" />
     <Content Include="Views\Ewos\Index.cshtml" />
+    <Content Include="Views\Shared\_Maquinas.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Content\images\ewo_images\" />
     <Folder Include="Views\ErrorPage\" />
-    <Folder Include="Views\Shared\Lines\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

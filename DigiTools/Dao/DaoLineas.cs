@@ -13,9 +13,10 @@ namespace DigiTools.Dao
 {
     public class DaoLineas
     {
-        static string IMG_PATH = "~/Content/images/v1/";
+        
         DaoMaquina daoMaq = new DaoMaquina();
         DaoKpis daoTc = new DaoKpis();
+        DaoSistemas daoSys = new DaoSistemas();
 
         public async Task<List<lineas>> GetLinesAsync(int plant,int type)
         {
@@ -171,7 +172,7 @@ namespace DigiTools.Dao
                         {
                             Id = item.id,
                             Nombre = item.nombre,
-                            Image = (item.image_path == null) ? IMG_PATH + "default2.jpg" : IMG_PATH + item.image_path,
+                            Image = (item.image_path == null) ? SomeHelpers.IMG_PATH + "default2.jpg" : SomeHelpers.IMG_PATH + item.image_path,
                             IdPlanta = (int)item.id_planta,
                             TipoLinea = (int)item.id_tipo_linea,
                             ListMaquinas = await daoMaq.GetMachinesAsync(item.id),
@@ -197,7 +198,7 @@ namespace DigiTools.Dao
 
             return list;
         }
-
+       
         public async Task<int> AddLineAsync(LineasViewModel lin)
         {
             int regs = 0;

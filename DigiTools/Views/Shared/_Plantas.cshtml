@@ -62,7 +62,7 @@
         $.ajax({
             url: '@Url.Content("~/")' + "MachineLedger/GetLinesView",
             type: 'GET',
-            data: { planta: id },
+            data: { planta: id, nombre:nombre },
             beforeSend: function () {
                 $('.page-loader-wrapper').fadeIn();
             }
@@ -70,7 +70,7 @@
 
             $('.breadcrumb li:eq(1)').show();
             $('.breadcrumb li a:eq(1)').text(nombre);
-            $('#CurrentPlant').val(id)
+            $('#CurrentPlant').val(id);
 
             $('.body').html(linesView);
 

@@ -1,0 +1,108 @@
+﻿@model List<DigiTools.Models.MaquinasViewModel>
+@{
+    var ctt = Model.Count;
+}
+
+<style>
+
+    h1 .label {
+        border-radius: 10px;
+        margin: 0 auto;
+    }
+
+    .optb {
+        width: 150px;
+    }
+</style>
+
+<h1 class="align-center"><span class="label bg-blue-grey">Máquinas @ViewBag.Linea (@ctt)</span></h1>
+<hr />
+<div class="row clearfix m-l-15">
+
+    <button type="button" class="btn btn-primary waves-effect optb" data-toggle="modal" data-target="#AddModalMach">
+        <i class="material-icons">library_add</i>
+        <span>NUEVA MÁQUINA</span>
+    </button>
+
+    <button type="button" class="btn btn-primary waves-effect optb">
+        <i class="material-icons">refresh</i>
+        <span>RECARGAR</span>
+    </button>
+
+</div>
+<hr />
+
+@foreach (var item in Model)
+{
+    <div class="col-md-4 col-sm-6 col-xs-12 cardUn">
+        <article class="material-card Blue">
+            <h2>
+                <span>@item.Nombre</span>
+                <strong>
+                    <i class="fa fa-th-list"></i>
+                    @item.ListSistemas.Count sistemas
+                </strong>
+            </h2>
+            <div class="mc-content">
+                <div class="img-container">
+                    <img class="img-responsive" src="@Url.Content(item.Image)" alt="imagen de @item.Nombre" onerror="standbyImage(this)"/>
+                </div>
+            </div>
+            <div class="mc-description" style="overflow-y: scroll;">
+                <strong>Vista previa de sistemas</strong>
+                <div class="list-group">
+                    @foreach (var ll in item.ListSistemas)
+                    {
+                        <a class="list-group-item">@ll.Nombre</a>
+                    }
+                </div>
+            </div>
+            <div class="mc-btn-action">
+                <i class="fa fa-bars"></i>
+            </div>
+            <div class="mc-footer">
+                <h4>ACCIONES</h4>
+                <button type="button" class="btn btn-primary waves-effect" >
+                    <i class="material-icons">search</i>
+                </button>
+                <button type="button" class="btn btn-primary waves-effect" onclick="Editar(@item.Id,'@item.Nombre','@Url.Content(item.Image)')" data-toggle="tooltip" data-placement="botton" title="Editar máquina...">
+                    <i class="material-icons">border_color</i>
+                </button>                
+                <button type="button" class="btn btn-primary waves-effect">
+                    <i class="material-icons">delete</i>
+                </button>
+            </div>
+        </article>
+    </div>
+}
+
+<script>    
+    $(function () {
+        $('.material-card').materialCard({
+            icon_close: 'fa-chevron-left',
+            icon_open: 'fa-bars',
+            icon_spin: 'fa-spin-fast',
+            card_activator: 'click'
+        });
+
+        //Tooltip
+        $('[data-toggle="tooltip"]').tooltip({
+            container: 'body'
+        });
+
+    });
+
+    function Editar(id, nombre, Image) {
+        $('#EditMachModal').modal('show');
+        $('#EditMachName').val(nombre);
+        $('#MachineImageEdit').attr('src', Image);
+        $('#IdMachineEdit').val(id);
+    }
+
+    function standbyImage(el) {
+        $(el).addClass('noImageCard');        
+        $('.noImageCard').attr("src", "@Url.Content("/Content/images/v1/default2.jpg")");
+    }
+</script>
+
+
