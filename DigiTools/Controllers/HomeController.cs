@@ -3,7 +3,7 @@ using DigiTools.Database;
 using DigiTools.Models;
 using DigiTools.Utils;
 using Microsoft.AspNet.Identity;
-using Microsoft.Office.Interop.Excel;
+using NetOffice.OfficeApi.Enums;
 using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Script.Serialization;
-using ExcelApp = Microsoft.Office.Interop.Excel ;
+using Excel = NetOffice.ExcelApi;
 
 namespace DigiTools.Controllers
 {
@@ -27,7 +27,7 @@ namespace DigiTools.Controllers
         DaoTipoData daoTD = new DaoTipoData();
         DaoLineas daoLin = new DaoLineas();
         DaoMaquina daoMaq = new DaoMaquina();
-        DaoPersonal daoPer = new DaoPersonal();
+        //DaoPersonal daoPer = new DaoPersonal();
         DaoUsuarios daoUser = new DaoUsuarios();
         DaoRepuestos daoRep = new DaoRepuestos();
         DaoPorque daoPor = new DaoPorque();
@@ -133,8 +133,7 @@ namespace DigiTools.Controllers
                 ewo.consecutivo = kvm.Id > 0 ? daoEwo.GetConsecutiveAsync(kvm.Id).Result : await daoEwo.GetLastConsecutive()  ;
                                 
                 ewo.id_area_linea = kvm.IdLinea;
-                ewo.id_equipo = kvm.IdMaquina;
-                ewo.fecha_ewo = SomeHelpers.GetCurrentTime();
+                ewo.id_equipo = kvm.IdMaquina;                
                 ewo.aviso_numero = kvm.NumAviso;
                 ewo.id_tecnico = daoUser.GetUserAsync(User.Identity.GetUserId()).Result.Id;
                 ewo.id_tipo_averia = kvm.IdTipoAveria;
@@ -149,6 +148,8 @@ namespace DigiTools.Controllers
                 ewo.fecha_analisis = kvm.FchAnaElab == null ? SomeHelpers.GetCurrentTime() : DateTime.ParseExact(kvm.FchAnaElab, "dd-MM-yyyy", CultureInfo.InvariantCulture);
                 ewo.fecha_validacion = kvm.FchEjeVal == null ? SomeHelpers.GetCurrentTime() : DateTime.ParseExact(kvm.FchEjeVal, "dd-MM-yyyy", CultureInfo.InvariantCulture);
                 ewo.fecha_contramedida = kvm.FchDefConMed == null ? SomeHelpers.GetCurrentTime() : DateTime.ParseExact(kvm.FchDefConMed, "dd-MM-yyyy", CultureInfo.InvariantCulture);
+
+                ewo.fecha_ewo = ewo.notificacion_averia.Value;
 
                 ewo.tiempo_espera_tecnico = kvm.TEspIniTec;
                 ewo.tiempo_diagnostico = kvm.TDiagn;
@@ -583,61 +584,61 @@ namespace DigiTools.Controllers
                         excelPackage.SaveAs(fileN);
                     }
 
-                    //ABRIR CON INTEROP PARA DILIGENCIAR CAMPOS PENDIENTES
-                    Application xlApp = new Application();
-                    xlApp.Visible = false;
-                    Workbook wb = xlApp.Workbooks.Open(nfilename);
-                    Worksheet ws2 = (Worksheet)wb.Worksheets[1];
+                    //NETOFFICE
+                    //Excel.Application app = new Excel.Application();
+                    //app.DisplayAlerts = false;
+                    //app.Visible = false;
 
-                    OptionButton opt =
-                           (OptionButton)ws2.OptionButtons(ewo.falla_index);
-                    opt.Value = true;
+                    //Excel.Workbook wb = app.Workbooks.Open(nfilename);
+                    //Excel.Worksheet ws2 = (Excel.Worksheet)wb.Worksheets[1];
 
-                    //CAUSA RAIZ
-                    Range rango1 = (Range)ws2.Cells[69, 1];
-                    Range rango2 = (Range)ws2.Cells[69, 2];
-                    Range rango3 = (Range)ws2.Cells[69, 4];
-                    Range rango4 = (Range)ws2.Cells[69, 5];
-                    Range rango5 = (Range)ws2.Cells[69, 7];
-                    Range rango6 = (Range)ws2.Cells[69, 9];
+                    //Excel.OptionButton opt = (Excel.OptionButton)ws2.OptionButtons(kvm.CausaRaiz);
+                    //opt.Value = true;
 
-                    float pri = (float)rango1.Left;
-                    float seg = (float)rango2.Left + 28f;
-                    float ter = (float)rango3.Left;
-                    float cua = (float)rango4.Left + 37f;
-                    float qui = (float)rango5.Left + 8f;
-                    float sex = (float)rango6.Left;
+                    //Excel.Range rango1 = ws2.Cells[69, 1];
+                    //Excel.Range rango2 = ws2.Cells[69, 2];
+                    //Excel.Range rango3 = ws2.Cells[69, 4];
+                    //Excel.Range rango4 = ws2.Cells[69, 5];
+                    //Excel.Range rango5 = ws2.Cells[69, 7];
+                    //Excel.Range rango6 = ws2.Cells[69, 9];
 
-                    switch (ewo.causa_raiz_index)
-                    {
-                        case 1:
-                            ws2.Shapes.AddShape(Microsoft.Office.Core.MsoAutoShapeType.msoShapeOval,
-                                pri, 1700, 80, 200).Fill.Transparency = 0.89f;
-                            break;
-                        case 2:
-                            ws2.Shapes.AddShape(Microsoft.Office.Core.MsoAutoShapeType.msoShapeOval,
-                                seg, 1700, 80, 200).Fill.Transparency = 0.89f;
-                            break;
-                        case 3:
-                            ws2.Shapes.AddShape(Microsoft.Office.Core.MsoAutoShapeType.msoShapeOval,
-                                ter, 1700, 80, 200).Fill.Transparency = 0.89f;
-                            break;
-                        case 4:
-                            ws2.Shapes.AddShape(Microsoft.Office.Core.MsoAutoShapeType.msoShapeOval,
-                                cua, 1700, 80, 200).Fill.Transparency = 0.89f;
-                            break;
-                        case 5:
-                            ws2.Shapes.AddShape(Microsoft.Office.Core.MsoAutoShapeType.msoShapeOval,
-                                qui, 1700, 80, 200).Fill.Transparency = 0.89f;
-                            break;
-                        case 6:
-                            ws2.Shapes.AddShape(Microsoft.Office.Core.MsoAutoShapeType.msoShapeOval,
-                                sex, 1700, 80, 200).Fill.Transparency = 0.89f;
-                            break;
-                    }                    
+                    //float pri = Convert.ToSingle(rango1.Left);
+                    //float seg = Convert.ToSingle(rango2.Left) + 28f;
+                    //float ter = Convert.ToSingle(rango3.Left);
+                    //float cua = Convert.ToSingle(rango4.Left) + 37f;
+                    //float qui = Convert.ToSingle(rango5.Left) + 10f;
+                    //float sex = Convert.ToSingle(rango6.Left);
 
-                    wb.Save();
-                    wb.Close();
+                    //switch (kvm.CicloRaiz)
+                    //{
+                    //    case 1:
+                    //        ws2.Shapes.AddShape(MsoAutoShapeType.msoShapeOval,
+                    //            pri, 1735, 80, 200).Fill.Transparency = 0.60f;
+                    //        break;
+                    //    case 2:
+                    //        ws2.Shapes.AddShape(MsoAutoShapeType.msoShapeOval,
+                    //            seg, 1735, 80, 200).Fill.Transparency = 0.60f;
+                    //        break;
+                    //    case 3:
+                    //        ws2.Shapes.AddShape(MsoAutoShapeType.msoShapeOval,
+                    //            ter, 1735, 80, 200).Fill.Transparency = 0.60f;
+                    //        break;
+                    //    case 4:
+                    //        ws2.Shapes.AddShape(MsoAutoShapeType.msoShapeOval,
+                    //            cua, 1735, 80, 200).Fill.Transparency = 0.60f;
+                    //        break;
+                    //    case 5:
+                    //        ws2.Shapes.AddShape(MsoAutoShapeType.msoShapeOval,
+                    //            qui, 1735, 80, 200).Fill.Transparency = 0.60f;
+                    //        break;
+                    //    case 6:
+                    //        ws2.Shapes.AddShape(MsoAutoShapeType.msoShapeOval,
+                    //            sex, 1735, 80, 200).Fill.Transparency = 0.60f;
+                    //        break;
+                    //}
+                                        
+                    //wb.Save();
+                    //wb.Close();
                     r = 1;
                     message = "OK";
                 }
@@ -763,26 +764,26 @@ namespace DigiTools.Controllers
 
         public async Task<JsonResult> GetTechnicians()
         {        
-            //LISTA DE DE LÍNEAS
-            var list = await daoPer.GetPersonalAsync(1);            
-                   
+            //LISTA DE DE USUARIOS            
+            var list = await daoUser.GetUsersAsync();
+            
             return Json(list, JsonRequestBehavior.AllowGet);
         }
 
-        public async Task<JsonResult> GetAdmins()
-        {
-            //LISTA DE DE LÍNEAS
-            var list = await daoPer.GetPersonalAsync(2);
+        //public async Task<JsonResult> GetAdmins()
+        //{
+        //    //LISTA DE DE LÍNEAS
+        //    var list = await daoPer.GetPersonalAsync(2);
 
-            return Json(list, JsonRequestBehavior.AllowGet);
-        }
+        //    return Json(list, JsonRequestBehavior.AllowGet);
+        //}
 
-        [HttpPost]
-        public async Task<JsonResult> GetAllUsersJsonAsync()
-        {
-            var users = await daoPer.GetAllPersonalAsync();
-            return Json(users);
-        }
+        //[HttpPost]
+        //public async Task<JsonResult> GetAllUsersJsonAsync()
+        //{
+        //    var users = await daoPer.GetAllPersonalAsync();
+        //    return Json(users);
+        //}
 
         [HttpPost]
         public async Task<JsonResult> GetUsedSpares(int id_ewo)

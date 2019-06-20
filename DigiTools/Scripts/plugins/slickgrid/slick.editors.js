@@ -300,7 +300,7 @@
 
     this.hide = function () {
       if (calendarOpen) {
-        $.datepicker.dpDiv.stop(true, true).hide();
+          $.datepicker.dpDiv.stop(true, true).hide();
       }
     };
 

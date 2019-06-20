@@ -98,6 +98,58 @@ namespace DigiTools.Dao
             return list;
         }
 
+        public async Task<List<UserToApprove>> GetUsersAsync()
+        {
+            List<UserToApprove> list = new List<UserToApprove>();
+
+            try
+            {
+                using (var context = new MttoAppEntities())
+                {
+                    // Query for all
+                    var als = from b in context.AspNetUsers
+                              join r in context.AspNetRoles
+                              on b.IdRol equals r.Id
+                              select new { b, r };
+
+                    var lista = als.ToList();
+
+                    await Task.Run(() => Parallel.ForEach(lista, s =>
+                    {
+                        list.Add(new UserToApprove()
+                        {
+                            Id = s.b.Id,
+                            Nombres = s.b.Nombres,
+                            Apellidos = s.b.Apellidos,
+                            Email = s.b.Email,
+                            Usuario = s.b.UserName,
+                            Registro = (DateTime)s.b.Registrado,
+                            IdRol = s.r.Id,
+                            DesRol = s.r.Name,
+                            NombresCompletos = s.b.Nombres +" "+s.b.Apellidos
+                        });
+
+                    }));
+                }
+            }
+            catch (Exception e)
+            {
+                string err = "Error al seleccionar usuarios : " + e.ToString();
+                Trace.WriteLine(err);
+                //REPORTAR ERROR EN LA BASE DE DATOS
+                await DaoExcepcion.AddExceptionAsync(
+                    new excepciones()
+                    {
+                        codigo_error = -1,
+                        codigo_usuario = HttpContext.Current.User.Identity.Name ?? "No definido",
+                        descripcion = err,
+                        fecha = SomeHelpers.GetCurrentTime()
+                    });
+            }
+
+            return list;
+        }
+
         public async Task<int> ApproveUser(string id, string role)
         {
             AspNetUsers usere;

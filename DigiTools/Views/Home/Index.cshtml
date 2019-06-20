@@ -1,6 +1,7 @@
 ﻿﻿@model DigiTools.Models.KpiViewModel
 @using DigiTools.Dao
 @using Microsoft.AspNet.Identity
+@using  DigiTools.Utils
 @{
     DaoUsuarios daoUs = new DaoUsuarios();
     ViewBag.Title = "Menú principal";
@@ -496,7 +497,7 @@
         var tecs = "GetTechnicians", admins = "GetAdmins";
 
         var tecNames = new Bloodhound({
-            datumTokenizer: Bloodhound.tokenizers.obj.whitespace('Nombre'),
+            datumTokenizer: Bloodhound.tokenizers.obj.whitespace('NombresCompletos'),
             queryTokenizer: Bloodhound.tokenizers.whitespace,
             prefetch: {
                 url: '@Url.Content("~/")' + "Home/" + tecs
@@ -508,18 +509,17 @@
 
         tecNames.initialize();
 
-
-        $('.tags input:text:not(.datepicker,#IdEjeValPor,#IdDiligenciado)').tagsinput({
+        $('.tags input:text:not(.datepicker)').tagsinput({
             typeaheadjs: {
                 name: 'tecNames',
-                displayKey: 'Nombre',
-                valueKey: 'Nombre',
+                displayKey: 'NombresCompletos',
+                valueKey: 'NombresCompletos',
                 source: tecNames.ttAdapter()
             }
         });
 
         //TAGSINPUT ADMIN RESPONSABLES DEL FORMATO
-        var AdmNames = new Bloodhound({
+        @*var AdmNames = new Bloodhound({
             datumTokenizer: Bloodhound.tokenizers.obj.whitespace('Nombre'),
             queryTokenizer: Bloodhound.tokenizers.whitespace,
             prefetch: {
@@ -539,7 +539,7 @@
                 valueKey: 'Nombre',
                 source: AdmNames.ttAdapter()
             }
-        });
+        });*@
 
         $('#QueDesc').change(fenomenoChange);
         $('#DondeDesc').change(fenomenoChange);
@@ -830,7 +830,7 @@
         </h2>
         <h2 class="tit">
             DOCUMENTO # @ViewBag.Cons<small>Diligenciamiento de nuevo formato ™</small>
-            @Uss.IdRol
+            @*@Uss.IdRol*@
         </h2>
 
     </div>
@@ -1480,7 +1480,7 @@
                                             <i class="material-icons">date_range</i>
                                         </span>
                                         <div class="form-line">
-                                            @Html.EditorFor(model => model.FchUltimoMtto, new { htmlAttributes = new { @class = "form-control datepicker", placeholder = "Seleccione fecha...", required = "required" } })
+                                            @Html.EditorFor(model => model.FchUltimoMtto, new { htmlAttributes = new { @class = "form-control datepicker", placeholder = "Seleccione fecha..."} })
                                         </div>
                                     </div>
                                 </div>
@@ -1492,7 +1492,7 @@
                                             <i class="material-icons">date_range</i>
                                         </span>
                                         <div class="form-line">
-                                            @Html.EditorFor(model => model.FchProxMtto, new { htmlAttributes = new { @class = "form-control datepicker", placeholder = "Seleccione fecha...", required = "required" } })
+                                            @Html.EditorFor(model => model.FchProxMtto, new { htmlAttributes = new { @class = "form-control datepicker", placeholder = "Seleccione fecha..." } })
                                         </div>
                                     </div>
                                 </div>
@@ -1604,11 +1604,14 @@
                                             <i class="material-icons">person</i>
                                         </span>
                                         <div class="form-line">
-                                            @*@if (Uss)
+                                            @if (Uss.IdRol.Equals(SomeHelpers.ROL_ADMIN) || Uss.IdRol.Equals(SomeHelpers.ROL_SADMIN))
                                             {
-                                                /**/
-                                            }*@
-                                            @Html.EditorFor(model => model.IdDiligenciado, new { htmlAttributes = new { placeholder = "Escriba aquí...", @class = "font-bold col-teal", @readonly = "readonly" } })
+                                                @Html.EditorFor(model => model.IdDiligenciado, new { htmlAttributes = new { placeholder = "Escriba aquí...", @class = "font-bold col-teal" } })
+                                            }
+                                            else
+                                            {
+                                                @Html.EditorFor(model => model.IdDiligenciado, new { htmlAttributes = new { placeholder = "Escriba aquí...", @class = "font-bold col-teal", @readonly = "readonly" } })
+                                            }
                                         </div>
                                     </div>
                                 </div>
@@ -1800,7 +1803,7 @@
         if (addBlank) { select.appendChild(new Option('', '')); }
 
         $.each(dataSource, function (value, text) {
-            newOption = new Option(text.Nombre, text.Id);
+            newOption = new Option(text.NombresCompletos, text.Id);
             select.appendChild(newOption);
         });
     };
@@ -1926,7 +1929,7 @@
 
     function select2Formatter(row, cell, value, columnDef, dataContext) {
         if (value) {
-            return columnDef.dataSource.find((x) => x.Id == value).Nombre || '-';
+            return columnDef.dataSource.find((x) => x.Id == value).NombresCompletos || '-';
         }
         else {
             return '-';
@@ -1980,7 +1983,7 @@
             grid.updateRowCount();
             grid.render();
         });
-        $('#gridAcciones').on('focusout', '#dateed', function () {
+        $('#gridAcciones').on('change', '#dateed', function () {
 
             window.setTimeout(function () {
 
@@ -2043,7 +2046,7 @@
          //INICIALIZAR OBJETO AJAX PARA TRAER DATOS DEL SERVIDOR
         $.ajax({
             //PARAMETRIZAR SERVICIO AJAX
-            url: '@Url.Action("GetAllUsersJsonAsync", "Home")',
+            url: '@Url.Action("GetTechnicians", "Home")',
             type: 'post',
             //MOSTRAR LOADER ANTES DE INICIAR LA SOLICITUD
             beforeSend: function () {
@@ -2080,7 +2083,6 @@
                 },
                 success: function (r)
                 {
-                    console.log(r);
                     //DILIGENCIAR CAMPOS
                     $('.IdPlanta').val(r.IdPlanta);
                     $('.IdTipoLinea').val(r.IdTipoLinea);
