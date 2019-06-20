@@ -524,8 +524,20 @@ namespace DigiTools.Utils
             }
             catch (Exception ex)
             {
-                Debug.WriteLine("Error al generar formato ewo (SOMEHELPERS): " + ex.ToString());
+                string err = "Error al generar formato ewo (SOMEHELPERS): " + ex.ToString();
+                Trace.WriteLine(err);
+                
+                //REPORTAR ERROR EN LA BASE DE DATOS
+                await DaoExcepcion.AddExceptionAsync(
+                    new excepciones()
+                    {
+                        codigo_error = -1,
+                        codigo_usuario = HttpContext.Current.User.Identity.Name ?? "No definido",
+                        descripcion = err,
+                        fecha = SomeHelpers.GetCurrentTime()
+                    });
                 return "-1";
+
             }            
         }
 
