@@ -188,13 +188,7 @@
                     return false;
                 }
 
-                ////DILIGENCIADO POR
-                //tgsDiligenciado = [];
-                //for (var i = $IdDiligenciado.length; i--;)
-                //{
-                //    tgsDiligenciado.push($($IdDiligenciado[i]).text().trim());
-                //}
-
+               
                 form.validate().settings.ignore = ':disabled,.ignore';
                 return form.valid();
                 //return true;
@@ -226,6 +220,11 @@
                 //ADJUNTAR LISTA DE ACCIONES
                 dataString.append('Cmd', JSON.stringify(cmd));
 
+                //DILIGENCIADO POR
+                var tags = $('#IdDiligenciado').val();
+
+                                                
+                dataString.append('IdDili', tags);
 
                 $.ajax({
                     type: "POST",
@@ -509,12 +508,38 @@
 
         tecNames.initialize();
 
-        $('.tags input:text:not(.datepicker)').tagsinput({
+        $('.tags input:text:not(.datepicker, .tagAdmin)').tagsinput({
             typeaheadjs: {
                 name: 'tecNames',
                 displayKey: 'NombresCompletos',
                 valueKey: 'NombresCompletos',
                 source: tecNames.ttAdapter()
+            }
+        });
+
+
+        var tecNamesDil = new Bloodhound({
+            datumTokenizer: Bloodhound.tokenizers.obj.whitespace('NombresCompletos'),
+            queryTokenizer: Bloodhound.tokenizers.whitespace,
+            prefetch: {
+                url: '@Url.Content("~/")' + "Home/" + tecs              
+            },
+            remote: {
+                url: '@Url.Content("~/")' + "Home/" + tecs
+            }
+        });
+
+        tecNamesDil.initialize();
+
+        var el = $('.tagAdmin');
+        el.tagsinput({
+            itemValue: 'Id',
+            itemText: 'NombresCompletos',
+            typeaheadjs: {
+                name: 'tecNamesDil',
+                displayKey: 'NombresCompletos',
+                //valueKey: 'Id',
+                source: tecNamesDil.ttAdapter()
             }
         });
 
@@ -1606,11 +1631,11 @@
                                         <div class="form-line">
                                             @if (Uss.IdRol.Equals(SomeHelpers.ROL_ADMIN) || Uss.IdRol.Equals(SomeHelpers.ROL_SADMIN))
                                             {
-                                                @Html.EditorFor(model => model.IdDiligenciado, new { htmlAttributes = new { placeholder = "Escriba aquí...", @class = "font-bold col-teal" } })
+                                                @Html.EditorFor(model => model.IdDiligenciado, new { htmlAttributes = new { placeholder = "Escriba aquí...", @class = "font-bold col-teal tagAdmin" } })
                                             }
                                             else
                                             {
-                                                @Html.EditorFor(model => model.IdDiligenciado, new { htmlAttributes = new { placeholder = "Escriba aquí...", @class = "font-bold col-teal", @readonly = "readonly" } })
+                                                @Html.EditorFor(model => model.IdDiligenciado, new { htmlAttributes = new { placeholder = "Escriba aquí...", @class = "font-bold col-teal tagAdmin", @readonly = "readonly" } })
                                             }
                                         </div>
                                     </div>
@@ -1787,7 +1812,6 @@
     function downloadFile() {
         window.location = '/Home/DownloadEwoFile';
     }
-
 </script>
 
 <script>
@@ -2305,12 +2329,16 @@
                     var cri = parseInt(r.CicloRaiz);
                     $("input[name=CicloRaiz][value=" + cri+ "]").prop('checked', true);
                     //
+
                     var tecMtto = r.IdTecMattInv.split(',');
                     var opeInv = r.IdOpersInv.split(',');
                     var anaEla = r.IdAnaElab.split(',');
                     var conDef = r.IdContMedDef.split(',');
                     var ejeVal = r.IdEjeValPor.split(',');
 
+                 
+                    $('.tagAdmin').tagsinput('add', { "Id": r.IdDiligenciado, "NombresCompletos": r.DiligenciadoPor });
+                   
                     $.each(tecMtto, function (index, value) {
                         $('#IdTecMattInv').tagsinput('add', value);
                     });

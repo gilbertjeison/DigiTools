@@ -1,7 +1,6 @@
 ﻿using DigiTools.Dao;
 using DigiTools.Database;
 using DigiTools.Models;
-using NetOffice.OfficeApi.Enums;
 using OfficeOpenXml;
 using RestSharp;
 using SendGrid;
@@ -13,7 +12,8 @@ using System.Drawing;
 using System.IO;
 using System.Threading.Tasks;
 using System.Web;
-using Excel = NetOffice.ExcelApi;
+using Spire.Xls;
+using Spire.Xls.Core;
 
 namespace DigiTools.Utils
 {
@@ -24,6 +24,7 @@ namespace DigiTools.Utils
         static DaoPorque daoP = new DaoPorque();
         static DaoAcciones daoA = new DaoAcciones();
         static DaoTecnicos daoTec = new DaoTecnicos();
+        static DaoUsuarios daoUSer = new DaoUsuarios();
         public static string ROL_SADMIN = "2b0bf2ba-c2a3-4f19-84d7-9288c0bc2895";
         public static string ROL_ADMIN = "d190e724-261a-49bb-8bbf-b24119c49a44";
         public static string ROL_MEC = "65b01f2a-0b46-4d0c-a227-304dc22e2f9d";
@@ -440,7 +441,8 @@ namespace DigiTools.Utils
                                 }
                                 if (cols == 3)
                                 {
-                                    ws.SetValue(row, cols + 5, daoTec.GetTecnicoAsync(int.Parse(lista_acc[row - 88].responsable)).Result.Nombre);
+                                    var names = daoUSer.GetUserAsync(lista_acc[row - 88].responsable).Result;
+                                    ws.SetValue(row, cols + 5, names.Nombres + " " + names.Apellidos);
                                 }
                                 if (cols == 4)
                                 {
@@ -463,6 +465,15 @@ namespace DigiTools.Utils
                     excelPackage.SaveAs(fileN);
                 }
 
+                //SPIRE FREE
+                Workbook wb = new Workbook();
+                wb.LoadFromFile(nfilename);
+                Worksheet ws2 = wb.Worksheets[0];
+                ICheckBox chk = ws2.CheckBoxes[km.CausaRaiz-1];
+                chk.CheckState = CheckState.Checked;
+
+                wb.Save();
+                wb.Dispose();
                 //NETOFFICE
                 //Excel.Application app = new Excel.Application();
                 //app.DisplayAlerts = false;

@@ -124,6 +124,7 @@ namespace DigiTools.Models
 
         [DisplayName("Diligenciada por")]
         public string IdDiligenciado { get; set; }
+        public string IdDili { get; set; }
 
         [DisplayName("Técnicos de mantenimiento involucrados")]
         public string IdTecMattInv { get; set; }

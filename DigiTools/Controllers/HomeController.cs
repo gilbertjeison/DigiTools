@@ -3,7 +3,6 @@ using DigiTools.Database;
 using DigiTools.Models;
 using DigiTools.Utils;
 using Microsoft.AspNet.Identity;
-using NetOffice.OfficeApi.Enums;
 using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
@@ -15,7 +14,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Script.Serialization;
-using Excel = NetOffice.ExcelApi;
+
 
 namespace DigiTools.Controllers
 {
@@ -85,7 +84,7 @@ namespace DigiTools.Controllers
                 listA.Insert(0, new tipos_data() { Id = 0, descripcion = "Seleccione tipo de avería..." });
                 kpiWiewModel.TipoAveriaList = new SelectList(listA, "Id", "descripcion");
 
-                kpiWiewModel.IdDiligenciado = aspNetUsers.Nombres + " " + aspNetUsers.Apellidos;
+                //kpiWiewModel.IdDiligenciado = aspNetUsers.Nombres + " " + aspNetUsers.Apellidos;
 
                 if (edit.HasValue && edit.Value > 0)
                 {
@@ -135,7 +134,10 @@ namespace DigiTools.Controllers
                 ewo.id_area_linea = kvm.IdLinea;
                 ewo.id_equipo = kvm.IdMaquina;                
                 ewo.aviso_numero = kvm.NumAviso;
-                ewo.id_tecnico = daoUser.GetUserAsync(User.Identity.GetUserId()).Result.Id;
+                //CONSULTAR USUARIO Y CONSEGUIR ID
+                var idsDil = kvm.IdDili.Split(',');
+                ewo.id_tecnico = idsDil[0];
+                //ewo.id_tecnico = daoUser.GetUserAsync(kvm.IdDiligenciado).Result.Id;
                 ewo.id_tipo_averia = kvm.IdTipoAveria;
                 ewo.id_turno = kvm.Turno;
 
@@ -561,7 +563,8 @@ namespace DigiTools.Controllers
                                     }
                                     if (cols == 3)
                                     {
-                                        ws.SetValue(row, cols+5,daoTec.GetTecnicoAsync(int.Parse(lista_acc[row - 88].responsable)).Result.Nombre);
+                                        var names = daoUser.GetUserAsync(lista_acc[row - 88].responsable).Result;
+                                        ws.SetValue(row, cols+5,names.Nombres+" "+names.Apellidos);
                                     }
                                     if (cols == 4)
                                     {

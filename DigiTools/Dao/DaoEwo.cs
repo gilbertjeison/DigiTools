@@ -365,7 +365,8 @@ namespace DigiTools.Dao
                             IdTipoLinea = i.l.id_tipo_linea.Value,
                             IdLinea = i.e.id_area_linea.Value,
                             IdMaquina = i.e.id_equipo.Value,
-                            IdTipoAveria = i.e.id_tipo_averia.Value
+                            IdTipoAveria = i.e.id_tipo_averia.Value,
+                            IdDiligenciado = i.e.id_tecnico
                         };
                     }
                 }
