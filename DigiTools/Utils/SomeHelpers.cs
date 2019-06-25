@@ -225,7 +225,7 @@ namespace DigiTools.Utils
                     ws.Cells["H6"].Value = km.HrFinRepEntD;
                     ws.Cells["I6"].Value = km.TiempoTotal;
 
-                    using (FileStream fileStream = new FileStream(HttpContext.Current.Server.MapPath(ewo_images + km.PathImage1) , FileMode.Open))
+                    using (FileStream fileStream = new FileStream(HttpContext.Current.Server.MapPath(ewo_images + km.PathImage1), FileMode.Open))
                     {
                         //IMAGEN 1
                         var eImg = ws.Drawings.AddPicture("image1", Image.FromStream(fileStream, true, true));
@@ -462,7 +462,48 @@ namespace DigiTools.Utils
                     ws.Cells["J105"].Value = km.FchEjeVal;
                     ws.Cells["H105"].Value = km.IdEjeValPor;
 
-                    excelPackage.SaveAs(fileN);
+                    var shape = ws.Drawings.AddShape("ff", eShapeStyle.Ellipse);
+                    shape.Fill.Transparancy = 70;
+                    shape.SetSize(110, 290);
+
+                    ExcelRange rango1 = ws.Cells[69, 1];
+                    ExcelRange rango2 = ws.Cells[69, 2];
+                    ExcelRange rango3 = ws.Cells[69, 4];
+                    ExcelRange rango4 = ws.Cells[69, 5];
+                    ExcelRange rango5 = ws.Cells[69, 7];
+                    ExcelRange rango6 = ws.Cells[69, 9];
+
+                    switch (km.CicloRaiz)
+                    {
+                        case 1:
+                            shape.SetPosition(72, 0, 0, 0);                                                   
+                            break;
+                        case 2:
+                            shape.SetPosition(72, 0, 1, 40);
+                            break;
+                        case 3:
+                            shape.SetPosition(72, 0, 3, 0);
+                            break;
+                        case 4:
+                            shape.SetPosition(72, 0, 4, 40);
+                            break;
+                        case 5:
+                            shape.SetPosition(72, 0, 6, 22);
+                            break;
+                        case 6:
+                            shape.SetPosition(72, 0, 8, 0);
+                            break;
+                    }
+
+
+                //float pri = Convert.ToSingle(rango1.);
+                //float seg = Convert.ToSingle(rango2.Left) + 28f;
+                //float ter = Convert.ToSingle(rango3.Left);
+                //float cua = Convert.ToSingle(rango4.Left) + 37f;
+                //float qui = Convert.ToSingle(rango5.Left) + 10f;
+                //float sex = Convert.ToSingle(rango6.Left);
+
+                excelPackage.SaveAs(fileN);
                 }
 
                 //SPIRE FREE
