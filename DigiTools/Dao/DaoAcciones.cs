@@ -38,7 +38,7 @@ namespace DigiTools.Dao
                         fecha = SomeHelpers.GetCurrentTime()
                     });
             }
-
+            
             return regs;
         }
 

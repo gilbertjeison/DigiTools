@@ -57,8 +57,7 @@ namespace DigiTools.Controllers
                 var model = new IndexAdminViewModel();
                 model = await daoEwo.GetIndexData();
                 return View("IndexAdmin",model);
-            }        
-            
+            }                    
         }
 
         public async Task<ActionResult> Index(int? edit)

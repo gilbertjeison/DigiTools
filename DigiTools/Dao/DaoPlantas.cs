@@ -88,6 +88,10 @@ namespace DigiTools.Dao
                         fecha = SomeHelpers.GetCurrentTime()
                     });
             }
+            finally
+            {
+
+            }
 
             return list;
         }
