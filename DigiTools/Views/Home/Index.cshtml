@@ -304,11 +304,13 @@
 
         //DROPDOWN CASCADE
         $('.IdPlanta').change(function () {
+           
             $('.IdTipoLinea').selectpicker('deselectAll');
             return false;
         });
-
-        $('.IdTipoLinea',).change(function (e,selected) {
+        
+        $('.IdTipoLinea').change(function (e, selected) {
+            
             var id1 = $('.IdPlanta').find("option:selected").val();
             var id2 = $(this).find("option:selected").val();
 
@@ -316,6 +318,8 @@
 
             $('.IdLinea').selectpicker('destroy');
             $('.IdLinea').empty();
+
+            e.stopImmediatePropagation();
 
             $.ajax({
                 url: url,
@@ -343,7 +347,9 @@
                     alert(error.responseText);
                 }
             });
-            return false;
+
+            
+            return true;
         });
 
 
@@ -886,7 +892,7 @@
                             </div>
                         </div>
                         <div class="col-md-3">
-                            <b>@Html.LabelFor(model => model.IdTipoLinea)</b>
+                            <b>@Html.LabelFor(model => model.IdTipoLinea, new { @class = "IdTipoLineaLabel"})</b>
                             <div class="form-line input-group">
                                 <select name="IdTipoLinea" class="show-tick IdTipoLinea" required>
                                     @foreach (var item in Model.TipoLineaList)
@@ -2116,7 +2122,10 @@
                     //DILIGENCIAR CAMPOS
                     $('.IdPlanta').val(r.IdPlanta);
                     $('.IdTipoLinea').val(r.IdTipoLinea);
+
+                    
                     $('.IdTipoLinea').trigger("change", r.IdLinea + '-' + r.IdMaquina);
+                    
 
                     $('#txtHrNotAve').bootstrapMaterialDatePicker('setDate', r.HrNotAve);
                     $('#txtHrIni').bootstrapMaterialDatePicker('setDate', r.HrIniRep);
