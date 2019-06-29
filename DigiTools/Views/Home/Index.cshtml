@@ -159,6 +159,7 @@
                 if (currentIndex == 3) {
 
                     if (firstTime) {
+                        
                         initGrid();
                     }
                 }
@@ -309,7 +310,7 @@
             return false;
         });
         
-        $('.IdTipoLinea').change(function (e, selected) {
+        $('#IdTipoLinea').change(function (e, selected) {
             
             var id1 = $('.IdPlanta').find("option:selected").val();
             var id2 = $(this).find("option:selected").val();
@@ -319,7 +320,7 @@
             $('.IdLinea').selectpicker('destroy');
             $('.IdLinea').empty();
 
-            e.stopImmediatePropagation();
+            //e.stopImmediatePropagation();
 
             $.ajax({
                 url: url,
@@ -335,6 +336,7 @@
                         }));
                     });
 
+                    console.log(selected);
                     if (selected) {
                         var spl = selected.split("-");
                         $(".IdLinea").selectpicker('val', spl[0]);
@@ -894,7 +896,7 @@
                         <div class="col-md-3">
                             <b>@Html.LabelFor(model => model.IdTipoLinea, new { @class = "IdTipoLineaLabel"})</b>
                             <div class="form-line input-group">
-                                <select name="IdTipoLinea" class="show-tick IdTipoLinea" required>
+                                <select name="IdTipoLinea" id="IdTipoLinea" class="show-tick IdTipoLinea" required>
                                     @foreach (var item in Model.TipoLineaList)
                                     {
                                         <option value="@item.Value">@item.Text</option>
@@ -1984,6 +1986,7 @@
     }
 
     function initGrid() {
+        //console.log(user_data);
         var columns =
             [
                 { id: "accion", name: "Acción", field: "accion", minWidth: 300, editable: true, editor: Slick.Editors.Text },
@@ -2007,9 +2010,7 @@
         };
 
         var data = [];
-
-
-
+                
         grid = new Slick.Grid("#gridAcciones", data, columns, options);
         grid.setSelectionModel(new Slick.CellSelectionModel());
         grid.onAddNewRow.subscribe(function (e, args) {
@@ -2121,11 +2122,8 @@
                 {
                     //DILIGENCIAR CAMPOS
                     $('.IdPlanta').val(r.IdPlanta);
-                    $('.IdTipoLinea').val(r.IdTipoLinea);
-
-                    
-                    $('.IdTipoLinea').trigger("change", r.IdLinea + '-' + r.IdMaquina);
-                    
+                    $('#IdTipoLinea').val(r.IdTipoLinea);                    
+                    $('#IdTipoLinea').trigger("change", r.IdLinea + '-' + r.IdMaquina);                    
 
                     $('#txtHrNotAve').bootstrapMaterialDatePicker('setDate', r.HrNotAve);
                     $('#txtHrIni').bootstrapMaterialDatePicker('setDate', r.HrIniRep);

@@ -4,6 +4,8 @@ using DigiTools.Models;
 using DigiTools.Utils;
 using Microsoft.AspNet.Identity;
 using OfficeOpenXml;
+using Spire.Xls;
+using Spire.Xls.Core;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -583,64 +585,52 @@ namespace DigiTools.Controllers
                         ws.Cells["J105"].Value = ewo.fecha_validacion == null ? "" : ewo.fecha_validacion.Value.ToShortDateString();
                         ws.Cells["H105"].Value = ewo.validador_ejecucion == null ? "" : ewo.validador_ejecucion.Replace(",", " - ");
 
+                        var shape = ws.Drawings.AddShape("ff", eShapeStyle.Ellipse);
+                        shape.Fill.Transparancy = 70;
+                        shape.SetSize(110, 290);
+
+                        ExcelRange rango1 = ws.Cells[69, 1];
+                        ExcelRange rango2 = ws.Cells[69, 2];
+                        ExcelRange rango3 = ws.Cells[69, 4];
+                        ExcelRange rango4 = ws.Cells[69, 5];
+                        ExcelRange rango5 = ws.Cells[69, 7];
+                        ExcelRange rango6 = ws.Cells[69, 9];
+
+                        switch (kvm.CicloRaiz)
+                        {
+                            case 1:
+                                shape.SetPosition(72, 0, 0, 0);
+                                break;
+                            case 2:
+                                shape.SetPosition(72, 0, 1, 40);
+                                break;
+                            case 3:
+                                shape.SetPosition(72, 0, 3, 0);
+                                break;
+                            case 4:
+                                shape.SetPosition(72, 0, 4, 40);
+                                break;
+                            case 5:
+                                shape.SetPosition(72, 0, 6, 22);
+                                break;
+                            case 6:
+                                shape.SetPosition(72, 0, 8, 0);
+                                break;
+                        }
+
                         excelPackage.SaveAs(fileN);
                     }
 
-                    //NETOFFICE
-                    //Excel.Application app = new Excel.Application();
-                    //app.DisplayAlerts = false;
-                    //app.Visible = false;
+                    //SPIRE FREE
+                    Workbook wb = new Workbook();
+                    wb.LoadFromFile(nfilename);
+                    Worksheet ws2 = wb.Worksheets[0];
+                    ICheckBox chk = ws2.CheckBoxes[kvm.CausaRaiz - 1];
+                    chk.CheckState = CheckState.Checked;
 
-                    //Excel.Workbook wb = app.Workbooks.Open(nfilename);
-                    //Excel.Worksheet ws2 = (Excel.Worksheet)wb.Worksheets[1];
-
-                    //Excel.OptionButton opt = (Excel.OptionButton)ws2.OptionButtons(kvm.CausaRaiz);
-                    //opt.Value = true;
-
-                    //Excel.Range rango1 = ws2.Cells[69, 1];
-                    //Excel.Range rango2 = ws2.Cells[69, 2];
-                    //Excel.Range rango3 = ws2.Cells[69, 4];
-                    //Excel.Range rango4 = ws2.Cells[69, 5];
-                    //Excel.Range rango5 = ws2.Cells[69, 7];
-                    //Excel.Range rango6 = ws2.Cells[69, 9];
-
-                    //float pri = Convert.ToSingle(rango1.Left);
-                    //float seg = Convert.ToSingle(rango2.Left) + 28f;
-                    //float ter = Convert.ToSingle(rango3.Left);
-                    //float cua = Convert.ToSingle(rango4.Left) + 37f;
-                    //float qui = Convert.ToSingle(rango5.Left) + 10f;
-                    //float sex = Convert.ToSingle(rango6.Left);
-
-                    //switch (kvm.CicloRaiz)
-                    //{
-                    //    case 1:
-                    //        ws2.Shapes.AddShape(MsoAutoShapeType.msoShapeOval,
-                    //            pri, 1735, 80, 200).Fill.Transparency = 0.60f;
-                    //        break;
-                    //    case 2:
-                    //        ws2.Shapes.AddShape(MsoAutoShapeType.msoShapeOval,
-                    //            seg, 1735, 80, 200).Fill.Transparency = 0.60f;
-                    //        break;
-                    //    case 3:
-                    //        ws2.Shapes.AddShape(MsoAutoShapeType.msoShapeOval,
-                    //            ter, 1735, 80, 200).Fill.Transparency = 0.60f;
-                    //        break;
-                    //    case 4:
-                    //        ws2.Shapes.AddShape(MsoAutoShapeType.msoShapeOval,
-                    //            cua, 1735, 80, 200).Fill.Transparency = 0.60f;
-                    //        break;
-                    //    case 5:
-                    //        ws2.Shapes.AddShape(MsoAutoShapeType.msoShapeOval,
-                    //            qui, 1735, 80, 200).Fill.Transparency = 0.60f;
-                    //        break;
-                    //    case 6:
-                    //        ws2.Shapes.AddShape(MsoAutoShapeType.msoShapeOval,
-                    //            sex, 1735, 80, 200).Fill.Transparency = 0.60f;
-                    //        break;
-                    //}
-                                        
-                    //wb.Save();
-                    //wb.Close();
+                    wb.Save();
+                    wb.Dispose();
+                    
                     r = 1;
                     message = "OK";
                 }

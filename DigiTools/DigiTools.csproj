@@ -67,10 +67,10 @@
       <HintPath>..\packages\Sendgrid.9.10.0\lib\net452\SendGrid.dll</HintPath>
     </Reference>
     <Reference Include="Spire.License">
-      <HintPath>C:\Program Files (x86)\e-iceblue\Spire.Xls-Fe\Bin\NET4.0 ClientProfile\Spire.License.dll</HintPath>
+      <HintPath>..\..\..\..\Spire.License.dll</HintPath>
     </Reference>
     <Reference Include="Spire.XLS">
-      <HintPath>C:\Program Files (x86)\e-iceblue\Spire.Xls-Fe\Bin\NET4.0 ClientProfile\Spire.XLS.dll</HintPath>
+      <HintPath>..\..\..\..\Spire.XLS.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />

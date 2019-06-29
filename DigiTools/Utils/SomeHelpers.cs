@@ -495,16 +495,8 @@ namespace DigiTools.Utils
                             shape.SetPosition(72, 0, 8, 0);
                             break;
                     }
-
-
-                //float pri = Convert.ToSingle(rango1.);
-                //float seg = Convert.ToSingle(rango2.Left) + 28f;
-                //float ter = Convert.ToSingle(rango3.Left);
-                //float cua = Convert.ToSingle(rango4.Left) + 37f;
-                //float qui = Convert.ToSingle(rango5.Left) + 10f;
-                //float sex = Convert.ToSingle(rango6.Left);
-
-                excelPackage.SaveAs(fileN);
+                    
+                    excelPackage.SaveAs(fileN);
                 }
 
                 //SPIRE FREE
@@ -516,62 +508,7 @@ namespace DigiTools.Utils
 
                 wb.Save();
                 wb.Dispose();
-                //NETOFFICE
-                //Excel.Application app = new Excel.Application();
-                //app.DisplayAlerts = false;
-                //app.Visible = false;
-
-                //Excel.Workbook wb = app.Workbooks.Open(nfilename);
-                //Excel.Worksheet ws2 = (Excel.Worksheet)wb.Worksheets[1];
-
-                //Excel.OptionButton opt = (Excel.OptionButton)ws2.OptionButtons(km.CausaRaiz);
-                //opt.Value = true;
-
-                //Excel.Range rango1 = ws2.Cells[69, 1];
-                //Excel.Range rango2 = ws2.Cells[69, 2];
-                //Excel.Range rango3 = ws2.Cells[69, 4];
-                //Excel.Range rango4 = ws2.Cells[69, 5];
-                //Excel.Range rango5 = ws2.Cells[69, 7];
-                //Excel.Range rango6 = ws2.Cells[69, 9];
-
-                //float pri = Convert.ToSingle(rango1.Left);
-                //float seg = Convert.ToSingle(rango2.Left) + 28f;
-                //float ter = Convert.ToSingle(rango3.Left);
-                //float cua = Convert.ToSingle(rango4.Left) + 37f;
-                //float qui = Convert.ToSingle(rango5.Left) + 10f;
-                //float sex = Convert.ToSingle(rango6.Left);
-
-                //switch (km.CicloRaiz)
-                //{
-                //    case 1:
-                //        ws2.Shapes.AddShape(MsoAutoShapeType.msoShapeOval,
-                //            pri, 1735, 80, 200).Fill.Transparency = 0.60f;
-                //        break;
-                //    case 2:
-                //        ws2.Shapes.AddShape(MsoAutoShapeType.msoShapeOval,
-                //            seg, 1735, 80, 200).Fill.Transparency = 0.60f;
-                //        break;
-                //    case 3:
-                //        ws2.Shapes.AddShape(MsoAutoShapeType.msoShapeOval,
-                //            ter, 1735, 80, 200).Fill.Transparency = 0.60f;
-                //        break;
-                //    case 4:
-                //        ws2.Shapes.AddShape(MsoAutoShapeType.msoShapeOval,
-                //            cua, 1735, 80, 200).Fill.Transparency = 0.60f;
-                //        break;
-                //    case 5:
-                //        ws2.Shapes.AddShape(MsoAutoShapeType.msoShapeOval,
-                //            qui, 1735, 80, 200).Fill.Transparency = 0.60f;
-                //        break;
-                //    case 6:
-                //        ws2.Shapes.AddShape(MsoAutoShapeType.msoShapeOval,
-                //            sex, 1735, 80, 200).Fill.Transparency = 0.60f;
-                //        break;
-                //}
-
-                //wb.Save();
-                //wb.Close();
-
+                
                 return nfilename;
             }
             catch (Exception ex)
